@@ -16,6 +16,9 @@ public abstract class AbstractActiveObstacle implements  ActiveObstacle {
      * @param direction the direction of the movement of the active obstacle.
      */
     public AbstractActiveObstacle(final Position position, final Dimension dimension, final Direction direction) {
+        if (direction == Direction.UP || direction == Direction.DOWN) {
+            throw new IllegalArgumentException("ActiveObstacle can only move LEFT or RIGHT");
+        }
         this.position = position;
         this.dimension = dimension;
         this.direction = direction;
@@ -26,8 +29,8 @@ public abstract class AbstractActiveObstacle implements  ActiveObstacle {
      */
     @Override
     public void update(long deltaTime, double speed) {
-        double deltaY = speed * deltaTime / 1000.0 * (this.direction == Direction.LEFT ? -1 : 1);
-        increaseY(deltaY);
+        double deltaX = speed * deltaTime / 1000.0 * (this.direction == Direction.LEFT ? -1 : 1);
+        this.position = new Position(this.position.x() + deltaX, this.position.y());
     }
 
     /**
@@ -44,13 +47,5 @@ public abstract class AbstractActiveObstacle implements  ActiveObstacle {
     @Override
     public Dimension getDimension() {
         return this.dimension;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void increaseY(double delta) {
-        this.position = new Position(this.position.x(), this.position.y() + delta);
     }
 }
