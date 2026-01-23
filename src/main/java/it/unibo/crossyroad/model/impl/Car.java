@@ -1,0 +1,41 @@
+package it.unibo.crossyroad.model.impl;
+
+import it.unibo.crossyroad.model.api.Direction;
+import it.unibo.crossyroad.model.api.AbstractActiveObstacle;
+import it.unibo.crossyroad.model.api.CollisionType;
+import it.unibo.crossyroad.model.api.Position;
+import it.unibo.crossyroad.model.api.Dimension;
+import it.unibo.crossyroad.model.api.EntityType;
+
+/**
+ * A class representing a car obstacle in the game.
+ */
+public class Car extends AbstractActiveObstacle {
+
+    /**
+     * It creates a new active obstacle (car) with the initial position, speed and direction.
+     *
+     * @param position the initial position of the car.
+     * @param speed the static speed of the car.
+     * @param direction the direction of the movement of the car.
+     */
+    public Car(final Position position, final double speed, final Direction direction) {
+        super(position, new Dimension(2, 1), speed, direction);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CollisionType getCollisionType() {
+        return CollisionType.DEADLY;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public EntityType getEntityType() {
+        return EntityType.CAR;
+    }
+}
