@@ -2,6 +2,8 @@ package it.unibo.crossyroad.model.api;
 
 import it.unibo.crossyroad.model.impl.GameParametersImpl;
 
+import java.io.IOException;
+
 /**
  * Interface representing game parameters and settings.
  */
@@ -11,6 +13,7 @@ public interface GameParameters {
      * Sets the new coin multiplier.
      *
      * @param coinMultiplier the new coin multiplier.
+     * @throws IllegalArgumentException if coinMultiplier is <= 0.
      */
     void setCoinMultiplier(int coinMultiplier);
 
@@ -18,6 +21,7 @@ public interface GameParameters {
      * Sets the new car speed multiplier.
      *
      * @param carSpeedMultiplier the new car speed multiplier.
+     * @throws IllegalArgumentException if carSpeedMultiplier is <= 0.
      */
     void setCarSpeedMultiplier(double carSpeedMultiplier);
 
@@ -25,6 +29,7 @@ public interface GameParameters {
      * Sets the new train speed multiplier.
      *
      * @param trainSpeedMultiplier the new train speed multiplier.
+     * @throws IllegalArgumentException if trainSpeedMultiplier is <= 0.
      */
     void setTrainSpeedMultiplier(double trainSpeedMultiplier);
 
@@ -34,6 +39,14 @@ public interface GameParameters {
      * @param invincibility true if invincible, false otherwise.
      */
     void setInvincibility(boolean invincibility);
+
+    /**
+     * Sets the current coin count.
+     *
+     * @param coinCount the coin count.
+     * @throws IllegalArgumentException if coinCount < 0.
+     */
+    void setCoinCount(int coinCount);
 
     /**
      * Gets the current coin multiplier.
@@ -80,6 +93,7 @@ public interface GameParameters {
      *
      * @param filepath the path to the file.
      * @return a GameParametersImpl instance with loaded parameters.
+     * @throws IOException if an I/O error occurs.
      */
-    GameParametersImpl loadFromFile(String filepath);
+    GameParametersImpl loadFromFile(String filepath) throws IOException;
 }
