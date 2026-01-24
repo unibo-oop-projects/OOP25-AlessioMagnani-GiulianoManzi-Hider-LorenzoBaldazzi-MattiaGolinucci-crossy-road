@@ -141,14 +141,16 @@ class TestGameParameters {
      */
     @Test
     void loadFromFile() throws IOException {
-        final String invalidFilepath = "notvalit/file/path.csv";
-        final Path tmpFile = Files.createTempFile("gameparametersfile", ".csv");
+        final String invalidFilepath = "not_valid/file/path.json";
+        final Path tmpFile = Files.createTempFile("game_parameters_file", ".json");
         Files.writeString(tmpFile, """
-                    coinMultiplier=2
-                    carSpeedMultiplier=1.5
-                    trainSpeedMultiplier=2
-                    invincibility=true
-                    coinCount=5
+                    {
+                     "coinMultiplier": 2,
+                     "carSpeedMultiplier": 1.5,
+                     "trainSpeedMultiplier": 2.0,
+                     "invincibility": true,
+                     "coinCount": 5
+                    }
                 """);
 
         assertThrows(IOException.class, () ->

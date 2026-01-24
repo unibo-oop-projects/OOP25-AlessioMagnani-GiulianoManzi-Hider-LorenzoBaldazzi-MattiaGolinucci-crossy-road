@@ -2,13 +2,9 @@ package it.unibo.crossyroad.model.impl;
 
 import it.unibo.crossyroad.model.api.GameParameters;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Implementation of the GameParameters interface.
@@ -152,55 +148,12 @@ public class GameParametersImpl implements GameParameters {
      * {@inheritDoc}
      */
     @Override
-    public GameParametersImpl loadFromFile(final String filepath) throws IOException {
-        try (FileInputStream fileInputStream = new FileInputStream(filepath)) {
-            return parse(fileInputStream);
-        } catch (final IOException e) {
-            throw new IOException("Error loading game parameters from file: " + filepath, e);
-        }
-    }
-
-    /**
-     * Parses game parameters from an InputStream containing key=value pairs.
-     * Each line in the stream should have the format "key=value", where key is one of the parameter names.
-     * If a parameter is missing, its default value is used.
-     * If the key is unknown, an IllegalArgumentException is thrown.
-     * If a line is malformed or contains an invalid value, an IllegalArgumentException is thrown.
-     *
-     * @param input the input stream.
-     * @return a GameParametersImpl instance with loaded parameters.
-     * @throws IOException if an I/O error occurs.
-     */
-    private GameParametersImpl parse(final InputStream input) throws IOException {
-        final GameParametersBuilder builder = new GameParametersBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(
-                new InputStreamReader(new BufferedInputStream(input), StandardCharsets.UTF_8))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                final String[] elements = line.split("=");
-                if (line.isEmpty() || elements.length != 2) {
-                    continue;
-                }
-                final String key = elements[0].trim();
-                final String value = elements[1].trim();
-                try {
-                    switch (key) {
-                        case "coinMultiplier" -> builder.setCoinMultiplier(Integer.parseInt(value));
-                        case "carSpeedMultiplier" -> builder.setCarSpeedMultiplier(Double.parseDouble(value));
-                        case "trainSpeedMultiplier" -> builder.setTrainSpeedMultiplier(Double.parseDouble(value));
-                        case "invincibility" -> builder.setInvincibility(Boolean.parseBoolean(value));
-                        case "coinCount" -> builder.setCoinCount(Integer.parseInt(value));
-                        default -> throw new IllegalArgumentException("Unknown parameter key: " + key);
-                    }
-                } catch (final NumberFormatException e) {
-                    throw new IllegalArgumentException("Invalid format for key " + key + ": " + value, e);
-                }
-                line = bufferedReader.readLine();
-            }
-            return builder.build();
-        } catch (final IOException e) {
-            throw new IOException("Error reading from input stream", e);
-        }
+    public GameParameters loadFromFile(final String filepath) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        final GameParameters newParameters = mapper.readValue(new File(filepath), GameParametersImpl.class);
+        validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
+                newParameters.getTrainSpeedMultiplier(), newParameters.getCoinCount());
+        return newParameters;
     }
 
     /**

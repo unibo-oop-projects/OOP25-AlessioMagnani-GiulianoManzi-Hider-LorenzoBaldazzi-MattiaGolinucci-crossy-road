@@ -1,7 +1,5 @@
 package it.unibo.crossyroad.model.api;
 
-import it.unibo.crossyroad.model.impl.GameParametersImpl;
-
 import java.io.IOException;
 
 /**
@@ -89,11 +87,11 @@ public interface GameParameters {
     void incrementCoinCount();
 
     /**
-     * Loads game parameters from a file.
+     * Loads game parameters from a json file.
      *
      * @param filepath the path to the file.
-     * @return a GameParametersImpl instance with loaded parameters.
+     * @return a GameParameters instance with loaded parameters.
      * @throws IOException if an I/O error occurs.
      */
-    GameParametersImpl loadFromFile(String filepath) throws IOException;
+    GameParameters loadFromFile(String filepath) throws IOException;
 }
