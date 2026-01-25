@@ -1,10 +1,8 @@
 package it.unibo.crossyroad.model.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import it.unibo.crossyroad.model.api.AbstractPositionable;
-import it.unibo.crossyroad.model.api.ActiveObstacle;
 import it.unibo.crossyroad.model.api.Chunk;
 import it.unibo.crossyroad.model.api.Dimension;
 import it.unibo.crossyroad.model.api.Obstacle;
@@ -16,25 +14,37 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
         super(initialPosition, dimension);
     }
 
-    private List<Obstacle> obstacles;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init() { }
 
-    public void init() {
-        this.obstacles = new LinkedList<>();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Obstacle> getObstacles() { 
+        throw new UnsupportedOperationException("Unimplemented method 'getObstacles'");
     }
 
-    public List<Obstacle> getObstacles() {
-        return this.obstacles;
-    }
+    /**
+     * Generates random Obstacles objects on the Chunk.
+     */
+    protected abstract void generateObstacles();
 
-    public abstract void genObstacles();
+    /**
+     * Generates random Pickables objects on the Chunk.
+     */
+    private void generatePickables() { }
 
-    private void moveObstacles() {
-        for (Obstacle obstacle : obstacles) {
-            if (obstacle instanceof ActiveObstacle) {
-                //((ActiveObstacle)obstacle).update(gameParameters); //TODO
-            }
-        }
-    }
-    
-    //TODO rest
+    /**
+     * Updates the positions of the Obstacles on the Chunk.
+     */
+    private void moveObstacles() {}
+
+    /**
+     * Updates the positions of the Pickables on the Chunk.
+     */
+    private void movePickables() {}
 }
