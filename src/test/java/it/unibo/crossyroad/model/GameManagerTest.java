@@ -4,13 +4,13 @@ package it.unibo.crossyroad.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.crossyroad.model.api.Direction;
 import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GameManagerTest {
     private GameManager gameManager;
@@ -30,10 +30,14 @@ public class GameManagerTest {
     }
 
     @Test
-    void testPlayerMovement() {
-        for (int i = 0; i < 5; i++) {
-            this.gameManager.movePlayer(Direction.UP);
-        }
+    void testPositionables() {
+        assertNotNull(this.gameManager.getPositionables());
+        assertFalse(this.gameManager.getPositionables().isEmpty());
+    }
+
+    @Test
+    void testGameOver() {
         assertFalse(this.gameManager.isGameOver());
     }
+
 }

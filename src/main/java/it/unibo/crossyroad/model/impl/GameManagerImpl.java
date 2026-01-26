@@ -52,6 +52,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public List<Positionable> getPositionables() {
         final List<Positionable> positionables = new LinkedList<>();
+        positionables.add(this.player);
         positionables.addAll(this.getObstaclesOnMap());
 
         return List.copyOf(positionables);   //TODO update when i get Pickables.
@@ -192,11 +193,7 @@ public class GameManagerImpl implements GameManager {
      */
     private List<Obstacle> getObstaclesOnMap() {
         final List<Obstacle> obstacles = new LinkedList<>();
-
-        for (Chunk c : this.chunks) {
-            obstacles.addAll(c.getObstacles());
-        }
-
+        this.chunks.forEach(c -> obstacles.addAll(c.getObstacles()));
         return obstacles;
     }
 
