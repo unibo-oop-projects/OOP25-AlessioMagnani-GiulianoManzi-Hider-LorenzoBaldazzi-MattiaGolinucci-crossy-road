@@ -45,7 +45,7 @@ class TestGrass {
         }
 
         assertNotEquals(max, min);
-        assertEquals(0, MIN_OBS_EXPECTED);
-        assertEquals(15, MAX_OBS_EXPECTED);
+        assertEquals(MIN_OBS_EXPECTED, min);
+        assertEquals(MAX_OBS_EXPECTED, max);
     }
 }

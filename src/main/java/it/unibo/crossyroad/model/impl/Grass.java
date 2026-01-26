@@ -12,6 +12,7 @@ public class Grass extends AbstractChunk {
 
     public Grass(Position initialPosition, Dimension dimension) {
         super(initialPosition, dimension);
+        this.init();
     }
 
     @Override
