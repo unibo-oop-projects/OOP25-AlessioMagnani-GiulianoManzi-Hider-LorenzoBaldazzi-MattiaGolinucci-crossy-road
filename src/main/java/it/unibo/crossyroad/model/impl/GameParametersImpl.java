@@ -45,6 +45,16 @@ public class GameParametersImpl implements GameParameters {
     }
 
     /**
+     * Copy constructor.
+     *
+     * @param p the GameParameters instance to copy from.
+     */
+    public GameParametersImpl(final GameParameters p) {
+        this(p.getCoinMultiplier(), p.getCarSpeedMultiplier(), p.getTrainSpeedMultiplier(),
+                p.isInvincible(), p.getCoinCount());
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
