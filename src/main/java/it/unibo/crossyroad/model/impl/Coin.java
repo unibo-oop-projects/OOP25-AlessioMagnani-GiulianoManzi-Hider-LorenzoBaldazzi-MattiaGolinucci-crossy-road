@@ -5,21 +5,31 @@ import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.api.Position;
 
+/**
+ * A class representig a coin in the game.
+ */
 public class Coin extends AbstractPickable {
 
+    /**
+     * It creates a new pickable (coin) with the initial position.
+     * 
+     * @param position the initial position of the coin.
+     */
     public Coin(final Position position) {
         super(position);
-        pickedUp = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void pickUp(final GameParameters g) {
-        if (!pickedUp) {
-            pickedUp = true;
-            g.setCoinCount(g.getCoinCount() + g.getCoinMultiplier());
-        }
+    protected void applyEffect(final GameParameters g) {
+        g.incrementCoinCount();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public EntityType getEntityType() {
         return EntityType.COIN;

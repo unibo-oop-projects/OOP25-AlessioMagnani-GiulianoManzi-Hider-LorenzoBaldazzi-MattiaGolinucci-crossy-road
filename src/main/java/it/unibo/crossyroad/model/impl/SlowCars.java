@@ -5,29 +5,43 @@ import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.api.Position;
 
-public class SlowCars extends AbstractPowerUp{
+/**
+ * A power-up that temporarily slows down all cars in the game. 
+ */
+public class SlowCars extends AbstractPowerUp {
 
     private static final double CAR_SLOW_MOTION = 0.5;
     private static final long CAR_SLOW_MOTION_DURATION = 10_000L;
 
+    /**
+     * Creates a new slow cars power-up at the given position.
+     * 
+     * @param position the initial position of the power-up.
+     */
     public SlowCars(final Position position) {
-        super(position,CAR_SLOW_MOTION_DURATION);
-        pickedUp = false;
+        super(position, CAR_SLOW_MOTION_DURATION);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deactivate(final GameParameters g) {
         g.setCarSpeedMultiplier(1.0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void pickUp(final GameParameters g) {
-        if (!pickedUp) {
-            pickedUp = true;
-            g.setCarSpeedMultiplier(g.getCarSpeedMultiplier() * CAR_SLOW_MOTION);
-        }
+    protected void applyEffect(final GameParameters g) {
+        g.setCarSpeedMultiplier(CAR_SLOW_MOTION);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public EntityType getEntityType() {
         return EntityType.SLOW_CARS; 
     }

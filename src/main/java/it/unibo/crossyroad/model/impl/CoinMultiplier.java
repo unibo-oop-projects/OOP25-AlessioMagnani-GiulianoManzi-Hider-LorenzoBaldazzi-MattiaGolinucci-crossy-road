@@ -5,29 +5,43 @@ import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.api.Position;
 
+/**
+ * A power-up that temporarily increases the amount of coins gained by the player.
+ */
 public class CoinMultiplier extends AbstractPowerUp {
 
     private static final int COIN_MULTIPLIER = 3;
     private static final long COIN_MULTIPLIER_DURATION = 10_000L;
 
+    /**
+     * Creates a new coin multiplier power-up at the given position.
+     * 
+     * @param position the initial position of the power-up.
+     */
     public CoinMultiplier(final Position position) {
         super(position, COIN_MULTIPLIER_DURATION);
-        pickedUp = false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void deactivate(final GameParameters g) {
         g.setCoinMultiplier(1);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void pickUp(final GameParameters g) {
-        if (!pickedUp) {
-            pickedUp = true;
-            g.setCoinMultiplier(g.getCoinMultiplier() * COIN_MULTIPLIER);
-        }
+    protected void applyEffect(final GameParameters g) {
+        g.setCoinMultiplier(COIN_MULTIPLIER);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public EntityType getEntityType() {
         return EntityType.COIN_MULTIPLIER; 
     }
