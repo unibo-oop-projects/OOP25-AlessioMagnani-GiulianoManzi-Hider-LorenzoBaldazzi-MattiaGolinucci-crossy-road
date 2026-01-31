@@ -64,8 +64,8 @@ public class River extends AbstractActiveChunk {
 
     private void addWater() {
         final Obstacle water = new Water(
-            new Position(this.getPosition().x(), this.getPosition().y()),
-            new Dimension(this.getDimension().width(), this.getDimension().height())
+            this.getPosition(),
+            this.getDimension()
         );
 
         this.addObstacle(water);

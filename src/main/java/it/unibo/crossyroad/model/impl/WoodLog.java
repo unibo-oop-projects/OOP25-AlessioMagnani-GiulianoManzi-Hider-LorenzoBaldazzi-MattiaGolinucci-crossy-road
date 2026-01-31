@@ -46,6 +46,6 @@ public class WoodLog extends AbstractActiveObstacle {
      */
     @Override
     protected double getSpeedMultiplier(final GameParameters parameters) {
-        return 1.0;  // TODO
+        return parameters.getLogSpeedMultiplier();
     }
 }
