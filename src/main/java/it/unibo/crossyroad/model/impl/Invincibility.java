@@ -25,16 +25,16 @@ public class Invincibility extends AbstractPowerUp {
      * {@inheritDoc}
      */
     @Override
-    public void deactivate(final GameParameters g) {
-        g.setInvincibility(false);
+    public void deactivate(final GameParameters gameParameters) {
+        gameParameters.setInvincibility(false);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void applyEffect(final GameParameters g) {
-        g.setInvincibility(true);
+    protected void applyEffect(final GameParameters gameParameters) {
+        gameParameters.setInvincibility(true);
     }
 
     /**

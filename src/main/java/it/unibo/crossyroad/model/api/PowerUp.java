@@ -8,9 +8,9 @@ public interface PowerUp extends Pickable {
      * Reload the remaining time of the power-up and deactive it when expired.
      * 
      * @param deltaTime the elapsed time since the last update.
-     * @param g the game parameters affected by this power up.
+     * @param gameParameters the game parameters affected by this power up.
      */
-    void update(long deltaTime, GameParameters g);
+    void update(long deltaTime, GameParameters gameParameters);
 
     /**
      * Returns the remaining time of the power-up.

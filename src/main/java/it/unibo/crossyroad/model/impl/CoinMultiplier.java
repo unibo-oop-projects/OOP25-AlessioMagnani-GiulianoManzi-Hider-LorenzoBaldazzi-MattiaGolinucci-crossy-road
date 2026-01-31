@@ -26,16 +26,16 @@ public class CoinMultiplier extends AbstractPowerUp {
      * {@inheritDoc}
      */
     @Override
-    protected void deactivate(final GameParameters g) {
-        g.setCoinMultiplier(1);
+    protected void deactivate(final GameParameters gameParameters) {
+        gameParameters.setCoinMultiplier(1);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void applyEffect(final GameParameters g) {
-        g.setCoinMultiplier(COIN_MULTIPLIER);
+    protected void applyEffect(final GameParameters gameParameters) {
+        gameParameters.setCoinMultiplier(COIN_MULTIPLIER);
     }
 
     /**

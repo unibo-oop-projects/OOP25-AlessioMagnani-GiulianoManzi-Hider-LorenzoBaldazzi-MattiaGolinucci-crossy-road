@@ -25,10 +25,10 @@ public abstract class AbstractPowerUp extends AbstractPickable implements PowerU
      * {@inheritDoc}
      */
     @Override
-    public void update(final long deltaTime, final GameParameters g) {
+    public void update(final long deltaTime, final GameParameters gameParameters) {
         this.remainingTime -= deltaTime;
         if (this.remainingTime <= 0) {
-            this.deactivate(g);
+            this.deactivate(gameParameters);
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class AbstractPowerUp extends AbstractPickable implements PowerU
     /**
      * Deactives the power-up and reverts its effect on the game parameters.
      * 
-     * @param g the game parameters affected by this power-up.
+     * @param gameParameters the game parameters affected by this power-up.
      */
-    protected abstract void deactivate(GameParameters g);
+    protected abstract void deactivate(GameParameters gameParameters);
 }

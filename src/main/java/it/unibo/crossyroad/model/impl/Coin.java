@@ -23,8 +23,8 @@ public class Coin extends AbstractPickable {
      * {@inheritDoc}
      */
     @Override
-    protected void applyEffect(final GameParameters g) {
-        g.incrementCoinCount();
+    protected void applyEffect(final GameParameters gameParameters) {
+        gameParameters.incrementCoinCount();
     }
 
     /**

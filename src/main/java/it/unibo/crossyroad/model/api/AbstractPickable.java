@@ -24,7 +24,7 @@ public abstract class AbstractPickable extends AbstractPositionable implements P
      * {@inheritDoc}
      */
     @Override
-    public boolean isPickUp() {
+    public boolean isPickedUp() {
         return this.pickedUp;
     }
 
@@ -32,18 +32,18 @@ public abstract class AbstractPickable extends AbstractPositionable implements P
      * {@inheritDoc}
      */
     @Override
-    public void pickUp(final GameParameters g) {
+    public void pickUp(final GameParameters gameParameters) {
         if (!this.pickedUp) {
             this.pickedUp = true;
-            this.applyEffect(g);
+            this.applyEffect(gameParameters);
         }
     }
 
     /**
      * Apply the specific effect of this pickable to the game parameter.
      * 
-     * @param g the game parameters affected by this pickable.
+     * @param gameParameters the game parameters affected by this pickable.
      */
-    protected abstract void applyEffect(GameParameters g);
+    protected abstract void applyEffect(GameParameters gameParameters);
 
 }

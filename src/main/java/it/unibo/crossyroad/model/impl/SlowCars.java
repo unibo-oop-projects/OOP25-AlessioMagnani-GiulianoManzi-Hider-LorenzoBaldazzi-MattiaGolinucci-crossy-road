@@ -26,16 +26,16 @@ public class SlowCars extends AbstractPowerUp {
      * {@inheritDoc}
      */
     @Override
-    public void deactivate(final GameParameters g) {
-        g.setCarSpeedMultiplier(1.0);
+    public void deactivate(final GameParameters gameParameters) {
+        gameParameters.setCarSpeedMultiplier(1.0);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected void applyEffect(final GameParameters g) {
-        g.setCarSpeedMultiplier(CAR_SLOW_MOTION);
+    protected void applyEffect(final GameParameters gameParameters) {
+        gameParameters.setCarSpeedMultiplier(CAR_SLOW_MOTION);
     }
 
     /**

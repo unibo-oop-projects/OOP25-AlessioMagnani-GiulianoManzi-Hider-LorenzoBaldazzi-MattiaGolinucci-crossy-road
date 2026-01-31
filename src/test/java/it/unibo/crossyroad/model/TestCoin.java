@@ -35,7 +35,7 @@ class TestCoin {
      */
     @Test
     void testCoinNotPickedUpAtTheBeginning() {
-        assertFalse(this.coin.isPickUp());
+        assertFalse(this.coin.isPickedUp());
     }
 
     /**
@@ -57,7 +57,7 @@ class TestCoin {
         coin.pickUp(this.gameParameters);
         coin.pickUp(this.gameParameters);
         assertEquals(initcoins + this.gameParameters.getCoinMultiplier(), this.gameParameters.getCoinCount());
-        assertTrue(coin.isPickUp());
+        assertTrue(coin.isPickedUp());
     }
 
     /**
