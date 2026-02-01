@@ -56,7 +56,6 @@ public class River extends AbstractActiveChunk {
 
     private void addWater() {
         final Obstacle water = new Water(this.getPosition(), this.getDimension());
-
         this.addObstacle(water);
     }
 
@@ -77,8 +76,8 @@ public class River extends AbstractActiveChunk {
 
     private Position getLogStartPosition() {
         return switch (this.direction) {
-            case LEFT -> new Position(this.getPosition().x() + this.getDimension().width(), this.getPosition().y());
-            case RIGHT -> new Position(this.getPosition().x() - LOGS_LENGTH, this.getPosition().y());
+            case LEFT -> Position.of(this.getDimension().width(), 0).relative(this.getPosition());
+            case RIGHT -> Position.of(-LOGS_LENGTH, 0).relative(this.getPosition());
             default -> throw new IllegalStateException("Direction must be LEFT or RIGHT");
         };
     }
