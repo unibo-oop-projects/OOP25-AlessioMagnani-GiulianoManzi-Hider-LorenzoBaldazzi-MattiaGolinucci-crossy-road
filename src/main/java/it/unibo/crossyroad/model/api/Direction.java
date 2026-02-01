@@ -4,10 +4,10 @@ package it.unibo.crossyroad.model.api;
  * Enum representing a direction.
  */
 public enum Direction {
-    UP(Position.of(-1, 0)),
-    DOWN(Position.of(1, 0)),
-    LEFT(Position.of(0, -1)),
-    RIGHT(Position.of(0, 1));
+    UP(Position.of(0, -1)),
+    DOWN(Position.of(0, 1)),
+    LEFT(Position.of(-1, 0)),
+    RIGHT(Position.of(1, 0));
 
     private final Position delta;
 
