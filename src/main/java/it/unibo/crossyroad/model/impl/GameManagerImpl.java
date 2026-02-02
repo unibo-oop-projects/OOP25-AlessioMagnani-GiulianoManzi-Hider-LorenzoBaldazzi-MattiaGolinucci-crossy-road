@@ -3,6 +3,7 @@ package it.unibo.crossyroad.model.impl;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,6 @@ public class GameManagerImpl implements GameManager {
     private PositionablePlayer player;
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
-    private List<Pickable> pickables;
 
     /**
      * Initializes the GameManager with the GameParameters.
@@ -64,7 +64,7 @@ public class GameManagerImpl implements GameManager {
         positionables.add(this.player);
         positionables.addAll(this.chunks);
         positionables.addAll(this.getObstaclesOnMap());
-        positionables.addAll(this.pickables);
+        positionables.addAll(this.getPickablesOnMap());
 
         return List.copyOf(positionables);
     }
@@ -74,7 +74,7 @@ public class GameManagerImpl implements GameManager {
      */
     @Override
     public Map<EntityType, Long> getActivePowerUps() {
-        return this.pickables.stream()
+        return this.getPickablesOnMap().stream()
                              .filter(p -> p instanceof PowerUp)
                              .map(p -> (PowerUp) p)
                              .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining));
@@ -90,8 +90,14 @@ public class GameManagerImpl implements GameManager {
                    .map(c -> (ActiveChunk) c)
                    .forEach(ac -> ac.update(this.gameParameters, deltaTime));
 
-        // this.checkCoinsCollisions();
-        // this.checkPowerUpCollisions(); //TODO when I have the objects.
+        if (this.checkCoinsCollision()) {
+            this.gameParameters.incrementCoinCount();
+        }
+
+        final Optional<PowerUp> powerUp = this.checkPowerUpCollisions();
+        if (powerUp.isPresent()) {
+            powerUp.get().pickUp(this.gameParameters);
+        }
     }
 
     /**
@@ -185,18 +191,34 @@ public class GameManagerImpl implements GameManager {
     }
 
     /**
-     * Checks how many coins is the player colliding with.
+     * Checks if the player is colliding with a Coin.
      * 
-     * @return the number of coins the player is colliding with.
+     * @return true if the player is colliding with a Coin, false otherwise.
      */
-    // private int checkCoinsCollision() {
-        
-    // }
+    private boolean checkCoinsCollision() {
+        for (final Pickable pick : this.getPickablesOnMap()) {
+            if (pick instanceof Coin && pick.getPosition().equals(this.player.getPosition())) {
+                return true;
+            }
+        }
 
-    //TODO when I have the object
-    // private PowerUp checkPowerUpCollisions() {
+        return false;
+    }
 
-    // }
+    /**
+     * Checks if the player is colliding with a PowerUp.
+     * 
+     * @return the PowerUp the player is colliding with, Optional.empty if there's no collision.
+     */
+    private Optional<PowerUp> checkPowerUpCollisions() {
+        for (final Pickable pick : this.getPickablesOnMap()) {
+            if (pick instanceof PowerUp && pick.getPosition().equals(this.player.getPosition())) {
+                return Optional.of((PowerUp) pick);
+            }
+        }
+
+        return Optional.empty();
+    }
 
     /**
      * Gets the Obstacles currently present on the map.
@@ -210,6 +232,17 @@ public class GameManagerImpl implements GameManager {
     }
 
     /**
+     * Gets the Pickables currently present on the map.
+     * 
+     * @return a List of the Pickables currently present on the map.
+     */
+    private List<Pickable> getPickablesOnMap() {
+        final List<Pickable> pickables = new LinkedList<>();
+        this.chunks.forEach(c -> pickables.addAll(c.getPickables()));
+        return pickables;
+    }
+
+    /**
      * Handles the map movement.
      */
     private void moveMap() {
@@ -219,8 +252,8 @@ public class GameManagerImpl implements GameManager {
 
         //Elements movement
         for (final Chunk c : this.chunks) {
-            for (final Obstacle o : c.getObstacles()) {
-                o.increaseY(Y_MAP_MOVEMENT); //TODO update when i get Pickables.
+            for (final Positionable p : c.getPositionables()) {
+                p.increaseY(Y_MAP_MOVEMENT);
             }
         }
 

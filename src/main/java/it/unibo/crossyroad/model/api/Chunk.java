@@ -29,6 +29,13 @@ public interface Chunk extends Positionable {
     List<Pickable> getPickables();
 
     /**
+     * Returns the Positionables present on the Chunk.
+     * 
+     * @return a list of the Positionables present on the Chunk.
+     */
+    List<Positionable> getPositionables();
+
+    /**
      * Returns the active PowerUps present on the Chunk.
      * 
      * @return a list of the active PowerUps present on the Chunk.

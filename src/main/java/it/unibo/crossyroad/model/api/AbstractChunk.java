@@ -60,11 +60,22 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
      * {@inheritDoc}
      */
     @Override
+    public List<Positionable> getPositionables() {
+        final List<Positionable> positionables = new LinkedList<>();
+        positionables.addAll(this.getObstacles());
+        positionables.addAll(this.getPickables());
+        return List.copyOf(positionables);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<PowerUp> getActivePowerUp() {
         return List.copyOf(this.pickables.stream()
                                          .filter(p -> p instanceof PowerUp)
                                          .map(p -> (PowerUp) p)
-                                         .filter(p -> p.isPickedUp())
+                                         .filter(Pickable::isPickedUp)
                                          .toList());
     }
 
