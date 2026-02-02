@@ -1,5 +1,6 @@
 package it.unibo.crossyroad.view.api;
 
+import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.Positionable;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  * Interface representing the game view.
  */
 public interface GameView extends View {
-    //void setController(GameController c);
+    void setController(GameController c);
 
     void render(List<Positionable> positionables);
 

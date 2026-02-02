@@ -1,5 +1,6 @@
 package it.unibo.crossyroad.view.impl;
 
+import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.view.api.GameView;
@@ -8,6 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public class GameViewImpl implements GameView {
+
+    @Override
+    public void setController(GameController c) {
+        //TODO: Giuli
+    }
 
     @Override
     public void render(List<Positionable> positionables) {
