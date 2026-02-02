@@ -11,7 +11,7 @@ import it.unibo.crossyroad.model.api.EntityType;
 /**
  * A class representing a wood log transporting obstacle in the game.
  */
-public class WoodLog extends AbstractActiveObstacle {
+public final class WoodLog extends AbstractActiveObstacle {
 
     /**
      * Constructor for WoodLog.

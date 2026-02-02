@@ -10,7 +10,7 @@ import it.unibo.crossyroad.model.api.Position;
 /**
  * A class representing a water obstacle in the game.
  */
-public class Water extends AbstractPositionable implements Obstacle {
+public final class Water extends AbstractPositionable implements Obstacle {
 
     /**
      * Constructor for Water.
