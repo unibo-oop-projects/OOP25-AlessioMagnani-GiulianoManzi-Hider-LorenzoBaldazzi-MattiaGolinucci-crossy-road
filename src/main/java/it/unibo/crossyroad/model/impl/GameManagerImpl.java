@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import it.unibo.crossyroad.model.api.ActiveChunk;
 import it.unibo.crossyroad.model.api.ActiveObstacle;
@@ -14,8 +15,10 @@ import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.api.Obstacle;
+import it.unibo.crossyroad.model.api.Pickable;
 import it.unibo.crossyroad.model.api.Position;
 import it.unibo.crossyroad.model.api.Positionable;
+import it.unibo.crossyroad.model.api.PowerUp;
 
 /**
  * Implementation of the GameManager interface.
@@ -40,6 +43,7 @@ public class GameManagerImpl implements GameManager {
     private PositionablePlayer player;
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
+    private List<Pickable> pickables;
 
     /**
      * Initializes the GameManager with the GameParameters.
@@ -60,8 +64,9 @@ public class GameManagerImpl implements GameManager {
         positionables.add(this.player);
         positionables.addAll(this.chunks);
         positionables.addAll(this.getObstaclesOnMap());
+        positionables.addAll(this.pickables);
 
-        return List.copyOf(positionables);   //TODO update when i get Pickables.
+        return List.copyOf(positionables);
     }
 
     /**
@@ -69,8 +74,10 @@ public class GameManagerImpl implements GameManager {
      */
     @Override
     public Map<EntityType, Long> getActivePowerUps() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getActivePowerUps'");
+        return this.pickables.stream()
+                             .filter(p -> p instanceof PowerUp)
+                             .map(p -> (PowerUp) p)
+                             .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining));
     }
 
     /**
@@ -128,18 +135,16 @@ public class GameManagerImpl implements GameManager {
      * Generates a new Chunk.
      */
     private void generateChunk() {
-
-        //TODO add new Chunks when ready.
         switch (RANDOM.nextInt(3)) {
             case 0:
                 this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 break;
-            // case 1:
-            //     this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
-            //     break;
-            // case 2:
-            //     this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
-            //     break;
+            case 1:
+                this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
+                break;
+            case 2:
+                this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
+                break;
             default:
                 break;
         }
@@ -179,9 +184,13 @@ public class GameManagerImpl implements GameManager {
         return false;
     }
 
-    //TODO when I have the object
+    /**
+     * Checks how many coins is the player colliding with.
+     * 
+     * @return the number of coins the player is colliding with.
+     */
     // private int checkCoinsCollision() {
-
+        
     // }
 
     //TODO when I have the object
