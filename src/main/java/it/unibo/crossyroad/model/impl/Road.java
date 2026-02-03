@@ -32,27 +32,21 @@ public class Road extends AbstractActiveChunk {
         this.laneSpeed = new Pair<>(rnd.nextDouble(2, 5), rnd.nextDouble(1, 4));
     }
 
-    @Override
-    protected boolean shouldGenerateNewObstacles(final long deltaTime) {
-        return false;
-    }
-
     /**
      * {@inheritDoc}
      */
-    /* @Override
-    protected void spawnIfNeeded(final long deltaTime) {
+    @Override
+    protected boolean shouldGenerateNewObstacles(final long deltaTime) {
         this.elapsedTime += deltaTime;
-
         final int activeCars = (int) getObstacles().stream()
                 .filter(obs -> obs instanceof Car)
                 .count();
-
         if (elapsedTime >= SPAWN_CAR_INTERVAL_MS && activeCars < MAX_CARS_PER_CHUNKS) {
-            generateObstacles();
-            elapsedTime = 0;
+            this.elapsedTime = 0;
+            return true;
         }
-    } */
+        return false;
+    }
 
     /**
      * {@inheritDoc}
