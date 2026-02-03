@@ -28,10 +28,10 @@ class TestRiver {
 
     @BeforeEach
     void setUp() {
-        gameParameters = new GameParametersImpl();
-        position = Position.of(0, 0);
-        dimension = Dimension.of(WIDTH, HEIGHT);
-        river = new River(position, dimension, Direction.LEFT);
+        this.gameParameters = new GameParametersImpl();
+        this.position = Position.of(0, 0);
+        this.dimension = Dimension.of(WIDTH, HEIGHT);
+        this.river = new River(position, dimension, Direction.LEFT);
     }
 
     @Test
