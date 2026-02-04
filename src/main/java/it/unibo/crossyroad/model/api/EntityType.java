@@ -22,10 +22,15 @@ public enum EntityType {
 
     private final String displayName;
 
-    EntityType(String displayName) {
+    EntityType(final String displayName) {
         this.displayName = displayName;
     }
 
+    /**
+     * Returns the display name of this entity type.
+     *
+     * @return the name of this entity type.
+     */
     public String getDisplayName() {
         return displayName;
     }

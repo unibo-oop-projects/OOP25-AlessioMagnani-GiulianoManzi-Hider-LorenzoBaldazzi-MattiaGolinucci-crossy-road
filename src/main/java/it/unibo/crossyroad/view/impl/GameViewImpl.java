@@ -8,30 +8,36 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of the GameView interface.
  *
  */
-public class GameViewImpl extends StackPane implements GameView {
+public class GameViewImpl implements GameView {
 
+    private final StackPane root;
     private final VBox powerUpBox = new VBox(5);
     private final Label coinLabel = new Label();
 
-    public GameViewImpl() {
+    /**
+     * Constructor.
+     *
+     * @param root the stack pane
+     */
+    public GameViewImpl(final StackPane root) {
+        this.root = Objects.requireNonNull(root, "root cannot be null");
     }
 
     @Override
-    public void setController(GameController c) {
+    public void setController(final GameController c) {
         //TODO: Giuli
     }
 
     @Override
-    public void render(List<Positionable> positionables) {
+    public void render(final List<Positionable> positionables) {
         //TODO: Giuli
     }
 
@@ -39,9 +45,9 @@ public class GameViewImpl extends StackPane implements GameView {
      * {@inheritDoc}
      */
     @Override
-    public void updatePowerUpTime(Map<EntityType, Long> powerUps) {
+    public void updatePowerUpTime(final Map<EntityType, Long> powerUps) {
         powerUpBox.getChildren().clear();
-        for (Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
+        for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
             final int duration = (int) (entry.getValue() / 1000);
             powerUpBox.getChildren().add(new Label(
                     formatPowerUpText(entry.getKey(), duration)
@@ -56,7 +62,7 @@ public class GameViewImpl extends StackPane implements GameView {
      * @param secondsLeft the remaining time in seconds
      * @return the formatted text
      */
-    private String formatPowerUpText(EntityType type, int secondsLeft) {
+    private String formatPowerUpText(final EntityType type, final int secondsLeft) {
         return type.getDisplayName() + ": " + secondsLeft + "s";
     }
 
@@ -64,13 +70,13 @@ public class GameViewImpl extends StackPane implements GameView {
      * {@inheritDoc}
      */
     @Override
-    public void updateCoinCount(int count) {
+    public void updateCoinCount(final int count) {
         coinLabel.setText("Coins: " + count);
     }
 
     @Override
     public void show() {
-        this.setVisible(true);
+        this.root.setVisible(true);
     }
 
     @Override
