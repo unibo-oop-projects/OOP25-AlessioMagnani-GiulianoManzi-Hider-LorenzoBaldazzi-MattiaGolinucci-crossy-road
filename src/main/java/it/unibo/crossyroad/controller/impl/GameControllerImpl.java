@@ -1,6 +1,12 @@
 package it.unibo.crossyroad.controller.impl;
 
+import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.GameController;
+import it.unibo.crossyroad.model.api.GameManager;
+import it.unibo.crossyroad.model.api.GameParameters;
+import it.unibo.crossyroad.model.impl.GameManagerImpl;
+import it.unibo.crossyroad.model.impl.GameParametersBuilder;
+import it.unibo.crossyroad.view.api.GameView;
 
 /**
  * Implementation of the GameController.
@@ -9,8 +15,26 @@ import it.unibo.crossyroad.controller.api.GameController;
  */
 final class GameControllerImpl implements GameController {
 
-    public GameControllerImpl() {
-        
+    private final AppController appController;
+    private final GameView gameView;
+    private final boolean pause;
+    private final GameManager gameManager;
+    private final GameParameters parameters;
+
+    public GameControllerImpl(AppController appController, GameView gameView) {
+        this.appController = appController;
+        this.gameView = gameView;
+        this.pause = false;
+
+        this.parameters = new GameParametersBuilder()
+                            .setCarSpeedMultiplier(1)
+                            .setCoinCount(0)
+                            .setCoinMultiplier(0)
+                            .setInvincibility(false)
+                            .setLogSpeedMultiplier(1.0)               
+                            .setTrainSpeedMultiplier(1)
+                            .build();
+        this.gameManager = new GameManagerImpl(this.parameters);
     }
 
     @Override
@@ -33,8 +57,12 @@ final class GameControllerImpl implements GameController {
 
     @Override
     public void startLoop() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'startLoop'");
+        this.gameManager.reset();
+        long deltaTime = 0;
+        //TODO time measuring
+        while (!this.pause && !this.gameManager.isGameOver()) {
+            this.gameManager.update(deltaTime);
+        }
     }
 
     @Override

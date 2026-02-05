@@ -51,7 +51,6 @@ public class GameManagerImpl implements GameManager {
      */
     public GameManagerImpl(final GameParameters g) {
         this.gameParameters = new GameParametersImpl(g);
-        this.reset();
     }
 
     /**
