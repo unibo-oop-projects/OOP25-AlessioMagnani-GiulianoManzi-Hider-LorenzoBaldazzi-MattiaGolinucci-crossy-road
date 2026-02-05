@@ -7,13 +7,23 @@ import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.Positionable;
 
-public interface GameView {
+public interface GameView extends View {
     
-    void setCOntroller(GameController controller);
+    void setController(GameController c);
 
     void render(List<Positionable> positionables);
 
-    void update(Map<EntityType, Long> powerUps);
+    /**
+     * Updates the power-up time display.
+     *
+     * @param powerUps a map of entity types to their remaining time
+     */
+    void updatePowerUpTime(Map<EntityType, Long> powerUps);
 
+    /**
+     * Updates the coin count display.
+     *
+     * @param count the current coin count
+     */
     void updateCoinCount(int count);
 }
