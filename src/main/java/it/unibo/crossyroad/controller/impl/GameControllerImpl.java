@@ -60,16 +60,6 @@ final class GameControllerImpl extends Thread implements GameController {
     }
 
     @Override
-    public void showMenu() {
-        this.appController.showMenu();
-    }
-
-    @Override
-    public void hideMenu() {
-        this.appController.hideMenu();
-    }
-
-    @Override
     public void startLoop() {
         this.loop.start();
     }
@@ -77,7 +67,7 @@ final class GameControllerImpl extends Thread implements GameController {
     @Override
     public void pauseGame() {
         this.pause = true;
-        this.showMenu();
+        this.appController.showMenu();
         this.hideGame();
     }
 
@@ -85,7 +75,7 @@ final class GameControllerImpl extends Thread implements GameController {
     public void resumeGame() {
         this.pause = false;
         this.showGame();
-        this.hideMenu();
+        this.appController.hideMenu();
     }
 
     @Override

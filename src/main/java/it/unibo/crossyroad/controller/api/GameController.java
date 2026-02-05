@@ -18,16 +18,6 @@ public interface GameController {
     void hideGame();
 
     /**
-     * Shows the menu view.
-     */
-    void showMenu();
-
-    /**
-     * Hides the menu view.
-     */
-    void hideMenu();
-
-    /**
      * Starts the game loop.
      */
     void startLoop();
