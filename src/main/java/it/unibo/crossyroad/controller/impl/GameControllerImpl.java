@@ -3,6 +3,7 @@ package it.unibo.crossyroad.controller.impl;
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.GameManager;
+
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
@@ -39,8 +40,7 @@ final class GameControllerImpl implements GameController {
 
     @Override
     public void showGame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showGame'");
+
     }
 
     @Override
@@ -51,14 +51,16 @@ final class GameControllerImpl implements GameController {
 
     @Override
     public void showMenu() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showMenu'");
+        this.appController.showMenu();
     }
 
     @Override
     public void startLoop() {
         this.gameManager.reset();
         long deltaTime = 0;
+        long starTime = 0;
+        long endTime = 0;
+
         //TODO time measuring
         while (!this.pause && !this.gameManager.isGameOver()) {
             this.gameManager.update(deltaTime);
@@ -83,9 +85,11 @@ final class GameControllerImpl implements GameController {
         throw new UnsupportedOperationException("Unimplemented method 'processInput'");
     }
 
-    //private Skin getActiveSkin() { }  //TODO
+    private String getActiveSkin() {
+        return this.appController.getActiveSkinId();
+    }
 
-    // private int getCoinCount() {
-    //     return 0;   //TODO
-    // }
+    private int getCoinCount() {
+        return this.appController.getCoinCount();
+    }
 }
