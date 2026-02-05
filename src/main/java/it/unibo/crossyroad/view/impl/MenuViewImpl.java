@@ -109,11 +109,11 @@ public class MenuViewImpl implements MenuView {
 
     private List<Button> createButtons() {
         final List<Button> buttons = List.of(
-            createButton("Gioca", e -> { }),
-            createButton("Negozio", e -> { }),
-            createButton("Carica salvataggio", e -> { }),
-            createButton("Salva", e -> { }),
-            createButton("Salva ed esci", e -> { })
+            createButton("Play", e -> { }),
+            createButton("Shop", e -> { }),
+            createButton("Load", e -> { }),
+            createButton("Save", e -> { }),
+            createButton("Save & exit", e -> { })
         );
 
         this.adjustButtonSizes(buttons);
