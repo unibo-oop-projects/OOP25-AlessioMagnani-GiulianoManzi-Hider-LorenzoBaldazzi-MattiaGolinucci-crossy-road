@@ -58,11 +58,11 @@ public class AppControllerImpl implements AppController {
     /**
      * {@inheritDoc}
      */
-    @Override
+    /*@Override
     public String getActiveSkinId() {
         // return this.shopController.getActiveSkinId();
         return "";
-    }
+    }*/
 
     /**
      * {@inheritDoc}

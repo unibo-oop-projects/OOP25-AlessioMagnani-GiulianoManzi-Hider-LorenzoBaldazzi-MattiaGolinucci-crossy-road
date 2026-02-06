@@ -24,7 +24,7 @@ public interface AppController {
      *
      * @return the active skin id
      */
-    String getActiveSkinId();
+    //String getActiveSkinId();
 
     /**
      * Gets the actual coin count.
