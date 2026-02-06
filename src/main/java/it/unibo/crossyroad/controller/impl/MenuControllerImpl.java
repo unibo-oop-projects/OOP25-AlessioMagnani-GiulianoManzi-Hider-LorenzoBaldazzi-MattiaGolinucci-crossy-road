@@ -7,7 +7,6 @@ import it.unibo.crossyroad.view.api.MenuView;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Objects;
-import java.util.List;
 
 /**
  * Implementation of MenuController.
@@ -18,27 +17,18 @@ public class MenuControllerImpl implements MenuController {
 
     private final AppController appController;
     //private final StateManager stateManager;
-    private final List<MenuView> menuView;
+    private final MenuView menuView;
 
     /**
      * Constructor.
      *
      * @param appController the application controller.
+     * @param menuView the menu view.
      * @param s the state manager.
      */
-    public MenuControllerImpl(AppController appController/*, StateManager s*/) {
-        this.appController = appController;
-        this.menuView = new LinkedList<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addView(MenuView v) {
-        if (Objects.nonNull(v)) {
-            this.menuView.add(v);
-        }
+    public MenuControllerImpl(AppController appController, MenuView menuView/*, StateManager s*/) {
+        this.appController = Objects.requireNonNull(appController, "The application controller cannot be null");
+        this.menuView = Objects.requireNonNull(menuView, "The menu view cannot be null");
     }
 
     /**
@@ -46,9 +36,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void showMenu() {
-        for (final MenuView m: this.menuView) {
-            m.show();
-        }
+        this.menuView.show();
     }
 
     /**
@@ -56,9 +44,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void hideMenu() {
-        for (final MenuView m: this.menuView) {
-            m.hide();
-        }
+        this.menuView.hide();
     }
 
     /**

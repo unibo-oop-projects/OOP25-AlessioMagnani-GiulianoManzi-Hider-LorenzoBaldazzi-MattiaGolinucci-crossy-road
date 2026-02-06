@@ -1,20 +1,11 @@
 package it.unibo.crossyroad.controller.api;
 
-import it.unibo.crossyroad.view.api.MenuView;
-
 import java.nio.file.Path;
 
 /**
  * An interface modelling a controller for menu interactions and navigation.
  */
 public interface MenuController {
-
-    /**
-     * Adds a menu view to the controller.
-     *
-     * @param v the view to add.
-     */
-    void addView(MenuView v);
 
     /**
      * Show the menu view.

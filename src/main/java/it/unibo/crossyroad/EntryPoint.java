@@ -52,13 +52,12 @@ public class EntryPoint extends Application {
 
         final AppController appController = new AppControllerImpl();
         final GameController gameController = new GameControllerImpl(appController, gameView);
-        final MenuController menuController = new MenuControllerImpl(appController/*, stateManager*/);
+        final MenuController menuController = new MenuControllerImpl(appController, menuView/*, stateManager*/);
         appController.setGameController(gameController);
         appController.setMenuController(menuController);
 
         gameView.setController(gameController);
         menuView.setController(menuController);
-        menuController.addView(menuView);
         gameController.startLoop();
         appController.showMenu();
     }
