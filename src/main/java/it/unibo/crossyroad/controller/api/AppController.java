@@ -1,7 +1,7 @@
 package it.unibo.crossyroad.controller.api;
 
 /**
- * Main controller, that links Menu and Game controllers.
+ * Main controller, that links Menu, Shop and Game controllers.
  */
 public interface AppController {
     /**
@@ -34,7 +34,7 @@ public interface AppController {
      *
      * @return the active skin id
      */
-    String getActiveSkinId();
+    //String getActiveSkinId();
 
     /**
      * Gets the actual coin count.
