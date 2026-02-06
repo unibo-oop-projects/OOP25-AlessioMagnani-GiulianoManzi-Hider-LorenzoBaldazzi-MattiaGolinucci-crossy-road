@@ -2,6 +2,7 @@ package it.unibo.crossyroad.view.impl;
 
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.Chunk;
+import it.unibo.crossyroad.model.api.Direction;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.Obstacle;
 import it.unibo.crossyroad.model.api.Player;
@@ -80,6 +81,28 @@ public class GameViewImpl implements GameView {
         this.canvas.widthProperty().addListener(c -> scale());
         this.canvas.heightProperty().addListener(c -> scale());
 
+        //Movement
+        this.currentPane.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case W:
+                    this.gameController.processInput(Direction.UP);
+                    break;
+                case A:
+                    this.gameController.processInput(Direction.LEFT);
+                    break;
+                case S:
+                this.gameController.processInput(Direction.DOWN);
+                    break;
+                case D:
+                this.gameController.processInput(Direction.RIGHT);
+                break;
+                default:
+                    break;
+            }
+        });
+        currentPane.setFocusTraversable(true);
+        currentPane.requestFocus();
+
         this.content.setImageSmoothing(false);
 
         this.loadImages();
@@ -138,14 +161,14 @@ public class GameViewImpl implements GameView {
     private void loadImages() {
         this.images.put(EntityType.PLAYER, new Image("file:///home/giuli/Desktop/images/player.png"));
         this.images.put(EntityType.GRASS, new Image("file:///home/giuli/Desktop/images/grass.png"));
-        // this.images.put(Road.class, new Image("path"));
+        this.images.put(EntityType.ROAD, new Image("file:///home/giuli/Desktop/images/road.png"));
         // this.images.put(River.class, new Image("path"));
-        // this.images.put(Car.class, new Image("path"));
+        this.images.put(EntityType.CAR, new Image("file:///home/giuli/Desktop/images/car.png"));
         // this.images.put(WoodLog.class, new Image("path"));
-        // this.images.put(Railway.class, new Image("path"));
+        this.images.put(EntityType.RAILWAY, new Image("file:///home/giuli/Desktop/images/railway.png"));
         this.images.put(EntityType.ROCK, new Image("file:///home/giuli/Desktop/images/rock.png"));
         this.images.put(EntityType.TREE, new Image("file:///home/giuli/Desktop/images/tree.png"));
-        // this.images.put(Train.class, new Image("path"));
+        this.images.put(EntityType.TRAIN, new Image("file:///home/giuli/Desktop/images/train.png"));
         this.images.put(EntityType.COIN, new Image("file:///home/giuli/Desktop/images/coin.png"));
         this.images.put(EntityType.COIN_MULTIPLIER, new Image("file:///home/giuli/Desktop/images/coinMultiplier.png"));
         this.images.put(EntityType.INVINCIBILITY, new Image("file:///home/giuli/Desktop/images/invincibility.png"));
