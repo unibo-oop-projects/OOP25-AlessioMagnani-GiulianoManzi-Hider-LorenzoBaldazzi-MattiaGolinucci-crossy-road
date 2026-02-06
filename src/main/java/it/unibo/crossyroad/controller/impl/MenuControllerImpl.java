@@ -2,10 +2,12 @@ package it.unibo.crossyroad.controller.impl;
 
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.MenuController;
+import it.unibo.crossyroad.view.api.MenuView;
 
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.List;
 
 /**
  * Implementation of MenuController.
@@ -15,7 +17,7 @@ import java.util.Objects;
 public class MenuControllerImpl implements MenuController {
 
     private final AppController appController;
-    private final StateManager stateManager;
+    //private final StateManager stateManager;
     private final List<MenuView> menuView;
 
     /**
@@ -24,7 +26,7 @@ public class MenuControllerImpl implements MenuController {
      * @param appController the application controller.
      * @param s the state manager.
      */
-    public MenuControllerImpl(AppController appController, StateManager s) {
+    public MenuControllerImpl(AppController appController/*, StateManager s*/) {
         this.appController = appController;
         this.menuView = new LinkedList<>();
     }
@@ -33,11 +35,10 @@ public class MenuControllerImpl implements MenuController {
      * {@inheritDoc}
      */
     @Override
-    void addView(MenuView v) {
+    public void addView(MenuView v) {
         if (Objects.nonNull(v)) {
-            this.menuView = v;
+            this.menuView.add(v);
         }
-        this.menuView.add(v);
     }
 
     /**
@@ -73,7 +74,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void save(Path p) {
-        this.stateManager.save(p);
+        //this.stateManager.save(p);
     }
 
     /**
@@ -81,6 +82,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void load(Path p) {
-        this.stateManager.load(p);
+        //this.stateManager.load(p);
     }
+
 }

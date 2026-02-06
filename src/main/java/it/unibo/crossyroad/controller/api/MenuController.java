@@ -1,5 +1,7 @@
 package it.unibo.crossyroad.controller.api;
 
+import it.unibo.crossyroad.view.api.MenuView;
+
 import java.nio.file.Path;
 
 /**
