@@ -15,16 +15,6 @@ public interface AppController {
     void showMenu();
 
     /**
-     * Hides the game view.
-     */
-    void hideGame();
-
-    /**
-     * Hides the menu view.
-     */
-    void hideMenu();
-
-    /**
      * Shows the shop view.
      */
     void showShop();

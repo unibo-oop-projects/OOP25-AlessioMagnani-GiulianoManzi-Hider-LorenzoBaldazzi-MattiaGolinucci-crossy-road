@@ -12,6 +12,7 @@ import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
+import it.unibo.crossyroad.model.impl.GameParametersImpl;
 import it.unibo.crossyroad.view.api.GameView;
 
 /**
@@ -34,14 +35,7 @@ final class GameControllerImpl extends Thread implements GameController {
         this.gameView = gameView;
         this.pause = false;
 
-        this.parameters = new GameParametersBuilder()
-                            .setCarSpeedMultiplier(1)
-                            .setCoinCount(0)
-                            .setCoinMultiplier(0)
-                            .setInvincibility(false)
-                            .setLogSpeedMultiplier(1.0)               
-                            .setTrainSpeedMultiplier(1)
-                            .build();
+        this.parameters = new GameParametersImpl();
         this.gameManager = new GameManagerImpl(this.parameters);
         this.loop = new Loop();
         this.queue = new LinkedBlockingQueue<>();
