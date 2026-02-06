@@ -100,6 +100,9 @@ public final class GameControllerImpl extends Thread implements GameController {
                 else {
                     lastUpdate = System.currentTimeMillis();
                 }
+                try {
+                    Thread.sleep(10);
+                } catch (Exception e) { }
             }
         }
     }

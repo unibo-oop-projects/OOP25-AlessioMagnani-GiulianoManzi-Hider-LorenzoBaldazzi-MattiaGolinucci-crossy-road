@@ -1,9 +1,12 @@
 package it.unibo.crossyroad.view.impl;
 
 import it.unibo.crossyroad.controller.api.GameController;
+import it.unibo.crossyroad.model.api.Chunk;
 import it.unibo.crossyroad.model.api.EntityType;
+import it.unibo.crossyroad.model.api.Obstacle;
 import it.unibo.crossyroad.model.api.Player;
 import it.unibo.crossyroad.model.api.Positionable;
+import it.unibo.crossyroad.model.api.PowerUp;
 import it.unibo.crossyroad.model.impl.Car;
 import it.unibo.crossyroad.model.impl.Coin;
 import it.unibo.crossyroad.model.impl.CoinMultiplier;
@@ -19,11 +22,17 @@ import it.unibo.crossyroad.model.impl.Tree;
 import it.unibo.crossyroad.model.impl.Water;
 import it.unibo.crossyroad.model.impl.WoodLog;
 import it.unibo.crossyroad.view.api.GameView;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,12 +45,17 @@ import java.util.Objects;
  */
 public class GameViewImpl implements GameView {
 
+    private static final int GAME_WIDTH = 10;
+    private static final int GAME_HEIGHT = 9;
     private final StackPane root;
-    private final StackPane currenPane;
+    private final StackPane currentPane;
     private final VBox powerUpBox = new VBox(5);
     private final Label coinLabel = new Label();
     private GameController gameController;
-    private final Map<Class<?>, Image> images = new HashMap<>();
+    private final Map<EntityType, Image> images = new HashMap<>();
+    private final Canvas canvas;
+    private final GraphicsContext content;
+    private double scale;
 
     /**
      * Constructor.
@@ -50,11 +64,39 @@ public class GameViewImpl implements GameView {
      */
     public GameViewImpl(final StackPane root) {
         this.root = Objects.requireNonNull(root, "root cannot be null");
-        this.currenPane = new StackPane();
+        this.currentPane = new StackPane();
+        this.canvas = new Canvas();
+        this.content = this.canvas.getGraphicsContext2D();
 
-        this.root.getChildren().add(this.currenPane);
-        this.currenPane.getChildren().add(this.powerUpBox);
-        this.currenPane.getChildren().add(this.coinLabel);
+        //CurrentPane on the canvas
+        VBox overlay = new VBox(10);
+        overlay.setAlignment(Pos.TOP_LEFT);
+        overlay.setPadding(new Insets(20));
+        overlay.setPickOnBounds(false);
+
+        //Bind canvas too root size
+        this.canvas.widthProperty().bind(root.widthProperty());
+        this.canvas.heightProperty().bind(root.heightProperty());
+        this.canvas.widthProperty().addListener(c -> scale());
+        this.canvas.heightProperty().addListener(c -> scale());
+
+        this.content.setImageSmoothing(false);
+
+        this.loadImages();
+        this.scale();
+
+        overlay.getChildren().addAll(this.powerUpBox, this.coinLabel);
+        this.currentPane.getChildren().addAll(this.canvas, overlay);
+        this.root.getChildren().add(this.currentPane);
+    }
+
+    /**
+     * Computes the scale for the game;
+     */
+    private void scale() {
+        double scaleX = this.canvas.getWidth() / GAME_WIDTH;
+        double scaleY = this.canvas.getHeight() / GAME_HEIGHT;
+        this.scale = Math.min(scaleX, scaleY);
     }
 
     @Override
@@ -64,39 +106,51 @@ public class GameViewImpl implements GameView {
 
     @Override
     public void render(final List<Positionable> positionables) {
-        this.currenPane.getChildren().clear();
+        Platform.runLater(() -> {
+            this.content.clearRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
 
-        for (Positionable pos : positionables) {
-            Image image = this.images.get(pos.getClass());
-            ImageView imageView = new ImageView(image);
-            imageView.setX(pos.getPosition().x());
-            imageView.setY(pos.getPosition().y());
-            imageView.setFitWidth(pos.getDimension().width());
-            imageView.setFitHeight(pos.getDimension().height());
-            this.currenPane.getChildren().add(imageView);
+            positionables.stream().filter(p -> p instanceof Chunk).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof Player).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof Obstacle).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof Coin).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof PowerUp).forEach(this::drawElement);
+        });
+    }
+
+    private void drawElement(Positionable pos) {
+        Image image = this.images.get(pos.getEntityType());
+
+        if (image != null) {
+            double x = Math.round(pos.getPosition().x() * this.scale);
+            double y = Math.round(pos.getPosition().y() * this.scale);
+            double width = Math.round(pos.getDimension().width() * this.scale);
+            double height = Math.round(pos.getDimension().height() * this.scale);
+
+            this.content.drawImage(image, x, y, width, height);
         }
     }
+
 
     //TODO add paths
     /**
      * Load the images for the various elements.
      */
     private void loadImages() {
-        this.images.put(Player.class, new Image("path"));
-        this.images.put(Grass.class, new Image("path"));
-        this.images.put(Road.class, new Image("path"));
-        this.images.put(River.class, new Image("path"));
-        this.images.put(Car.class, new Image("path"));
-        this.images.put(WoodLog.class, new Image("path"));
-        this.images.put(Railway.class, new Image("path"));
-        this.images.put(Rock.class, new Image("path"));
-        this.images.put(Tree.class, new Image("path"));
-        this.images.put(Train.class, new Image("path"));
-        this.images.put(Coin.class, new Image("path"));
-        this.images.put(CoinMultiplier.class, new Image("path"));
-        this.images.put(Invincibility.class, new Image("path"));
-        this.images.put(SlowCars.class, new Image("path"));
-        this.images.put(Water.class, new Image("path"));
+        this.images.put(EntityType.PLAYER, new Image("file:///home/giuli/Desktop/images/player.png"));
+        this.images.put(EntityType.GRASS, new Image("file:///home/giuli/Desktop/images/grass.png"));
+        // this.images.put(Road.class, new Image("path"));
+        // this.images.put(River.class, new Image("path"));
+        // this.images.put(Car.class, new Image("path"));
+        // this.images.put(WoodLog.class, new Image("path"));
+        // this.images.put(Railway.class, new Image("path"));
+        this.images.put(EntityType.ROCK, new Image("file:///home/giuli/Desktop/images/rock.png"));
+        // this.images.put(Tree.class, new Image("path"));
+        // this.images.put(Train.class, new Image("path"));
+        // this.images.put(Coin.class, new Image("path"));
+        // this.images.put(CoinMultiplier.class, new Image("path"));
+        // this.images.put(Invincibility.class, new Image("path"));
+        // this.images.put(SlowCars.class, new Image("path"));
+        // this.images.put(Water.class, new Image("path"));
     }
 
     /**
@@ -104,13 +158,15 @@ public class GameViewImpl implements GameView {
      */
     @Override
     public void updatePowerUpTime(final Map<EntityType, Long> powerUps) {
-        powerUpBox.getChildren().clear();
-        for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
-            final int duration = (int) (entry.getValue() / 1000);
-            powerUpBox.getChildren().add(new Label(
-                    formatPowerUpText(entry.getKey(), duration)
-            ));
-        }
+        Platform.runLater(() -> {
+            powerUpBox.getChildren().clear();
+            for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
+                final int duration = (int) (entry.getValue() / 1000);
+                powerUpBox.getChildren().add(new Label(
+                        formatPowerUpText(entry.getKey(), duration)
+                ));
+            }
+        });
     }
 
     /**
@@ -129,16 +185,22 @@ public class GameViewImpl implements GameView {
      */
     @Override
     public void updateCoinCount(final int count) {
-        coinLabel.setText("Coins: " + count);
+        Platform.runLater(() -> {
+            coinLabel.setText("Coins: " + count);
+        });
     }
 
     @Override
     public void show() {
-        this.currenPane.setVisible(true);
+        Platform.runLater(() -> {
+            this.currentPane.setVisible(true);
+        });
     }
 
     @Override
     public void hide() {
-        this.currenPane.setVisible(false);
+        Platform.runLater(() -> {
+            this.currentPane.setVisible(false);
+        });
     }
 }

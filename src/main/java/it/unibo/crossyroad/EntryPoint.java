@@ -59,6 +59,7 @@ public class EntryPoint extends Application {
         gameView.setController(gameController);
         menuView.setController(menuController);
         menuController.addView(menuView);
+        gameController.startLoop();
         appController.showMenu();
     }
 }
