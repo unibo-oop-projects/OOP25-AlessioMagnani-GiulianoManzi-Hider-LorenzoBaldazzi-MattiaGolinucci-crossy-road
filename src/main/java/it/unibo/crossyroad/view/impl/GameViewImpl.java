@@ -23,6 +23,7 @@ import it.unibo.crossyroad.model.impl.Tree;
 import it.unibo.crossyroad.model.impl.Water;
 import it.unibo.crossyroad.model.impl.WoodLog;
 import it.unibo.crossyroad.view.api.GameView;
+import it.unibo.crossyroad.view.api.UserInput;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -84,18 +85,22 @@ public class GameViewImpl implements GameView {
         //Movement
         this.currentPane.setOnKeyPressed(e -> {
             switch (e.getCode()) {
+                case UP:
                 case W:
-                    this.gameController.processInput(Direction.UP);
+                    this.gameController.processInput(UserInput.UP);
                     break;
+                case LEFT:
                 case A:
-                    this.gameController.processInput(Direction.LEFT);
+                    this.gameController.processInput(UserInput.LEFT);
                     break;
+                case DOWN:
                 case S:
-                this.gameController.processInput(Direction.DOWN);
+                    this.gameController.processInput(UserInput.DOWN);
                     break;
+                case RIGHT:
                 case D:
-                this.gameController.processInput(Direction.RIGHT);
-                break;
+                    this.gameController.processInput(UserInput.RIGHT);
+                    break;
                 default:
                     break;
             }
@@ -163,12 +168,14 @@ public class GameViewImpl implements GameView {
         this.images.put(EntityType.GRASS, new Image("assets/grass.png"));
         this.images.put(EntityType.ROAD, new Image("assets/road.png"));
         // this.images.put(River.class, new Image("path"));
-        //this.images.put(EntityType.CAR, new Image("assets/car.png"));
+        this.images.put(EntityType.CAR_LEFT, new Image("assets/carLeft.png"));
+        this.images.put(EntityType.CAR_RIGHT, new Image("assets/carRight.png"));
         // this.images.put(WoodLog.class, new Image("path"));
         this.images.put(EntityType.RAILWAY, new Image("assets/railway.png"));
         this.images.put(EntityType.ROCK, new Image("assets/rock.png"));
         this.images.put(EntityType.TREE, new Image("assets/tree.png"));
-        //this.images.put(EntityType.TRAIN, new Image("assets/train.png"));
+        this.images.put(EntityType.TRAIN_LEFT, new Image("assets/trainLeft.png"));
+        this.images.put(EntityType.TRAIN_RIGHT, new Image("assets/trainRight.png"));
         this.images.put(EntityType.COIN, new Image("assets/coin.png"));
         this.images.put(EntityType.COIN_MULTIPLIER, new Image("assets/coinMultiplier.png"));
         this.images.put(EntityType.INVINCIBILITY, new Image("assets/invincibility.png"));

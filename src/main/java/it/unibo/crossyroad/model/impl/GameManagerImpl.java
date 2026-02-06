@@ -43,6 +43,7 @@ public class GameManagerImpl implements GameManager {
     private PositionablePlayer player;
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
+    private boolean isGameOver;
 
     /**
      * Initializes the GameManager with the GameParameters.
@@ -110,7 +111,10 @@ public class GameManagerImpl implements GameManager {
      */
     @Override
     public boolean isGameOver() {
-        return this.checkDeadlyCollisions();
+        if (!this.isGameOver) {
+            this.isGameOver = this.checkDeadlyCollisions();
+        }
+        return this.isGameOver;
     }
 
     /**
@@ -120,6 +124,7 @@ public class GameManagerImpl implements GameManager {
     public final void reset() {
         this.player = new PositionablePlayer(PLAYER_START_POSITION);
         this.chunks = new LinkedList<>();
+        this.isGameOver = false;
 
         //Adds the first chunks to start the game
         this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
@@ -246,5 +251,10 @@ public class GameManagerImpl implements GameManager {
         if (this.chunks.stream().anyMatch(c -> c.getPosition().y() == Y_CREATE_CHUNK_MARK)) {
             this.generateChunk();
         }
+    }
+
+    @Override
+    public void endGame() {
+        this.isGameOver = true;
     }
 }

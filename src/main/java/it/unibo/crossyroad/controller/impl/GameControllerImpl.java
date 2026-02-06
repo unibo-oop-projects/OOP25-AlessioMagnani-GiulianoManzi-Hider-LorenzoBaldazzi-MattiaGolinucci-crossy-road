@@ -10,13 +10,14 @@ import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.model.impl.GameParametersImpl;
 import it.unibo.crossyroad.view.api.GameView;
+import it.unibo.crossyroad.view.api.UserInput;
 
 /**
  * Implementation of the GameController.
  *
  * @see GameController
  */
-public final class GameControllerImpl extends Thread implements GameController {
+public final class GameControllerImpl implements GameController {
 
     private final AppController appController;
     private final GameView gameView;
@@ -67,8 +68,28 @@ public final class GameControllerImpl extends Thread implements GameController {
     }
 
     @Override
-    public void processInput(Direction d) {
-        this.queue.add(d);
+    public void processInput(UserInput input) {
+        switch (input) {
+            case UP:
+                this.queue.add(Direction.UP);
+                break;
+            case DOWN:
+                this.queue.add(Direction.DOWN);
+                break;
+            case LEFT:
+                this.queue.add(Direction.LEFT);
+                break;
+            case RIGHT:
+                this.queue.add(Direction.RIGHT);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void endGame() {
+        this.gameManager.endGame();
     }
 
     // private String getActiveSkin() {
@@ -106,4 +127,6 @@ public final class GameControllerImpl extends Thread implements GameController {
             }
         }
     }
+
+    
 }

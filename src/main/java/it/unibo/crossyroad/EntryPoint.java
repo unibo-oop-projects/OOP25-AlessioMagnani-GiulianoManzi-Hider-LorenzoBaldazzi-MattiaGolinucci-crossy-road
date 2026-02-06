@@ -11,6 +11,7 @@ import it.unibo.crossyroad.view.api.MenuView;
 import it.unibo.crossyroad.view.impl.GameViewImpl;
 import it.unibo.crossyroad.view.impl.MenuViewImpl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -46,13 +47,19 @@ public class EntryPoint extends Application {
         stage.setTitle("Crossy Road");
         stage.setScene(scene);
         stage.show();
-
+        
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
 
         final AppController appController = new AppControllerImpl();
         final GameController gameController = new GameControllerImpl(appController, gameView);
         final MenuController menuController = new MenuControllerImpl(appController, menuView/*, stateManager*/);
+
+        stage.setOnCloseRequest(e -> {
+            gameController.endGame();
+            Platform.exit();
+        });
+
         appController.setGameController(gameController);
         appController.setMenuController(menuController);
 

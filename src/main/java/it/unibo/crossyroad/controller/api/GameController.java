@@ -1,6 +1,6 @@
 package it.unibo.crossyroad.controller.api;
 
-import it.unibo.crossyroad.model.api.Direction;
+import it.unibo.crossyroad.view.api.UserInput;
 
 /**
  * Controller that manages the Game.
@@ -23,6 +23,11 @@ public interface GameController {
     void startLoop();
 
     /**
+     * Stops the game.
+     */
+    void endGame();
+
+    /**
      * Pauses the game.
      */
     void pauseGame();
@@ -35,5 +40,5 @@ public interface GameController {
     /**
      * Process the users's input.
      */
-    void processInput(Direction d);
+    void processInput(UserInput input);
 }
