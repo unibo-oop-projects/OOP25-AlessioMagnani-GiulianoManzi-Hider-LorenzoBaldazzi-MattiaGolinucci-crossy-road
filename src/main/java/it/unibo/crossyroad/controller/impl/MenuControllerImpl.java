@@ -4,6 +4,7 @@ import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.MenuController;
 
 import java.nio.file.Path;
+import java.util.LinkedList;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ public class MenuControllerImpl implements MenuController {
 
     private final AppController appController;
     private final StateManager stateManager;
-    private final MenuView menuView;
+    private final List<MenuView> menuView;
 
     /**
      * Constructor.
@@ -25,6 +26,7 @@ public class MenuControllerImpl implements MenuController {
      */
     public MenuControllerImpl(AppController appController, StateManager s) {
         this.appController = appController;
+        this.menuView = new LinkedList<>();
     }
 
     /**
@@ -35,6 +37,7 @@ public class MenuControllerImpl implements MenuController {
         if (Objects.nonNull(v)) {
             this.menuView = v;
         }
+        this.menuView.add(v);
     }
 
     /**
@@ -42,7 +45,9 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void showMenu() {
-        this.menuView.show();
+        for (final MenuView m: this.menuView) {
+            m.show();
+        }
     }
 
     /**
@@ -50,7 +55,9 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void hideMenu() {
-        this.menuView.hide();
+        for (final MenuView m: this.menuView) {
+            m.hide();
+        }
     }
 
     /**
