@@ -57,14 +57,14 @@ public class Road extends AbstractActiveChunk {
     protected void generateObstacles() {
         final Direction dir;
         final double speed;
-        final int lane = RND.nextInt(2);
+        final int lane = RND.nextInt(1, 3);
 
         switch (lane) {
-            case 0:
+            case 1:
                 dir = Direction.LEFT;
                 speed = this.laneSpeed.e2();
                 break;
-            case 1:
+            case 2:
                 dir = Direction.RIGHT;
                 speed = this.laneSpeed.e1();
                 break;
@@ -76,12 +76,13 @@ public class Road extends AbstractActiveChunk {
 
         final double laneHeight = this.getDimension().height() / 2;
 
-        final double y = this.getPosition().y() - lane * laneHeight;
+        final double y = this.getPosition().y() + (laneHeight / 2) * lane;
         final double x = dir == Direction.RIGHT
                 ? this.getPosition().x() - 2
                 : this.getPosition().x() + this.getDimension().width() + 2;
 
         this.addObstacle(new Car(new Position(x, y), speed, dir));
+        System.out.println("Generata macchina in: " + new Position(x, y));
     }
 
     /**

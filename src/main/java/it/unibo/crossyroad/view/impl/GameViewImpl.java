@@ -7,6 +7,7 @@ import it.unibo.crossyroad.model.api.Obstacle;
 import it.unibo.crossyroad.model.api.Player;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.model.api.PowerUp;
+import it.unibo.crossyroad.model.impl.Car;
 import it.unibo.crossyroad.model.impl.Coin;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
