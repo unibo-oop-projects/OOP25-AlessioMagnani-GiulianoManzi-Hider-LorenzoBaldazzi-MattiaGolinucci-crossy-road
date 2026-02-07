@@ -8,6 +8,7 @@ import it.unibo.crossyroad.model.api.Player;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.model.api.PowerUp;
 import it.unibo.crossyroad.model.impl.Coin;
+import it.unibo.crossyroad.model.impl.WoodLog;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
 import javafx.application.Platform;
@@ -131,8 +132,8 @@ public class GameViewImpl implements GameView {
             positionables.stream().filter(p -> p instanceof Chunk).forEach(this::drawElement);
             positionables.stream().filter(p -> p instanceof Coin).forEach(this::drawElement);
             positionables.stream().filter(p -> p instanceof PowerUp).map(p -> (PowerUp) p).filter(p -> !p.isPickedUp()).forEach(this::drawElement);
-            positionables.stream().filter(p -> p instanceof Player).forEach(this::drawElement);
             positionables.stream().filter(p -> p instanceof Obstacle).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof Player).forEach(this::drawElement);
         });
     }
 
@@ -157,10 +158,10 @@ public class GameViewImpl implements GameView {
         this.images.put(EntityType.PLAYER, new Image("skins/aura_overhead.png"));
         this.images.put(EntityType.GRASS, new Image("assets/grass.png"));
         this.images.put(EntityType.ROAD, new Image("assets/road.png"));
-        // this.images.put(River.class, new Image("path"));
+        this.images.put(EntityType.RIVER, new Image("assets/grass.png"));
         this.images.put(EntityType.CAR_LEFT, new Image("assets/carLeft.png"));
         this.images.put(EntityType.CAR_RIGHT, new Image("assets/carRight.png"));
-        // this.images.put(WoodLog.class, new Image("path"));
+        this.images.put(EntityType.WOOD_LOG, new Image("assets/log.png"));
         this.images.put(EntityType.RAILWAY, new Image("assets/railway.png"));
         this.images.put(EntityType.ROCK, new Image("obstacles/rock.png"));
         this.images.put(EntityType.TREE, new Image("obstacles/tree.png"));
@@ -170,7 +171,7 @@ public class GameViewImpl implements GameView {
         this.images.put(EntityType.COIN_MULTIPLIER, new Image("assets/coinMultiplier.png"));
         this.images.put(EntityType.INVINCIBILITY, new Image("assets/invincibility.png"));
         this.images.put(EntityType.SLOW_CARS, new Image("assets/obstacleSpeed.png"));
-        // this.images.put(Water.class, new Image("path"));
+        this.images.put(EntityType.WATER, new Image("assets/water.png"));
     }
 
     /**

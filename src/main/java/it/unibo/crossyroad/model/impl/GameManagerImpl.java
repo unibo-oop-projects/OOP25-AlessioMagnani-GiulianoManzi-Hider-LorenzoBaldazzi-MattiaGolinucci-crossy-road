@@ -22,6 +22,7 @@ import it.unibo.crossyroad.model.api.Pickable;
 import it.unibo.crossyroad.model.api.Position;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.model.api.PowerUp;
+import it.unibo.crossyroad.model.api.CollisionType;
 
 /**
  * Implementation of the GameManager interface.
@@ -155,14 +156,18 @@ public class GameManagerImpl implements GameManager {
                 this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.GRASS);
             }
-            else if (number > 0.3 && number <= 0.8) {
+            else if (number > 0.3 && number <= 0.6) {
                 this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.ROAD);
 
             }
-            else {
+            else if (number > 0.6 && number <= 0.8) {
                 this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.RAILWAY);
+            }
+            else {
+                final Direction riverDirection = RANDOM.nextInt(2) == 0 ? Direction.LEFT : Direction.RIGHT;
+                this.chunks.add(new River(CHUNK_START_POSITION, CHUNK_DIMENSION, riverDirection));
             }
         }
     }
@@ -207,15 +212,23 @@ public class GameManagerImpl implements GameManager {
      * @return true if there's a collision, false otherwise.
      */
     private boolean checkDeadlyCollisions() {
+        boolean deadlyCollision = false;
+        boolean transportCollision = false;
+
         for (final Obstacle obs : this.getObstaclesOnMap()) {
             Range<Double> xRange = Range.closed(obs.getPosition().x(), obs.getPosition().x() + obs.getDimension().width());
-            if (obs instanceof ActiveObstacle && obs.getPosition().y() == this.player.getPosition().y() && xRange.contains(this.player.getPosition().x())
+            if (obs.getPosition().y() == this.player.getPosition().y() && xRange.contains(this.player.getPosition().x())
                 && !this.gameParameters.isInvincible()) {
-                return true;
+                if (obs.getCollisionType() == CollisionType.DEADLY) {
+                    deadlyCollision = true;
+                }
+                else if (obs.getCollisionType() == CollisionType.TRANSPORT) {
+                    transportCollision = true;
+                }
             }
         }
 
-        return false;
+        return deadlyCollision && !transportCollision;
     }
 
     /**

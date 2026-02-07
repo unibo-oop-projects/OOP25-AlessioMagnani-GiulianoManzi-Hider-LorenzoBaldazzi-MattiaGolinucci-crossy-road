@@ -39,6 +39,7 @@ public final class River extends AbstractActiveChunk {
         this.sectionHeight = this.getDimension().height() / CHUNK_SECTIONS;
         this.direction = direction;
         this.logInterval = Math.round(LOGS_DISTANCE / LOGS_SPEED * 1000);
+        this.init();
     }
 
     /**
