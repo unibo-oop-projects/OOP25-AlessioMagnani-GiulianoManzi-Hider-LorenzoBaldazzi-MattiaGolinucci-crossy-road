@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Range;
 
 import it.unibo.crossyroad.model.api.AbstractChunk;
-import it.unibo.crossyroad.model.api.ActiveObstacle;
 import it.unibo.crossyroad.model.api.Chunk;
 import it.unibo.crossyroad.model.api.Dimension;
 import it.unibo.crossyroad.model.api.Direction;
