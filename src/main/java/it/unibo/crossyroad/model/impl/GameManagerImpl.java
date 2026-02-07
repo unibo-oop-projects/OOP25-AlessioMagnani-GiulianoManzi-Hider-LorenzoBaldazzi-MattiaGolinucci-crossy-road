@@ -265,7 +265,6 @@ public class GameManagerImpl implements GameManager {
     private void moveMap() {
         //Chunk movement
         this.chunks.forEach(c -> c.increaseY(Y_MAP_MOVEMENT));
-        this.chunks.forEach(c -> System.out.println(c.getEntityType() + " moved in " + c.getPosition()));
         this.chunks.removeIf(c -> c.getPosition().y() >= Y_DISPOSE_CHUNK_MARK && c.getActivePowerUp().size() == 0);
 
         //Elements movement

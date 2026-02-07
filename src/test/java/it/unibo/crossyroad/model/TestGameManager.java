@@ -53,35 +53,4 @@ class TestGameManager {
     void testGameOver() {
         assertFalse(this.gameManager.isGameOver());
     }
-
-    private void printMap() {
-        System.out.print("\n"); //NOPMD
-
-        for (int j = 8; j >= 0; j--) {
-            for (int i = 0; i < 10; i++) {
-                final Position current = new Position(i, j);
-                final Optional<Positionable> element = this.gameManager.getPositionables()
-                                                                       .stream()
-                                                                       .filter(p -> p.getPosition().equals(current))
-                                                                       .findFirst();
-
-                if (element.isPresent()) {
-                    if (element.get() instanceof Obstacle) {
-                        System.out.print("x"); //NOPMD
-                    } else if (element.get() instanceof PowerUp) {
-                        System.out.print("!"); //NOPMD
-                    } else if (element.get() instanceof Coin) {
-                        System.out.print("o"); //NOPMD
-                    } else if (element.get() instanceof Player) {
-                        System.out.print("?"); //NOPMD
-                    } else {
-                        System.out.print("-"); //NOPMD
-                    }
-                } else {
-                    System.out.print("-"); //NOPMD
-                }
-            }
-            System.out.print("\n"); //NOPMD
-        }
-    }
 }
