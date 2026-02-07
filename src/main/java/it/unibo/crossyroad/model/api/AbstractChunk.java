@@ -140,13 +140,13 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
                 if (number <= 0.70) {
                     this.addPickable(new Coin(randomPosition));
                 }
-                else if (number > 0.70 && number <= 0.80) {
+                else if (this.getActivePowerUp().size() == 0 && number > 0.70 && number <= 0.80) {
                     this.addPickable(new Invincibility(randomPosition));
                 }
-                else if (number > 0.80 && number <= 0.90) {
+                else if (this.getActivePowerUp().size() == 0 && number > 0.80 && number <= 0.90) {
                     this.addPickable(new SlowCars(randomPosition));
                 }
-                else if (number > 0.90 && number <= 1) {
+                else if (this.getActivePowerUp().size() == 0 && number > 0.90 && number <= 1) {
                     this.addPickable(new CoinMultiplier(randomPosition));
                 }
             }

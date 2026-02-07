@@ -7,6 +7,7 @@ import it.unibo.crossyroad.model.api.Obstacle;
 import it.unibo.crossyroad.model.api.Player;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.model.api.PowerUp;
+import it.unibo.crossyroad.model.impl.Car;
 import it.unibo.crossyroad.model.impl.Coin;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
@@ -44,6 +45,7 @@ public class GameViewImpl implements GameView {
     private final Canvas canvas;
     private final GraphicsContext content;
     private double scale;
+    private final VBox overlay;
 
     /**
      * Constructor.
@@ -57,13 +59,13 @@ public class GameViewImpl implements GameView {
         this.content = this.canvas.getGraphicsContext2D();
 
         //CurrentPane on the canvas
-        VBox overlay = new VBox(10);
-        overlay.setPadding(new Insets(20));
-        overlay.setAlignment(Pos.TOP_LEFT);
-        overlay.setPickOnBounds(false);
-        overlay.setMaxWidth(200);
-        overlay.setMaxHeight(50);
-        overlay.setBackground(Background.fill(Color.WHITE));
+        this.overlay = new VBox(10);
+        this.overlay.setPadding(new Insets(20));
+        this.overlay.setAlignment(Pos.TOP_LEFT);
+        this.overlay.setPickOnBounds(false);
+        this.overlay.setMaxWidth(200);
+        this.overlay.setMaxHeight(50);
+        this.overlay.setBackground(Background.fill(Color.WHITE));
 
         //Bind canvas too root size
         this.canvas.widthProperty().bind(root.widthProperty());
@@ -98,14 +100,14 @@ public class GameViewImpl implements GameView {
         currentPane.requestFocus();
 
         this.content.setImageSmoothing(false);
-
         this.loadImages();
-        this.scale();
 
-        overlay.getChildren().addAll(this.powerUpBox, this.coinLabel);
-        this.currentPane.getChildren().addAll(this.canvas, overlay);
-        StackPane.setAlignment(overlay, Pos.TOP_LEFT);
+        this.overlay.getChildren().addAll(this.powerUpBox, this.coinLabel);
+        this.currentPane.getChildren().addAll(this.canvas, this.overlay);
+        StackPane.setAlignment(this.overlay, Pos.TOP_LEFT);
         this.root.getChildren().add(this.currentPane);
+
+        this.scale();
     }
 
     /**
@@ -180,7 +182,7 @@ public class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             powerUpBox.getChildren().clear();
             for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
-                final int duration = (int) (entry.getValue() / 10);
+                final int duration = (int) (entry.getValue() / 1000);
                 powerUpBox.getChildren().add(new Label(
                         formatPowerUpText(entry.getKey(), duration)
                 ));
