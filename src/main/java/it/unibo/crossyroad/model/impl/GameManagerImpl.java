@@ -1,6 +1,5 @@
 package it.unibo.crossyroad.model.impl;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,7 @@ public class GameManagerImpl implements GameManager {
     private static final int Y_MOVE_MAP_MARK = 4; 
     private static final int Y_DISPOSE_CHUNK_MARK = MAP_WIDTH + 2;
     private static final int Y_MAP_MOVEMENT = 1;
-    private static final int Y_CREATE_CHUNK_MARK = (int) CHUNK_DIMENSION.height() - Y_MAP_MOVEMENT;
+    private static final int Y_CREATE_CHUNK_MARK = 0;
     private PositionablePlayer player;
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
@@ -136,8 +135,6 @@ public class GameManagerImpl implements GameManager {
         this.chunks.add(new Grass(CHUNK_SECOND_POSITION, CHUNK_DIMENSION));
         this.chunks.add(new Grass(CHUNK_THIRD_POSITION, CHUNK_DIMENSION));
         this.lastGenerated = new Pair<>(EntityType.GRASS, 4);
-
-        this.chunks.forEach(c -> c.getObstacles().stream().filter(o -> o.getPosition().equals(PLAYER_START_POSITION)));
     }
 
     /**
@@ -159,6 +156,7 @@ public class GameManagerImpl implements GameManager {
             else if (number > 0.3 && number <= 0.8) {
                 this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.ROAD);
+
             }
             else {
                 this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
@@ -267,6 +265,7 @@ public class GameManagerImpl implements GameManager {
     private void moveMap() {
         //Chunk movement
         this.chunks.forEach(c -> c.increaseY(Y_MAP_MOVEMENT));
+        this.chunks.forEach(c -> System.out.println(c.getEntityType() + " moved in " + c.getPosition()));
         this.chunks.removeIf(c -> c.getPosition().y() >= Y_DISPOSE_CHUNK_MARK && c.getActivePowerUp().size() == 0);
 
         //Elements movement

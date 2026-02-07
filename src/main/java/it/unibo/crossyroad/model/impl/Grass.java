@@ -11,7 +11,7 @@ import it.unibo.crossyroad.model.api.Position;
  * Chunk without active obstacles on it, only passive ones.
  */
 public final class Grass extends AbstractChunk {
-    private static final Position PLAYER_START_POSITION = new Position(5, 0);
+    private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private final Random rnd = new Random();
 
     /**
