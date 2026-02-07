@@ -90,7 +90,7 @@ public final class SkinManagerImpl implements SkinManager {
             .ifPresentOrElse(
                 this.unlockedSkins::add,
                 () -> { 
-                    throw new IllegalStateException(); 
+                    throw new IllegalStateException("Default skin not found"); 
                 });
     }
 
