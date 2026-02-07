@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TestRiver {
     private static final int WIDTH = 10;
     private static final int HEIGHT = 3;
-    private static final long LOG_INTERVAL = 3000;
+    private static final long LOG_INTERVAL = Math.round(River.LOGS_DISTANCE / River.LOGS_SPEED * 1000);
 
     private GameParameters gameParameters;
     private River river;
