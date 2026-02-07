@@ -105,14 +105,18 @@ public final class GameControllerImpl implements GameController {
         public void run() {
             gameManager.reset();
             long lastUpdate = 0;
+            long currentTime = 0;
+            long deltaTime = 0;
 
             while (!gameManager.isGameOver()) {
                 if (!pause) {
-                    lastUpdate = System.currentTimeMillis();
+                    currentTime = System.currentTimeMillis();
+                    deltaTime = currentTime - lastUpdate;
+                    lastUpdate = currentTime;
                     gameView.render(gameManager.getPositionables());
                     gameView.updatePowerUpTime(gameManager.getActivePowerUps());
                     gameView.updateCoinCount(getCoinCount());
-                    gameManager.update(System.currentTimeMillis() - lastUpdate);
+                    gameManager.update(deltaTime);
 
                     if (!queue.isEmpty()) {
                         gameManager.movePlayer(queue.poll());

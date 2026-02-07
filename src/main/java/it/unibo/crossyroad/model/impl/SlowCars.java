@@ -11,7 +11,7 @@ import it.unibo.crossyroad.model.api.Position;
 public class SlowCars extends AbstractPowerUp {
 
     private static final double CAR_SLOW_MOTION = 0.5;
-    private static final long CAR_SLOW_MOTION_DURATION = 100L;
+    private static final long CAR_SLOW_MOTION_DURATION = 10_000L;
 
     /**
      * Creates a new slow cars power-up at the given position.

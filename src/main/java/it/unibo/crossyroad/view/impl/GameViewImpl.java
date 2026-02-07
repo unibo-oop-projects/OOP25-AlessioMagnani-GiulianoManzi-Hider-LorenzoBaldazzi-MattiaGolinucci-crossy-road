@@ -181,7 +181,7 @@ public class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             powerUpBox.getChildren().clear();
             for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
-                final int duration = (int) (entry.getValue() / 10);
+                final int duration = (int) (entry.getValue() / 1000);
                 powerUpBox.getChildren().add(new Label(
                         formatPowerUpText(entry.getKey(), duration)
                 ));

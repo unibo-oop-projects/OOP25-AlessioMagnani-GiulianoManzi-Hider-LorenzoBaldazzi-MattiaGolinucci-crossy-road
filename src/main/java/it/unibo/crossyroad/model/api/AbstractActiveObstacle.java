@@ -39,7 +39,7 @@ public abstract class AbstractActiveObstacle extends AbstractPositionable implem
         if (speedMultiplier <= 0) {
             throw new IllegalArgumentException("Speed multiplier must be positive");
         }
-        final int deltaX = (int) Math.round(this.speed * speedMultiplier * deltaTime / 10 * (this.direction == Direction.LEFT ? -1 : 1));
+        final double deltaX = this.speed * speedMultiplier * deltaTime / 1000.0 * (this.direction == Direction.LEFT ? -1 : 1);
         super.setPosition(new Position(super.getPosition().x() + deltaX, super.getPosition().y()));
     }
 

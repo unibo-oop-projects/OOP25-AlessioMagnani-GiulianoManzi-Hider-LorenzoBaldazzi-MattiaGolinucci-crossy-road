@@ -10,7 +10,7 @@ import it.unibo.crossyroad.model.api.Position;
  */
 public class Invincibility extends AbstractPowerUp {
 
-    private static final long INVINCIBILITY_DURATION = 100L;
+    private static final long INVINCIBILITY_DURATION = 10_000L;
 
     /**
      * Creates a new invincibility power-up at the given position.
