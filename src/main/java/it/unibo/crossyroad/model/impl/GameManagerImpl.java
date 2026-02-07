@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import it.unibo.crossyroad.model.api.ActiveChunk;
+import it.unibo.crossyroad.model.api.AbstractChunk;
 import it.unibo.crossyroad.model.api.ActiveObstacle;
 import it.unibo.crossyroad.model.api.Chunk;
 import it.unibo.crossyroad.model.api.Dimension;
@@ -84,8 +84,8 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void update(final long deltaTime) {
         this.chunks.stream()
-                   .filter(c -> c instanceof ActiveChunk)
-                   .map(c -> (ActiveChunk) c)
+                   .filter(c -> c instanceof AbstractChunk)
+                   .map(c -> (AbstractChunk) c)
                    .forEach(ac -> ac.update(this.gameParameters, deltaTime));
 
         this.checkCoinsCollision();
@@ -197,6 +197,7 @@ public class GameManagerImpl implements GameManager {
         for (final Pickable pick : this.getPickablesOnMap()) {
             if (pick instanceof Coin && pick.getPosition().equals(this.player.getPosition())) {
                 ((Coin) pick).applyEffect(this.gameParameters);
+                this.chunks.forEach(c -> c.removePickable(pick));
             }
         }
     }

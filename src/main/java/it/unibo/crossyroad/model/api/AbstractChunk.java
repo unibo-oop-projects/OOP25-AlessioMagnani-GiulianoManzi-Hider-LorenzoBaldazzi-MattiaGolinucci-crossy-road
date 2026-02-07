@@ -78,7 +78,7 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
         return List.copyOf(this.pickables.stream()
                                          .filter(p -> p instanceof PowerUp)
                                          .map(p -> (PowerUp) p)
-                                         .filter(Pickable::isPickedUp)
+                                         .filter(p -> !p.isDone() && p.isPickedUp())
                                          .toList());
     }
 
@@ -109,6 +109,15 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
     protected void removeObstacle(final Obstacle obs) {
         Objects.requireNonNull(obs, "Obstacle cannot be null");
         this.obstacles.remove(obs);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void removePickable(final Pickable pick) {
+        Objects.requireNonNull(pick, "Pickable cannot be null");
+        this.pickables.remove(pick);
     }
 
     /**
@@ -143,6 +152,19 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
             }
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update(GameParameters params, long deltaTime) {
+        this.pickables.removeIf(p -> p instanceof AbstractPowerUp powerUp && powerUp.isDone());
+
+        this.pickables.stream()
+                      .filter(p -> p instanceof AbstractPowerUp powerUp && powerUp.isPickedUp())
+                      .map(p -> (AbstractPowerUp) p)
+                      .forEach(p -> p.update(deltaTime, params));
+    } 
 
     /**
      * Adds a new pickable to the list.

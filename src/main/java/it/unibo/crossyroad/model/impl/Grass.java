@@ -33,8 +33,6 @@ public final class Grass extends AbstractChunk {
 
     @Override
     protected void generateObstacles() {
-        
-
         for (int i = 0; i < this.rnd.nextInt(16); i++) {
             final int relativeX = this.rnd.nextInt((int) this.getDimension().width());
             final int relativeY = this.rnd.nextInt((int) this.getDimension().height());

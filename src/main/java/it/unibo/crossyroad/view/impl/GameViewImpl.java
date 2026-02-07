@@ -2,26 +2,12 @@ package it.unibo.crossyroad.view.impl;
 
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.Chunk;
-import it.unibo.crossyroad.model.api.Direction;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.Obstacle;
 import it.unibo.crossyroad.model.api.Player;
 import it.unibo.crossyroad.model.api.Positionable;
 import it.unibo.crossyroad.model.api.PowerUp;
-import it.unibo.crossyroad.model.impl.Car;
 import it.unibo.crossyroad.model.impl.Coin;
-import it.unibo.crossyroad.model.impl.CoinMultiplier;
-import it.unibo.crossyroad.model.impl.Grass;
-import it.unibo.crossyroad.model.impl.Invincibility;
-import it.unibo.crossyroad.model.impl.Railway;
-import it.unibo.crossyroad.model.impl.River;
-import it.unibo.crossyroad.model.impl.Road;
-import it.unibo.crossyroad.model.impl.Rock;
-import it.unibo.crossyroad.model.impl.SlowCars;
-import it.unibo.crossyroad.model.impl.Train;
-import it.unibo.crossyroad.model.impl.Tree;
-import it.unibo.crossyroad.model.impl.Water;
-import it.unibo.crossyroad.model.impl.WoodLog;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
 import javafx.application.Platform;
@@ -31,12 +17,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -147,7 +131,7 @@ public class GameViewImpl implements GameView {
             positionables.stream().filter(p -> p instanceof Player).forEach(this::drawElement);
             positionables.stream().filter(p -> p instanceof Obstacle).forEach(this::drawElement);
             positionables.stream().filter(p -> p instanceof Coin).forEach(this::drawElement);
-            positionables.stream().filter(p -> p instanceof PowerUp).forEach(this::drawElement);
+            positionables.stream().filter(p -> p instanceof PowerUp).map(p -> (PowerUp) p).filter(p -> !p.isPickedUp()).forEach(this::drawElement);
         });
     }
 
@@ -164,13 +148,12 @@ public class GameViewImpl implements GameView {
         }
     }
 
-
     //TODO add paths
     /**
      * Load the images for the various elements.
      */
     private void loadImages() {
-        this.images.put(EntityType.PLAYER, new Image("assets/player.png"));
+        this.images.put(EntityType.PLAYER, new Image("skins/aura_overhead.png"));
         this.images.put(EntityType.GRASS, new Image("assets/grass.png"));
         this.images.put(EntityType.ROAD, new Image("assets/road.png"));
         // this.images.put(River.class, new Image("path"));
@@ -178,11 +161,11 @@ public class GameViewImpl implements GameView {
         this.images.put(EntityType.CAR_RIGHT, new Image("assets/carRight.png"));
         // this.images.put(WoodLog.class, new Image("path"));
         this.images.put(EntityType.RAILWAY, new Image("assets/railway.png"));
-        this.images.put(EntityType.ROCK, new Image("assets/rock.png"));
-        this.images.put(EntityType.TREE, new Image("assets/tree.png"));
+        this.images.put(EntityType.ROCK, new Image("obstacles/rock.png"));
+        this.images.put(EntityType.TREE, new Image("obstacles/tree.png"));
         this.images.put(EntityType.TRAIN_LEFT, new Image("assets/trainLeft.png"));
         this.images.put(EntityType.TRAIN_RIGHT, new Image("assets/trainRight.png"));
-        this.images.put(EntityType.COIN, new Image("assets/coin.png"));
+        this.images.put(EntityType.COIN, new Image("pickables/coin.png"));
         this.images.put(EntityType.COIN_MULTIPLIER, new Image("assets/coinMultiplier.png"));
         this.images.put(EntityType.INVINCIBILITY, new Image("assets/invincibility.png"));
         this.images.put(EntityType.SLOW_CARS, new Image("assets/obstacleSpeed.png"));
@@ -197,7 +180,7 @@ public class GameViewImpl implements GameView {
         Platform.runLater(() -> {
             powerUpBox.getChildren().clear();
             for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
-                final int duration = (int) (entry.getValue() / 1000);
+                final int duration = (int) (entry.getValue() / 10);
                 powerUpBox.getChildren().add(new Label(
                         formatPowerUpText(entry.getKey(), duration)
                 ));
