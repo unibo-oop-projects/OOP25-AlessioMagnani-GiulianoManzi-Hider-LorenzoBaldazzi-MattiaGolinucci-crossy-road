@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Range;
+
 import it.unibo.crossyroad.model.api.AbstractChunk;
 import it.unibo.crossyroad.model.api.ActiveObstacle;
 import it.unibo.crossyroad.model.api.Chunk;
@@ -206,7 +208,8 @@ public class GameManagerImpl implements GameManager {
      */
     private boolean checkDeadlyCollisions() {
         for (final Obstacle obs : this.getObstaclesOnMap()) {
-            if (obs instanceof ActiveObstacle && obs.getPosition().equals(this.player.getPosition())) {
+            Range<Double> xRange = Range.closed(obs.getPosition().x(), obs.getPosition().x() + obs.getDimension().width());
+            if (obs instanceof ActiveObstacle && obs.getPosition().y() == this.player.getPosition().y() && xRange.contains(this.player.getPosition().x())) {
                 return true;
             }
         }

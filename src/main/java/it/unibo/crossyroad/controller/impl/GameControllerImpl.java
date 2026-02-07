@@ -125,6 +125,9 @@ public final class GameControllerImpl implements GameController {
                     Thread.sleep(10);
                 } catch (Exception e) { }
             }
+
+            //TODO togliere
+            appController.showMenu();
         }
     }
 
