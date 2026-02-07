@@ -73,10 +73,8 @@ public class Road extends AbstractActiveChunk {
                 speed = 0.0;
                 break;
         }
+        final double y = this.getPosition().y() + lane;
 
-        final double laneHeight = this.getDimension().height() / 2;
-
-        final double y = this.getPosition().y() + (laneHeight / 2) * lane;
         final double x = dir == Direction.RIGHT
                 ? this.getPosition().x() - 2
                 : this.getPosition().x() + this.getDimension().width() + 2;
