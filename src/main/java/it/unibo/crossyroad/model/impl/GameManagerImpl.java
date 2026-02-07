@@ -75,7 +75,7 @@ public class GameManagerImpl implements GameManager {
     public Map<EntityType, Long> getActivePowerUps() {
         return this.chunks.stream()
                           .flatMap(c -> c.getActivePowerUp().stream())
-                          .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining));
+                          .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining, Math::min));
     }
 
     /**
@@ -241,7 +241,7 @@ public class GameManagerImpl implements GameManager {
     private void moveMap() {
         //Chunk movement
         this.chunks.forEach(c -> c.increaseY(Y_MAP_MOVEMENT));
-        this.chunks.removeIf(c -> c.getPosition().y() >= Y_DISPOSE_CHUNK_MARK);
+        this.chunks.removeIf(c -> c.getPosition().y() >= Y_DISPOSE_CHUNK_MARK && c.getActivePowerUp().size() == 0);
 
         //Elements movement
         for (final Chunk c : this.chunks) {
