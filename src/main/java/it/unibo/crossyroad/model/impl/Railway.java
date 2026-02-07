@@ -45,7 +45,7 @@ public class Railway extends AbstractActiveChunk {
      */
     @Override
     protected void generateObstacles() {
-        final double y = this.getPosition().y() + RND.nextDouble(getDimension().height()); //??
+        final int y = (int) Math.round(this.getPosition().y() + RND.nextDouble(getDimension().height() - 1));
         final double x = direction == Direction.LEFT
                 ? this.getPosition().x() + this.getDimension().width() + 10
                 : this.getPosition().x() - 10;
