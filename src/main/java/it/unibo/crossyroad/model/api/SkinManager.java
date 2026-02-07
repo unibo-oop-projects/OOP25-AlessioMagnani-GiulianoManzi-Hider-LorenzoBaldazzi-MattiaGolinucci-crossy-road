@@ -37,11 +37,11 @@ public interface SkinManager {
     void lockSkins();
 
     /**
-     * Save skins from the file at the given path.
+     * Load all skins from the default resource file.
      * 
-     * @param path the file path.
+     * @throws IOException if there are any problems with the resource file.
      */
-    void loadFromFile(String path) throws IOException;
+    void loadFromResources() throws IOException;
 
     /**
      * Updates the status of skins by unlocking those whose is present in the provided set.

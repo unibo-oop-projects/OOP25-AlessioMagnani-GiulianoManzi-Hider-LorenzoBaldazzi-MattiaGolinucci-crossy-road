@@ -1,8 +1,8 @@
 package it.unibo.crossyroad.model.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,6 +17,8 @@ import it.unibo.crossyroad.model.api.SkinManager;
  */
 public final class SkinManagerImpl implements SkinManager {
 
+    private static final String SKINS_RESOURCE = "/skins.json";
+    private static final String SKINS_KEY = "skins";
     private final Set<Skin> skins;
     private final Set<Skin> unlockedSkins;
 
@@ -32,21 +34,54 @@ public final class SkinManagerImpl implements SkinManager {
      * {@inheritDoc}
      */
     @Override
-    public void loadFromFile(final String path) throws IOException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final JsonNode root = objectMapper.readTree(new File(path));
-        final JsonNode skinsNode = root.get("skins");
-        this.skins.clear();
-        for (final JsonNode node: skinsNode) {
-            final Skin skin = new SkinImpl(
-                node.get("name").asText(),
-                node.get("id").asText(),
-                node.get("price").asInt(),
-                Path.of(node.get("overheadImage").asText()),
-                Path.of(node.get("frontalImage").asText()));
-            this.skins.add(skin);
+    public void loadFromResources() throws IOException {
+        try (InputStream inputstream = openResourceStream()) {
+            this.loadSkinsFromStream(inputstream);
         }
+    }
+
+    /** 
+     * Open the skins resource file as an input stream.
+     * 
+     * @return the input stream for the skins resource file.
+     * @throws IOException if there are problems with resource file.
+     */
+    private InputStream openResourceStream() throws IOException {
+        final InputStream stream = getClass().getResourceAsStream(SKINS_RESOURCE);
+        if (stream == null) {
+            throw new IOException("Resource not found");
+        }
+        return stream;
+    }
+
+    /**
+     * Load and parse skins from the input stream.
+     * 
+     * @param inputStream the input stream to read from.
+     * @throws IOException if an error occurs while reading.
+     */
+    private void loadSkinsFromStream(final InputStream inputStream) throws IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final JsonNode skinsNode = objectMapper.readTree(inputStream).get(SKINS_KEY);
+        this.skins.clear();
+        skinsNode.forEach(this::parseSkin);
         this.unlockDefaultSkin();
+    }
+
+    /**
+     * Parse a single skin from json and add it to the collection.
+     * 
+     * @param node the json node containing the skin data.
+     */
+    private void parseSkin(final JsonNode node) {
+        final Skin skin = new SkinImpl(
+            node.get("name").asText(),
+            node.get("id").asText(),
+            node.get("price").asInt(),
+            Path.of(node.get("overheadImage").asText()),
+            Path.of(node.get("frontalImage").asText())
+        );
+        this.skins.add(skin);
     }
 
     /**
