@@ -70,6 +70,7 @@ public class EntryPoint extends Application {
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
 
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
