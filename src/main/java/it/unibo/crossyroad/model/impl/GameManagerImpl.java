@@ -3,6 +3,7 @@ package it.unibo.crossyroad.model.impl;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,8 @@ public final class GameManagerImpl implements GameManager {
     private List<Chunk> chunks;
     private boolean isGameOver;
     private Pair<EntityType, Integer> lastGenerated;
+    private Optional<Obstacle> currentTransport;
+    private boolean wasOnTransport;
 
     /**
      * Initializes the GameManager with the GameParameters.
@@ -90,13 +93,72 @@ public final class GameManagerImpl implements GameManager {
      */
     @Override
     public void update(final long deltaTime) {
+        final Optional<Obstacle> transport = this.getTransportCarryingPlayer();
+        final Optional<Position> positionBefore = transport.map(Obstacle::getPosition);
+
         this.chunks.stream()
                    .filter(c -> c instanceof AbstractChunk)
                    .map(c -> (AbstractChunk) c)
                    .forEach(ac -> ac.update(this.gameParameters, deltaTime));
 
+        if (transport.isPresent() && positionBefore.isPresent()) {
+            movePlayerWithTransport(positionBefore.get(), transport.get().getPosition());
+        }
+
+        this.currentTransport = transport;
+        this.handlePlayerOffTransport();
+        this.wasOnTransport = transport.isPresent();
+
         this.checkCoinsCollision();
         this.checkPowerUpCollisions();
+    }
+
+    /**
+     * Handles the player getting off a transport Obstacle, aligning him horizontally to the nearest integer position.
+     */
+    private void handlePlayerOffTransport() {
+        if (this.wasOnTransport && this.currentTransport.isEmpty()) {
+            this.alignHorizontallyPlayer();
+        }
+    }
+
+    /**
+     * Moves the player of the deltaX between the old and new position of the transport obstacle.
+     *
+     * @param oldPosition old position of the transport obstacle
+     * @param newPosition new position of the transport obstacle
+     */
+    private void movePlayerWithTransport(final Position oldPosition, final Position newPosition) {
+        final double deltaX = newPosition.x() - oldPosition.x();
+
+        if (Math.abs(deltaX) > 0) {
+            this.player.move(deltaX > 0 ? Direction.RIGHT : Direction.LEFT, Math.abs(deltaX));
+        }
+    }
+
+    /**
+     * Gets the transport Active Obstacle which the player is on.
+     *
+     * @return the transport Active Obstacle the player is currently on, or null if there is none
+     */
+    private Optional<Obstacle> getTransportCarryingPlayer() {
+        return this.getObstaclesOnMap().stream()
+            .filter(o -> o.getCollisionType() == CollisionType.TRANSPORT)
+            .filter(o -> o.getDimension().overlaps(o.getPosition(), this.player.getPosition(), this.player.getDimension()))
+            .findFirst();
+    }
+
+    /**
+     * Aligns the player horizontally after he gets off a transport Obstacle (to the nearest integer position).
+     */
+    private void alignHorizontallyPlayer() {
+        if (this.player.getPosition().x() % 1 != 0) {
+            final double nearestX = Math.round(this.player.getPosition().x());
+            this.player.move(
+                this.player.getPosition().x() < nearestX ? Direction.RIGHT : Direction.LEFT,
+                Math.abs(nearestX - this.player.getPosition().x())
+            );
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package it.unibo.crossyroad.model.api;
 
+import com.google.common.collect.Range;
+
 /**
  * A record representing the dimensions of an entity.
  *
@@ -48,5 +50,23 @@ public record Dimension(double width, double height) {
      */
     public static Dimension unit() {
         return square(1);
+    }
+
+    /**
+     * Checks if this dimension overlaps with another dimension, given their respective origins.
+     *
+     * @param origin1 the origin position of this dimension
+     * @param otherOrigin the origin position of the other dimension
+     * @param otherDimension the other dimension to check for overlap
+     * @return true if the dimensions overlap
+     */
+    public boolean overlaps(final Position origin1, final Position otherOrigin, final Dimension otherDimension) {
+        final var xRange1 = Range.closedOpen(origin1.x(), origin1.x() + this.width);
+        final var yRange1 = Range.closedOpen(origin1.y(), origin1.y() + this.height);
+        final var xRange2 = Range.closedOpen(otherOrigin.x(), otherOrigin.x() + otherDimension.width);
+        final var yRange2 = Range.closedOpen(otherOrigin.y(), otherOrigin.y() + otherDimension.height);
+        return xRange1.isConnected(xRange2) && yRange1.isConnected(yRange2)
+            && !xRange1.intersection(xRange2).isEmpty()
+            && !yRange1.intersection(yRange2).isEmpty();
     }
 }
