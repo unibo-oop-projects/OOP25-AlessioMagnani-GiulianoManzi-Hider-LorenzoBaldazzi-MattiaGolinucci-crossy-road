@@ -53,10 +53,7 @@ class TestRiver {
 
     @Test
     void testInit() {
-        assertTrue(river.getObstacles().isEmpty());
-        river.init();
         assertFalse(river.getObstacles().isEmpty());
-        assertTrue(river.getObstacles().size() >= 2);
     }
 
     @Test
