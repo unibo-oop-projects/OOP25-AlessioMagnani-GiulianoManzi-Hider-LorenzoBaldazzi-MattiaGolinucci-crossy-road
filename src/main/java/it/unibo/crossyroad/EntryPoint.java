@@ -18,6 +18,7 @@ import it.unibo.crossyroad.view.impl.GameViewImpl;
 import it.unibo.crossyroad.view.impl.MenuViewImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -33,6 +34,9 @@ import java.util.logging.Logger;
 public class EntryPoint extends Application {
     private static final double WIDTH = 1000;
     private static final double HEIGHT = 900;
+    private static final double ASPECT_RATIO = WIDTH / HEIGHT;
+    private static final String TITLE = "Crossy Road";
+    private static final double SCALE = 0.9;
     private static final Logger LOGGER = Logger.getLogger(EntryPoint.class.getName());
     private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
 
@@ -60,9 +64,10 @@ public class EntryPoint extends Application {
     @Override
     public void start(final Stage stage) throws Exception {
         final StackPane root = new StackPane();
-        final Scene scene = new Scene(root, WIDTH, HEIGHT);
+        final Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
+        final Scene scene = new Scene(root, screenBounds.getHeight() * ASPECT_RATIO * SCALE, screenBounds.getHeight() * SCALE);
 
-        stage.setTitle("Crossy Road");
+        stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
 
