@@ -221,15 +221,15 @@ public final class GameManagerImpl implements GameManager {
             if (number <= FIRST_PROBABILITY) {
                 this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.GRASS);
-            } else if (number > FIRST_PROBABILITY && number <= SECOND_PROBABILITY) {
+            } else if (number <= SECOND_PROBABILITY) {
                 this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.ROAD);
 
-            } else if (number > SECOND_PROBABILITY && number <= THIRD_PROBABILITY) {
+            } else if (number <= THIRD_PROBABILITY) {
                 this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
                 this.updateLastGenerated(EntityType.RAILWAY);
             } else {
-                final Direction riverDirection = RANDOM.nextInt(2) == 0 ? Direction.LEFT : Direction.RIGHT;
+                final Direction riverDirection = RANDOM.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
                 this.chunks.add(new River(CHUNK_START_POSITION, CHUNK_DIMENSION, riverDirection));
             }
         }
@@ -277,8 +277,15 @@ public final class GameManagerImpl implements GameManager {
         boolean deadlyCollision = false;
         boolean transportCollision = false;
 
+        //Check if player is outside the map
+        Range<Double> xRange = Range.closed(0.0, (double) MAP_WIDTH);
+        if (!xRange.contains(this.player.getPosition().x())) {
+            return true;
+        }
+
+        //Check obstacles collisions
         for (final Obstacle obs : this.getObstaclesOnMap()) {
-            final Range<Double> xRange = Range.closed(obs.getPosition().x(), obs.getPosition().x() + obs.getDimension().width());
+            xRange = Range.closed(obs.getPosition().x(), obs.getPosition().x() + obs.getDimension().width());
             if (obs.getPosition().y() == this.player.getPosition().y() && xRange.contains(this.player.getPosition().x())
                 && !this.gameParameters.isInvincible()) {
                 if (obs.getCollisionType() == CollisionType.DEADLY) {

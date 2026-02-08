@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * Chunk representing a road where car can move.
  */
-public class Road extends AbstractActiveChunk {
+public final class Road extends AbstractActiveChunk {
     private static final int MAX_CARS_PER_CHUNKS = 8;
     private static final long SPAWN_CAR_INTERVAL_MS = 1200;
     private static final int MAX_SPEED = 5;
