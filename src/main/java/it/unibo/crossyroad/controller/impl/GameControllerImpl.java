@@ -145,9 +145,8 @@ public final class GameControllerImpl implements GameController {
                 }
             }
 
-            //TODO togliere
             gameManager.reset();
-            appController.showMenu();
+            appController.gameOver();
         }
     }
 }
