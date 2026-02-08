@@ -29,7 +29,6 @@ public final class GameControllerImpl implements GameController {
     private volatile boolean pause;
     private final GameManager gameManager;
     private final GameParameters parameters;
-    private final Loop loop;
     private final Queue<Direction> queue;
 
     /**
@@ -55,7 +54,6 @@ public final class GameControllerImpl implements GameController {
 
         this.parameters = new GameParametersImpl();
         this.gameManager = new GameManagerImpl(this.parameters);
-        this.loop = new Loop();
         this.queue = new LinkedBlockingQueue<>();
     }
 
@@ -80,7 +78,7 @@ public final class GameControllerImpl implements GameController {
      */
     @Override
     public void startLoop() {
-        this.loop.start();
+        new Loop().start();
     }
 
     /**

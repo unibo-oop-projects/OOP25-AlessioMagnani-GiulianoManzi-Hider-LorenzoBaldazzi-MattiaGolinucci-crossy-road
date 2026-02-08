@@ -33,6 +33,9 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
      */
     public AbstractChunk(final Position initialPosition, final Dimension dimension) {
         super(initialPosition, dimension);
+        if (dimension.height() % 3 != 0) {
+            throw new IllegalArgumentException("Chunk height must be a multiple of 3");
+        }
         this.obstacles = new LinkedList<>();
         this.pickables = new LinkedList<>();
     }

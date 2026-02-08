@@ -246,7 +246,7 @@ public final class GameViewImpl implements GameView {
         this.images.put(EntityType.COIN_MULTIPLIER, new Image("pickables/multiplier.png"));
         this.images.put(EntityType.INVINCIBILITY, new Image("pickables/invincible.png"));
         this.images.put(EntityType.SLOW_CARS, new Image("pickables/slow.png"));
-        this.images.put(EntityType.WATER, new Image("assets/water.png"));
+        this.images.put(EntityType.WATER, new Image("obstacles/water.png"));
     }
 
     /**
