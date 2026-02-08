@@ -34,13 +34,13 @@ public final class Grass extends AbstractChunk {
 
     @Override
     protected void generateObstacles() {
-        for (int i = 0; i < this.rnd.nextInt(16); i++) {
+        for (int i = 0; i < this.rnd.nextInt(5, 16); i++) {
             final int relativeX = this.rnd.nextInt((int) this.getDimension().width());
             final int relativeY = this.rnd.nextInt((int) this.getDimension().height());
             final Position randomPosition = new Position(this.getPosition().x() + relativeX, this.getPosition().y() + relativeY);
 
             //Leave at least a path
-            if (Math.abs(randomPosition.x() - PLAYER_START_POSITION.x()) < COMPARING_DELTA
+            if (Math.abs(randomPosition.x() - PLAYER_START_POSITION.x()) > COMPARING_DELTA
                 && !this.getPositionables().stream().anyMatch(p -> p.getPosition().equals(randomPosition))) {
                 switch (this.rnd.nextInt(2)) {
                     case 0:

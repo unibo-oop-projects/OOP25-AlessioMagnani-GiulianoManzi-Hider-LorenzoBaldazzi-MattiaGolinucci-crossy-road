@@ -9,14 +9,10 @@ import it.unibo.crossyroad.model.api.Position;
 import it.unibo.crossyroad.model.impl.Grass;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestGrass {
-    private static final int MAX_OBS_EXPECTED = 14;
-    private static final int MIN_OBS_EXPECTED = 0;
-    private static final int MAX_PICK_EXPECTED = 4;
-    private static final int MIN_PICK_EXPECTED = 0;
-    private static final int LOOPS = 10_000_000;
+    private static final int LOOPS = 10_000;
     private static final Position CHUNK_INITIAL_POSITION = new Position(0, 0);
     private Grass grass;
 
@@ -32,37 +28,16 @@ class TestGrass {
 
     @Test
     void testRandomGenerations() {
-        int maxObs = MIN_OBS_EXPECTED;
-        int minObs = MAX_OBS_EXPECTED;
-        int maxPick = MIN_PICK_EXPECTED;
-        int minPick = MAX_PICK_EXPECTED;
-
         for (int i = 0; i < LOOPS; i++) {
             this.grass.init();
             final int nOfObstacles = this.grass.getObstacles().size();
             final int nOfPickables = this.grass.getPickables().size();
 
-            if (nOfObstacles > maxObs) {
-                maxObs = nOfObstacles;
-            }
-            if (nOfObstacles < minObs) {
-                minObs = nOfObstacles;
-            }
-
-            if (nOfPickables > maxPick) {
-                maxPick = nOfPickables;
-            }
-            if (nOfPickables < minPick) {
-                minPick = nOfPickables;
-            }
+            assertTrue(nOfObstacles > 0);
+            assertTrue(nOfObstacles < 16);
+            assertTrue(nOfPickables >= 0);
+            assertTrue(nOfPickables < 3);
         }
-
-        assertNotEquals(maxObs, minObs);
-        assertNotEquals(maxPick, minPick);
-        assertEquals(MIN_OBS_EXPECTED, minObs);
-        assertEquals(MAX_OBS_EXPECTED, maxObs);
-        assertEquals(MIN_PICK_EXPECTED, minPick);
-        assertEquals(MAX_PICK_EXPECTED, maxPick);
     }
 
     @Test

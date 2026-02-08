@@ -26,6 +26,7 @@ class TestGameManager {
                               .setLogSpeedMultiplier(1)
                               .build();
         this.gameManager = new GameManagerImpl(gameParameters);
+        this.gameManager.reset();
     }
 
     @Test
