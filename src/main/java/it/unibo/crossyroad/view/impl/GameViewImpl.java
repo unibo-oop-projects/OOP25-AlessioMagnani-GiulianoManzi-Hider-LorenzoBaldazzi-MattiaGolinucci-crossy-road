@@ -72,7 +72,7 @@ public class GameViewImpl implements GameView {
         this.canvas.widthProperty().addListener(c -> scale());
         this.canvas.heightProperty().addListener(c -> scale());
 
-        //Movement
+        //Keys
         this.currentPane.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case UP:
@@ -91,6 +91,8 @@ public class GameViewImpl implements GameView {
                 case D:
                     this.gameController.processInput(UserInput.RIGHT);
                     break;
+                case ESCAPE:
+                    this.gameController.pauseGame();
                 default:
                     break;
             }

@@ -71,14 +71,12 @@ public final class GameControllerImpl implements GameController {
     public void pauseGame() {
         this.pause = true;
         this.appController.showMenu();
-        this.hideGame();
     }
 
     @Override
     public void resumeGame() {
         this.pause = false;
-        this.showGame();
-        this.appController.showGame();
+        this.gameView.show();
     }
 
     @Override
