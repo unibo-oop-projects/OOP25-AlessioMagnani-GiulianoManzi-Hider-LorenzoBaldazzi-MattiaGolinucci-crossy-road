@@ -35,4 +35,18 @@ class TestPassiveObstacles {
         assertEquals(EntityType.ROCK, rock.getEntityType());
         assertEquals(EntityType.TREE, tree.getEntityType());
     }
+
+    @Test
+    void testDimension() {
+        assertEquals(this.rock.getDimension().width(), 1);
+        assertEquals(this.tree.getDimension().width(), 1);
+        assertEquals(this.rock.getDimension().height(), 1);
+        assertEquals(this.tree.getDimension().height(), 1);
+    }
+
+    @Test
+    void testPosition() {
+        assertEquals(this.rock.getPosition(), OBSTACLE_POS_1);
+        assertEquals(this.tree.getPosition(), OBSTACLE_POS_2);
+    }
 }
