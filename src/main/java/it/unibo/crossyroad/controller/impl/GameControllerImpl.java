@@ -45,8 +45,8 @@ public final class GameControllerImpl implements GameController {
      */
     @SuppressFBWarnings(
         value = "EI2",
-        justification = "AppController and GameView references are intentionally shared. " +
-            "These components need to interact with the same instances as per MVC pattern."
+        justification = "AppController and GameView references are intentionally shared. "
+            + "These components need to interact with the same instances as per MVC pattern."
     )
     public GameControllerImpl(final AppController appController, final GameView gameView) {
         this.appController = appController;

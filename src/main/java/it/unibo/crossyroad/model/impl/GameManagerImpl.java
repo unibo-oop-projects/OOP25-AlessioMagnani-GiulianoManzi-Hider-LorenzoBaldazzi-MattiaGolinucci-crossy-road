@@ -226,7 +226,8 @@ public final class GameManagerImpl implements GameManager {
         //Check obstacles collisions
         for (final Obstacle obs : this.getObstaclesOnMap()) {
             xRange = Range.closed(obs.getPosition().x(), obs.getPosition().x() + obs.getDimension().width());
-            if (Math.abs(obs.getPosition().y() - this.player.getPosition().y()) < COMPARING_DELTA && xRange.contains(this.player.getPosition().x())
+            if (Math.abs(obs.getPosition().y() - this.player.getPosition().y()) < COMPARING_DELTA
+                && xRange.contains(this.player.getPosition().x())
                 && !this.gameParameters.isInvincible()) {
                 if (obs.getCollisionType() == CollisionType.DEADLY) {
                     deadlyCollision = true;

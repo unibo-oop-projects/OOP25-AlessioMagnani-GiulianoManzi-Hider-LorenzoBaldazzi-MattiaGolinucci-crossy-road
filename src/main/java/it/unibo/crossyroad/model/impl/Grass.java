@@ -13,6 +13,8 @@ import it.unibo.crossyroad.model.api.Position;
 public final class Grass extends AbstractChunk {
     private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private static final Double COMPARING_DELTA = 0.0001;
+    private static final int MIN_OBSTACLES_NUMBER = 5;
+    private static final int MAX_OBSTACLES_NUMBER = 16;
     private final Random rnd = new Random();
 
     /**
@@ -34,7 +36,7 @@ public final class Grass extends AbstractChunk {
 
     @Override
     protected void generateObstacles() {
-        for (int i = 0; i < this.rnd.nextInt(5, 16); i++) {
+        for (int i = 0; i < this.rnd.nextInt(MIN_OBSTACLES_NUMBER, MAX_OBSTACLES_NUMBER); i++) {
             final int relativeX = this.rnd.nextInt((int) this.getDimension().width());
             final int relativeY = this.rnd.nextInt((int) this.getDimension().height());
             final Position randomPosition = new Position(this.getPosition().x() + relativeX, this.getPosition().y() + relativeY);
