@@ -34,6 +34,9 @@ public final class Grass extends AbstractChunk {
         return EntityType.GRASS;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void generateObstacles() {
         for (int i = 0; i < this.rnd.nextInt(MIN_OBSTACLES_NUMBER, MAX_OBSTACLES_NUMBER); i++) {
