@@ -7,20 +7,25 @@ import it.unibo.crossyroad.model.api.Skin;
  */
 public interface AppController {
     /**
-     * Sets the game controller.
+     * Gets the GameController.
      *
-     * @param gc the game controller
+     * @return the GameController created by the AppController
      */
-    void setGameController(GameController gc);
+    GameController getGameController();
 
     /**
-     * Sets the menu controller.
+     * Gets the MenuController.
      *
-     * @param mc the menu controller
+     * @return the MenuController created by the AppController
      */
-    void setMenuController(MenuController mc);
+    MenuController getMenuController();
 
-    // void setShopController(ShopController sc);
+    /**
+     * Gets the ShopController.
+     *
+     * @return the ShopController created by the AppController
+     */
+    ShopController getShopController();
 
     /**
      * Shows the game view.

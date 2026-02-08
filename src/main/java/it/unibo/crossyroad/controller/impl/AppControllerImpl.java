@@ -3,44 +3,66 @@ package it.unibo.crossyroad.controller.impl;
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.controller.api.MenuController;
+import it.unibo.crossyroad.controller.api.ShopController;
 import it.unibo.crossyroad.model.api.Skin;
+
+import java.util.function.Function;
 
 /**
  * Implementation of the AppController interface.
  */
 public class AppControllerImpl implements AppController {
-    private GameController gameController;
-    private MenuController menuController;
-    // private ShopController shopController;
+    private final GameController gameController;
+    private final MenuController menuController;
+    private final ShopController shopController;
     private boolean isGameOver;
 
     /**
      * Constructor for AppControllerImpl.
+     *
+     * @param gameControllerFactory factory function to create the GameController
+     * @param menuControllerFactory factory function to create the MenuController
+     * @param shopControllerFactory factory function to create the ShopController
      */
-    public AppControllerImpl() {
+    public AppControllerImpl(
+        final Function<AppController, GameController> gameControllerFactory,
+        final Function<AppController, MenuController> menuControllerFactory,
+        final Function<AppController, ShopController> shopControllerFactory
+    ) {
+        this.gameController = gameControllerFactory.apply(this);
+        this.menuController = menuControllerFactory.apply(this);
+        this.shopController = shopControllerFactory.apply(this);
         this.isGameOver = true;
     }
 
     private void hideAllViews() {
         this.gameController.hideGame();
         this.menuController.hideMenu();
-        // this.shopController.hideShop();
+        // todo: this.shopController.hideShop();
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setGameController(final GameController gc) {
-        this.gameController = gc;
+    public GameController getGameController() {
+        return this.gameController;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setMenuController(final MenuController mc) {
-        this.menuController = mc;
+    public MenuController getMenuController() {
+        return this.menuController;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ShopController getShopController() {
+        return this.shopController;
     }
 
     /**
@@ -71,7 +93,7 @@ public class AppControllerImpl implements AppController {
     @Override
     public void showShop() {
         this.hideAllViews();
-        // this.shopController.showShop();
+        // todo: this.shopController.showShop();
     }
 
     /**
@@ -89,8 +111,8 @@ public class AppControllerImpl implements AppController {
      */
     @Override
     public Skin getActiveSkin() {
-        // return this.shopController.getActiveSkinId();
-        return null;
+        // return this.shopController.getActiveSkin();
+        return null; // todo
     }
 
     /**
@@ -98,7 +120,7 @@ public class AppControllerImpl implements AppController {
      */
     @Override
     public int getCoinCount() {
-        // this.shopController.getCoinCount();
-        return 0;
+        // return this.shopController.getCoinCount();
+        return 0; // todo
     }
 }
