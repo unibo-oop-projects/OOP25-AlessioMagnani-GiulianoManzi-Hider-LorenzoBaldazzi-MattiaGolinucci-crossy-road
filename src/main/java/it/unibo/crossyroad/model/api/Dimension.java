@@ -53,10 +53,10 @@ public record Dimension(double width, double height) {
     }
 
     /**
-     * Checks if a given point is contained within the area defined by this dimension, given an origin position.
+     * Checks if a given point is contained within the area defined by this dimension relative to an origin position.
      *
      * @param origin origin position of the area defined by this dimension
-     * @param point point to check for containment
+     * @param point point to check
      * @return true if the point is contained within the area
      */
     public boolean containsPoint(final Position origin, final Position point) {
