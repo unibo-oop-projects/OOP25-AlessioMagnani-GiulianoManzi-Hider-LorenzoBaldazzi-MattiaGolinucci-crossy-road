@@ -16,7 +16,7 @@ public final class Road extends AbstractActiveChunk {
     private static final int MAX_CARS_PER_CHUNKS = 8;
     private static final long SPAWN_CAR_INTERVAL_MS = 1200;
     private static final int MAX_SPEED = 5;
-    private static final int MIN_SPEED = 1;
+    private static final int MIN_SPEED = 3;
     private static final Random RND = new Random();
 
     private final Pair<Double, Double> laneSpeed;
