@@ -159,7 +159,6 @@ public final class GameControllerImpl implements GameController {
                     gameView.render(gameManager.getPositionables());
                     gameView.updatePowerUpTime(gameManager.getActivePowerUps());
                     gameView.updateCoinCount(getCoinCount());
-
                     if (!queue.isEmpty()) {
                         gameManager.movePlayer(queue.poll());
                     }

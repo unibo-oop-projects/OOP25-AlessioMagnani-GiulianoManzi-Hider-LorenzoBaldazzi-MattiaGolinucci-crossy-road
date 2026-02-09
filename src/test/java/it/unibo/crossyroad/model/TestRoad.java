@@ -61,6 +61,7 @@ class TestRoad {
                 switch (car.getEntityType()) {
                     case EntityType.CAR_LEFT -> leftCars++;
                     case EntityType.CAR_RIGHT -> rightCars++;
+                    default -> { }
                 }
             }
         }
