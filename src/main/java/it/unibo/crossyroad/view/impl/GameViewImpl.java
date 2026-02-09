@@ -17,10 +17,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.Map;
 import java.util.EnumMap;
@@ -40,16 +40,21 @@ public final class GameViewImpl implements GameView {
     private static final int OVERLAY_PADDING = 20;
     private static final int OVERLAY_WIDTH = 200;
     private static final int OVERLAY_HEIGHT = 50;
+    private static final double LABEL_PADDING = 10.0;
+    private static final double CORNER_RADIUS = 10.0;
+    private static final double FONT_SIZE = 12.0;
+    private static final Color DEFAULT_COLOR_LABEL = Color.WHITE;
+    private static final double BORDER_WIDTH = 2.0;
     private final StackPane root;
     private final StackPane currentPane;
-    private final VBox powerUpBox = new VBox(5);
+    private final VBox powerUpBox;
     private final VBox overlay;
-    private final Label coinLabel = new Label();
+    private final Label coinLabel;
     private final Canvas canvas;
     private final GraphicsContext content;
     private final Map<EntityType, Image> images = new EnumMap<>(EntityType.class);
     private GameController gameController;
-    private double scale;
+    private double scale = 1.0;
 
     /**
      * Initializes and places the various view's components.
@@ -61,6 +66,8 @@ public final class GameViewImpl implements GameView {
         this.currentPane = new StackPane();
         this.canvas = new Canvas();
         this.content = this.canvas.getGraphicsContext2D();
+        this.powerUpBox = new VBox();
+        this.coinLabel = new Label();
 
         //Set up the overlay
         this.overlay = new VBox(10);
@@ -69,13 +76,30 @@ public final class GameViewImpl implements GameView {
         this.overlay.setPickOnBounds(false);
         this.overlay.setMaxWidth(OVERLAY_WIDTH);
         this.overlay.setMaxHeight(OVERLAY_HEIGHT);
-        this.overlay.setBackground(Background.fill(Color.WHITE));
+        this.overlay.setBackground(new Background(
+                new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)
+        ));
+
+        //Set up the coin label
+        this.coinLabel.setPadding(new Insets(LABEL_PADDING));
+        this.coinLabel.setBackground(new Background(
+                new BackgroundFill(Color.GOLDENROD, new CornerRadii(CORNER_RADIUS), Insets.EMPTY)
+        ));
+        this.coinLabel.setBorder(new Border(
+                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS), new BorderWidths(BORDER_WIDTH))
+        ));
+        this.coinLabel.setFont(Font.font(null, FontWeight.BOLD, FONT_SIZE));
+        this.coinLabel.setTextFill(DEFAULT_COLOR_LABEL);
+
+        //Set up the power up vbox
+        this.powerUpBox.setSpacing(10);
 
         //Bind canvas too root size
         this.canvas.widthProperty().bind(root.widthProperty());
         this.canvas.heightProperty().bind(root.heightProperty());
         this.canvas.widthProperty().addListener(c -> scale());
         this.canvas.heightProperty().addListener(c -> scale());
+
 
         //Manage key press
         this.currentPane.setOnKeyPressed(e -> {
@@ -107,7 +131,7 @@ public final class GameViewImpl implements GameView {
         currentPane.requestFocus();
 
         this.content.setImageSmoothing(false);
-        this.overlay.getChildren().addAll(this.powerUpBox, this.coinLabel);
+        this.overlay.getChildren().addAll(this.coinLabel, this.powerUpBox);
         this.currentPane.getChildren().addAll(this.canvas, this.overlay);
         StackPane.setAlignment(this.overlay, Pos.TOP_LEFT);
         this.root.getChildren().add(this.currentPane);
@@ -160,14 +184,46 @@ public final class GameViewImpl implements GameView {
     @Override
     public void updatePowerUpTime(final Map<EntityType, Long> powerUps) {
         Platform.runLater(() -> {
+            if (powerUps.isEmpty()) {
+                powerUpBox.setVisible(false);
+                return;
+            }
+            powerUpBox.setVisible(true);
             powerUpBox.getChildren().clear();
             for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
                 final int duration = (int) (entry.getValue() / 1000);
-                powerUpBox.getChildren().add(new Label(
-                        formatPowerUpText(entry.getKey(), duration)
+
+                //Create the label for every active power up
+                final Label label = new Label(formatPowerUpText(entry.getKey(), duration));
+                label.setFont(Font.font(null, FontWeight.BOLD, FONT_SIZE));
+                label.setTextFill(DEFAULT_COLOR_LABEL);
+                label.setBorder(new Border(
+                        new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS), new BorderWidths(BORDER_WIDTH))
                 ));
+                label.setPadding(new Insets(LABEL_PADDING));
+                label.setBackground(labelBackground(entry.getKey()));
+
+                powerUpBox.getChildren().add(label);
             }
         });
+    }
+
+    /**
+     * It returns the background based on the type of power up, if the entity type isn't
+     * a power up an IllegalArgumentException is thrown.
+     *
+     * @param type the type of power up
+     * @return the background base on the type of power up
+     */
+    private Background labelBackground(EntityType type) {
+        Color color;
+        switch (type) {
+            case EntityType.SLOW_CARS -> color = Color.DARKCYAN;
+            case EntityType.COIN_MULTIPLIER -> color = Color.DARKSALMON;
+            case EntityType.INVINCIBILITY -> color = Color.ROSYBROWN;
+            default -> throw new IllegalArgumentException("The entity type is not a power up");
+        }
+        return new Background(new BackgroundFill(color, new CornerRadii(CORNER_RADIUS), Insets.EMPTY));
     }
 
     /**
@@ -176,7 +232,7 @@ public final class GameViewImpl implements GameView {
     @Override
     public void updateCoinCount(final int count) {
         Platform.runLater(() -> {
-            coinLabel.setText("Coins: " + count);
+            coinLabel.setText("COINS : " + count);
         });
     }
 
@@ -257,6 +313,6 @@ public final class GameViewImpl implements GameView {
      * @return the formatted text.
      */
     private String formatPowerUpText(final EntityType type, final int secondsLeft) {
-        return type.getDisplayName() + ": " + secondsLeft + "s";
+        return type.getDisplayName() + ": " + (secondsLeft + 1) + "s";
     }
 }

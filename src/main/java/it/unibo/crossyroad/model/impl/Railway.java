@@ -13,9 +13,12 @@ import java.util.Random;
  */
 public class Railway extends AbstractActiveChunk {
     private static final Random RND = new Random();
+    private static final int MAX_TRAINS = 3;
+    private static final long SPAWN_INTERVAL_MS = 1400;
 
     private final Direction direction;
     private final double speed;
+    private long elapsedTime = 0;
 
     /**
      * Initializes the Chunk.
@@ -35,9 +38,19 @@ public class Railway extends AbstractActiveChunk {
      */
     @Override
     protected boolean shouldGenerateNewObstacles(final long deltaTime) {
-        final boolean hasTrain = this.getObstacles().stream()
-                .anyMatch(obs -> obs instanceof Train);
-        return !hasTrain;
+        this.elapsedTime += deltaTime;
+
+        final int activeTrains = (int) this.getObstacles().stream()
+                .filter(obs -> obs instanceof Train)
+                .count();
+        if (activeTrains == 0) {
+            return true;
+        }
+        if (elapsedTime >= SPAWN_INTERVAL_MS && activeTrains < MAX_TRAINS) {
+            this.elapsedTime = 0;
+            return true;
+        }
+        return false;
     }
 
     /**

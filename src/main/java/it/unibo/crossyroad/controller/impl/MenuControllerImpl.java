@@ -17,6 +17,7 @@ import java.util.Objects;
  * @see MenuController
  */
 public class MenuControllerImpl implements MenuController {
+    private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
 
     private final AppController appController;
     private final StateManager stateManager;
@@ -80,7 +81,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void save() throws IOException {
-        this.stateManager.save(Paths.get(System.getProperty("user.home"), "crossyroad"));
+        this.stateManager.save(SAVE_PATH);
     }
 
     /**
@@ -88,7 +89,7 @@ public class MenuControllerImpl implements MenuController {
      */
     @Override
     public void load() throws IOException {
-        this.stateManager.load(Paths.get(System.getProperty("user.home"), "crossyroad"));
+        this.stateManager.load(SAVE_PATH);
     }
 
 }

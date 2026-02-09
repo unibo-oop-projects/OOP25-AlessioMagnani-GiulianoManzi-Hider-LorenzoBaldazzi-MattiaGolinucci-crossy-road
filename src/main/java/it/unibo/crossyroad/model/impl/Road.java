@@ -34,7 +34,7 @@ public final class Road extends AbstractActiveChunk {
         this.laneSpeed = new Pair<>(RND.nextDouble(MIN_SPEED, MAX_SPEED), RND.nextDouble(MIN_SPEED, MAX_SPEED));
 
         //Generate a first set of cars
-        for (int i = 0; i <= MAX_CARS_PER_CHUNKS; i++) {
+        for (int i = 0; i < MAX_CARS_PER_CHUNKS; i++) {
             this.generateObstacles();
         }
     }
@@ -48,7 +48,10 @@ public final class Road extends AbstractActiveChunk {
         final int activeCars = (int) getObstacles().stream()
                 .filter(obs -> obs instanceof Car)
                 .count();
-        if ((elapsedTime >= SPAWN_CAR_INTERVAL_MS && activeCars < MAX_CARS_PER_CHUNKS) || activeCars == 0) {
+        if (activeCars >= MAX_CARS_PER_CHUNKS) {
+            return false;
+        }
+        if (elapsedTime >= SPAWN_CAR_INTERVAL_MS) {
             this.elapsedTime = 0;
             return true;
         }
@@ -81,8 +84,8 @@ public final class Road extends AbstractActiveChunk {
         final double y = this.getPosition().y() + lane;
 
         final double x = dir == Direction.RIGHT
-                ? this.getPosition().x() - 1
-                : this.getPosition().x() + this.getDimension().width() + 1;
+                ? this.getPosition().x() - 2
+                : this.getPosition().x() + this.getDimension().width() + 2;
 
         this.addObstacle(new Car(new Position(x, y), speed, dir));
     }

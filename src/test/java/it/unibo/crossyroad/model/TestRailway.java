@@ -6,18 +6,18 @@ import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
 import it.unibo.crossyroad.model.impl.Railway;
+import it.unibo.crossyroad.model.impl.Train;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the {@link Railway} class.
  */
 class TestRailway {
     private static final int UPDATES_RAILWAY = 20;
-    private static final int DELTA_TIME = 1200;
+    private static final int DELTA_TIME = 1400;
 
     private Railway railway;
 
@@ -48,7 +48,10 @@ class TestRailway {
                 .build();
         for (int i = 0; i < UPDATES_RAILWAY; i++) {
             this.railway.update(gp, DELTA_TIME);
-            assertFalse(this.railway.getObstacles().size() > 1);
+
+            assertTrue(this.railway.getObstacles().stream()
+                    .filter(obs -> obs instanceof Train)
+                    .count() <= 3);
         }
     }
 }
