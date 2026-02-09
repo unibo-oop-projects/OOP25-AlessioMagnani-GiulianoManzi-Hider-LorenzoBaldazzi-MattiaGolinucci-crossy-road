@@ -68,6 +68,7 @@ public final class GameViewImpl implements GameView {
     private double responsiveCornerRadius;
     private double responsiveFontSize = BASE_FONT_SIZE;
     private double responsiveBorderWidth;
+    private double overlayWidth;
 
     /**
      * Initializes and places the various view's components.
@@ -204,6 +205,8 @@ public final class GameViewImpl implements GameView {
 
                 //Create the label for every active power up
                 final Label label = new Label(formatPowerUpText(entry.getKey(), duration));
+                label.setMaxWidth(this.overlayWidth);
+                label.setWrapText(true);
                 label.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
                 label.setTextFill(DEFAULT_COLOR_LABEL);
                 label.setBorder(new Border(
@@ -283,15 +286,14 @@ public final class GameViewImpl implements GameView {
         this.responsiveCornerRadius = this.canvas.getHeight() * CORNER_RADIUS_RATIO;
         this.responsiveFontSize = this.canvas.getHeight() * (BASE_FONT_SIZE / MIN_SCREEN_WIDTH);
         this.responsiveBorderWidth = this.canvas.getHeight() * BORDER_WIDTH_RATIO;
+        this.overlayWidth = this.canvas.getWidth() * OVERLAY_WIDTH_RATIO;
 
         //overlay scale
-        final double overlayWidth = this.canvas.getWidth() * OVERLAY_WIDTH_RATIO;
         final double overlayHeight = this.canvas.getHeight() * OVERLAY_HEIGHT_RATIO;
 
         //Coin label and overlay update
         Platform.runLater(() -> {
             this.overlay.setPadding(new Insets(responsivePadding));
-            this.overlay.setMaxWidth(overlayWidth);
             this.overlay.setMaxHeight(overlayHeight);
 
             this.coinLabel.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
