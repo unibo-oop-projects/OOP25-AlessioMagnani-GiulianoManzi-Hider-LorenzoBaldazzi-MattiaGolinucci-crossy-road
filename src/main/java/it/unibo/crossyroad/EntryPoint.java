@@ -20,6 +20,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -71,6 +72,7 @@ public class EntryPoint extends Application {
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);
+        stage.getIcons().add(new Image("skins/default_front.png"));
 
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
