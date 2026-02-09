@@ -37,14 +37,14 @@ public final class GameViewImpl implements GameView {
 
     private static final int GAME_WIDTH = 10;
     private static final int GAME_HEIGHT = 9;
-    private static final int OVERLAY_PADDING = 20;
-    private static final int OVERLAY_WIDTH = 200;
-    private static final int OVERLAY_HEIGHT = 50;
-    private static final double LABEL_PADDING = 10.0;
-    private static final double CORNER_RADIUS = 10.0;
-    private static final double FONT_SIZE = 12.0;
+    private static final double OVERLAY_PADDING_RATIO = 0.02;
+    private static final double OVERLAY_WIDTH_RATIO = 0.2;
+    private static final double OVERLAY_HEIGHT_RATIO = 0.08;
+    private static final double LABEL_PADDING_RATIO = 0.01;
+    private static final double CORNER_RADIUS_RATIO = 0.01;
+    private static final double BASE_FONT_SIZE = 12.0;
     private static final Color DEFAULT_COLOR_LABEL = Color.WHITE;
-    private static final double BORDER_WIDTH = 2.0;
+    private static final double BORDER_WIDTH_RATIO = 0.002;
     private final StackPane root;
     private final StackPane currentPane;
     private final VBox powerUpBox;
@@ -55,6 +55,10 @@ public final class GameViewImpl implements GameView {
     private final Map<EntityType, Image> images = new EnumMap<>(EntityType.class);
     private GameController gameController;
     private double scale = 1.0;
+    private double responsivePadding = 0;
+    private double responsiveCornerRadius = 0;
+    private double responsiveFontSize = BASE_FONT_SIZE;
+    private double responsiveBorderWidth = 0;
 
     /**
      * Initializes and places the various view's components.
@@ -69,29 +73,24 @@ public final class GameViewImpl implements GameView {
         this.powerUpBox = new VBox();
         this.coinLabel = new Label();
 
-        //Set up the overlay
+        //overlay sizes
         this.overlay = new VBox(10);
-        this.overlay.setPadding(new Insets(OVERLAY_PADDING));
         this.overlay.setAlignment(Pos.TOP_LEFT);
         this.overlay.setPickOnBounds(false);
-        this.overlay.setMaxWidth(OVERLAY_WIDTH);
-        this.overlay.setMaxHeight(OVERLAY_HEIGHT);
         this.overlay.setBackground(new Background(
                 new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)
         ));
 
-        //Set up the coin label
-        this.coinLabel.setPadding(new Insets(LABEL_PADDING));
+        //coin label sizes
         this.coinLabel.setBackground(new Background(
-                new BackgroundFill(Color.GOLDENROD, new CornerRadii(CORNER_RADIUS), Insets.EMPTY)
+                new BackgroundFill(Color.GOLDENROD, new CornerRadii(CORNER_RADIUS_RATIO), Insets.EMPTY)
         ));
         this.coinLabel.setBorder(new Border(
-                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS), new BorderWidths(BORDER_WIDTH))
+                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS_RATIO), new BorderWidths(BORDER_WIDTH_RATIO))
         ));
-        this.coinLabel.setFont(Font.font(null, FontWeight.BOLD, FONT_SIZE));
         this.coinLabel.setTextFill(DEFAULT_COLOR_LABEL);
 
-        //Set up the power up vbox
+        //power up box sizes
         this.powerUpBox.setSpacing(10);
 
         //Bind canvas too root size
@@ -99,7 +98,6 @@ public final class GameViewImpl implements GameView {
         this.canvas.heightProperty().bind(root.heightProperty());
         this.canvas.widthProperty().addListener(c -> scale());
         this.canvas.heightProperty().addListener(c -> scale());
-
 
         //Manage key press
         this.currentPane.setOnKeyPressed(e -> {
@@ -195,12 +193,12 @@ public final class GameViewImpl implements GameView {
 
                 //Create the label for every active power up
                 final Label label = new Label(formatPowerUpText(entry.getKey(), duration));
-                label.setFont(Font.font(null, FontWeight.BOLD, FONT_SIZE));
+                label.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
                 label.setTextFill(DEFAULT_COLOR_LABEL);
                 label.setBorder(new Border(
-                        new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS), new BorderWidths(BORDER_WIDTH))
+                        new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(this.responsiveCornerRadius), new BorderWidths(this.responsiveBorderWidth))
                 ));
-                label.setPadding(new Insets(LABEL_PADDING));
+                label.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
                 label.setBackground(labelBackground(entry.getKey()));
 
                 powerUpBox.getChildren().add(label);
@@ -223,7 +221,7 @@ public final class GameViewImpl implements GameView {
             case EntityType.INVINCIBILITY -> color = Color.ROSYBROWN;
             default -> throw new IllegalArgumentException("The entity type is not a power up");
         }
-        return new Background(new BackgroundFill(color, new CornerRadii(CORNER_RADIUS), Insets.EMPTY));
+        return new Background(new BackgroundFill(color, new CornerRadii(this.responsiveCornerRadius), Insets.EMPTY));
     }
 
     /**
@@ -257,12 +255,39 @@ public final class GameViewImpl implements GameView {
     }
 
     /**
-     * Computes the scale for the game.
+     * Computes the scale for the game and updates UI components with responsive dimensions.
      */
     private void scale() {
+        //Game scale
         final double scaleX = this.canvas.getWidth() / GAME_WIDTH;
         final double scaleY = this.canvas.getHeight() / GAME_HEIGHT;
         this.scale = Math.min(scaleX, scaleY);
+
+        //labels and boxes scales
+        this.responsivePadding = this.canvas.getHeight() * OVERLAY_PADDING_RATIO;
+        this.responsiveCornerRadius = this.canvas.getHeight() * CORNER_RADIUS_RATIO;
+        this.responsiveFontSize = this.canvas.getHeight() * (BASE_FONT_SIZE / 720.0);
+        this.responsiveBorderWidth = this.canvas.getHeight() * BORDER_WIDTH_RATIO;
+
+        //overlay scale
+        final double overlayWidth = this.canvas.getWidth() * OVERLAY_WIDTH_RATIO;
+        final double overlayHeight = this.canvas.getHeight() * OVERLAY_HEIGHT_RATIO;
+        
+        //Coin label and overlay update
+        Platform.runLater(() -> {
+            this.overlay.setPadding(new Insets(responsivePadding));
+            this.overlay.setMaxWidth(overlayWidth);
+            this.overlay.setMaxHeight(overlayHeight);
+
+            this.coinLabel.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
+            this.coinLabel.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
+            this.coinLabel.setBorder(new Border(
+                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(this.responsiveCornerRadius), new BorderWidths(this.responsiveBorderWidth))
+            ));
+            this.coinLabel.setBackground(new Background(
+                new BackgroundFill(Color.GOLDENROD, new CornerRadii(this.responsiveCornerRadius), Insets.EMPTY)
+            ));
+        });
     }
 
     /**
