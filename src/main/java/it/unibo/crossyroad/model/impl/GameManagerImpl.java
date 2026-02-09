@@ -236,7 +236,7 @@ public final class GameManagerImpl implements GameManager {
             for (final Obstacle obs : this.getObstaclesOnMap().stream().filter(o -> o.overlaps(this.player)).toList()) {
                 if (obs.getCollisionType() == CollisionType.DEADLY) {
                     deadlyCollision = true;
-                } else if (obs.getCollisionType() == CollisionType.TRANSPORT) {
+                } else if (obs.getCollisionType() == CollisionType.TRANSPORT && this.currentTransport.isPresent()) {
                     transportCollision = true;
                 }
             }
