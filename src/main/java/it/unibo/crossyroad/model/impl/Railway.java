@@ -18,7 +18,7 @@ public class Railway extends AbstractActiveChunk {
 
     private final Direction direction;
     private final double speed;
-    private long elapsedTime = 0L;
+    private long elapsedTime;
 
     /**
      * Initializes the Chunk.
