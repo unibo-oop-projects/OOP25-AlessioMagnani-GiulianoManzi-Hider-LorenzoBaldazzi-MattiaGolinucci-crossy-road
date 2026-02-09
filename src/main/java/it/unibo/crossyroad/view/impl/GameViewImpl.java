@@ -17,7 +17,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -43,8 +51,9 @@ public final class GameViewImpl implements GameView {
     private static final double LABEL_PADDING_RATIO = 0.01;
     private static final double CORNER_RADIUS_RATIO = 0.01;
     private static final double BASE_FONT_SIZE = 12.0;
-    private static final Color DEFAULT_COLOR_LABEL = Color.WHITE;
     private static final double BORDER_WIDTH_RATIO = 0.002;
+    private static final double MIN_SCREEN_WIDTH = 720.0;
+    private static final Color DEFAULT_COLOR_LABEL = Color.WHITE;
     private final StackPane root;
     private final StackPane currentPane;
     private final VBox powerUpBox;
@@ -55,10 +64,10 @@ public final class GameViewImpl implements GameView {
     private final Map<EntityType, Image> images = new EnumMap<>(EntityType.class);
     private GameController gameController;
     private double scale = 1.0;
-    private double responsivePadding = 0;
-    private double responsiveCornerRadius = 0;
+    private double responsivePadding;
+    private double responsiveCornerRadius;
     private double responsiveFontSize = BASE_FONT_SIZE;
-    private double responsiveBorderWidth = 0;
+    private double responsiveBorderWidth;
 
     /**
      * Initializes and places the various view's components.
@@ -83,10 +92,12 @@ public final class GameViewImpl implements GameView {
 
         //coin label sizes
         this.coinLabel.setBackground(new Background(
-                new BackgroundFill(Color.GOLDENROD, new CornerRadii(CORNER_RADIUS_RATIO), Insets.EMPTY)
+            new BackgroundFill(Color.GOLDENROD, new CornerRadii(CORNER_RADIUS_RATIO), Insets.EMPTY)
         ));
         this.coinLabel.setBorder(new Border(
-                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS_RATIO), new BorderWidths(BORDER_WIDTH_RATIO))
+            new BorderStroke(
+                Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(CORNER_RADIUS_RATIO), new BorderWidths(BORDER_WIDTH_RATIO)
+            )
         ));
         this.coinLabel.setTextFill(DEFAULT_COLOR_LABEL);
 
@@ -196,7 +207,11 @@ public final class GameViewImpl implements GameView {
                 label.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
                 label.setTextFill(DEFAULT_COLOR_LABEL);
                 label.setBorder(new Border(
-                        new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(this.responsiveCornerRadius), new BorderWidths(this.responsiveBorderWidth))
+                    new BorderStroke(
+                        Color.WHITE, BorderStrokeStyle.SOLID,
+                        new CornerRadii(this.responsiveCornerRadius),
+                        new BorderWidths(this.responsiveBorderWidth)
+                    )
                 ));
                 label.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
                 label.setBackground(labelBackground(entry.getKey()));
@@ -213,8 +228,8 @@ public final class GameViewImpl implements GameView {
      * @param type the type of power up
      * @return the background base on the type of power up
      */
-    private Background labelBackground(EntityType type) {
-        Color color;
+    private Background labelBackground(final EntityType type) {
+        final Color color;
         switch (type) {
             case EntityType.SLOW_CARS -> color = Color.DARKCYAN;
             case EntityType.COIN_MULTIPLIER -> color = Color.DARKSALMON;
@@ -266,13 +281,13 @@ public final class GameViewImpl implements GameView {
         //labels and boxes scales
         this.responsivePadding = this.canvas.getHeight() * OVERLAY_PADDING_RATIO;
         this.responsiveCornerRadius = this.canvas.getHeight() * CORNER_RADIUS_RATIO;
-        this.responsiveFontSize = this.canvas.getHeight() * (BASE_FONT_SIZE / 720.0);
+        this.responsiveFontSize = this.canvas.getHeight() * (BASE_FONT_SIZE / MIN_SCREEN_WIDTH);
         this.responsiveBorderWidth = this.canvas.getHeight() * BORDER_WIDTH_RATIO;
 
         //overlay scale
         final double overlayWidth = this.canvas.getWidth() * OVERLAY_WIDTH_RATIO;
         final double overlayHeight = this.canvas.getHeight() * OVERLAY_HEIGHT_RATIO;
-        
+
         //Coin label and overlay update
         Platform.runLater(() -> {
             this.overlay.setPadding(new Insets(responsivePadding));
@@ -282,7 +297,9 @@ public final class GameViewImpl implements GameView {
             this.coinLabel.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
             this.coinLabel.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
             this.coinLabel.setBorder(new Border(
-                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID, new CornerRadii(this.responsiveCornerRadius), new BorderWidths(this.responsiveBorderWidth))
+                new BorderStroke(Color.WHITE, BorderStrokeStyle.SOLID,
+                    new CornerRadii(this.responsiveCornerRadius),
+                    new BorderWidths(this.responsiveBorderWidth))
             ));
             this.coinLabel.setBackground(new Background(
                 new BackgroundFill(Color.GOLDENROD, new CornerRadii(this.responsiveCornerRadius), Insets.EMPTY)
