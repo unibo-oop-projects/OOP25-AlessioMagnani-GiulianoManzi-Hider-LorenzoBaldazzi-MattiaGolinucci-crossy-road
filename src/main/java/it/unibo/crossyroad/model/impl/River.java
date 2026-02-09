@@ -16,8 +16,8 @@ public final class River extends AbstractActiveChunk {
     public static final double LOGS_SPEED = 1.0;
     private static final int LOGS_LENGTH = 3;
     private static final int CHUNK_SECTIONS = 3;
+    private static final long LOG_INTERVAL = Math.round(LOGS_DISTANCE / LOGS_SPEED * 1000);
 
-    private final long logInterval = Math.round(LOGS_DISTANCE / LOGS_SPEED * 1000);
     private final double sectionHeight;
     private final Direction direction;
     private long timeSinceLastGeneration;
@@ -57,7 +57,7 @@ public final class River extends AbstractActiveChunk {
     protected boolean shouldGenerateNewObstacles(final long deltaTime) {
         this.timeSinceLastGeneration += deltaTime;
 
-        if (this.timeSinceLastGeneration >= this.logInterval) {
+        if (this.timeSinceLastGeneration >= LOG_INTERVAL) {
             this.timeSinceLastGeneration = 0;
             return true;
         }
