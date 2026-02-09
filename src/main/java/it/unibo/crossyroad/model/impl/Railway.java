@@ -1,6 +1,10 @@
 package it.unibo.crossyroad.model.impl;
 
-import it.unibo.crossyroad.model.api.*;
+import it.unibo.crossyroad.model.api.AbstractActiveChunk;
+import it.unibo.crossyroad.model.api.Position;
+import it.unibo.crossyroad.model.api.Dimension;
+import it.unibo.crossyroad.model.api.Direction;
+import it.unibo.crossyroad.model.api.EntityType;
 
 import java.util.Random;
 
