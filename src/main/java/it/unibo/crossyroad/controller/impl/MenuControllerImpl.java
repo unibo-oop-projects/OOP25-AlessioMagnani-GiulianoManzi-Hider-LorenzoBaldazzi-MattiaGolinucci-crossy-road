@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Implementation of MenuController.
@@ -18,6 +19,8 @@ import java.util.Objects;
  */
 public class MenuControllerImpl implements MenuController {
     private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
+
+    private static final Logger LOGGER = Logger.getLogger(MenuControllerImpl.class.getName());
 
     private final AppController appController;
     private final StateManager stateManager;
@@ -30,7 +33,7 @@ public class MenuControllerImpl implements MenuController {
      * @param menuView the menu view.
      * @param s the state manager.
      */
-    public MenuControllerImpl(AppController appController, MenuView menuView, StateManager s) {
+    public MenuControllerImpl(final AppController appController, final MenuView menuView, final StateManager s) {
         this.appController = Objects.requireNonNull(appController, "The application controller cannot be null");
         this.menuView = Objects.requireNonNull(menuView, "The menu view cannot be null");
         this.stateManager = Objects.requireNonNull(s, "The state manager cannot be null");
@@ -80,16 +83,24 @@ public class MenuControllerImpl implements MenuController {
      * {@inheritDoc}
      */
     @Override
-    public void save() throws IOException {
-        this.stateManager.save(SAVE_PATH);
+    public void save() {
+        try {
+            this.stateManager.save(SAVE_PATH);
+        } catch (final IOException ex) {
+            LOGGER.severe("Failed to save game state");
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void load() throws IOException {
-        this.stateManager.load(SAVE_PATH);
+    public void load() {
+        try {
+            this.stateManager.load(SAVE_PATH);
+        } catch (final IOException ex) {
+            LOGGER.severe("Failed to load game state");
+        }
     }
 
 }

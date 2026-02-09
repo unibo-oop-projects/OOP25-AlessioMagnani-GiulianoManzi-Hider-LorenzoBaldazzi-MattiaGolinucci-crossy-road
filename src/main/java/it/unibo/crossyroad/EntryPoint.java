@@ -24,7 +24,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
@@ -97,21 +96,13 @@ public class EntryPoint extends Application {
 
     private void loadSave(final MenuController menuController) {
         if (SAVE_PATH.toFile().exists()) {
-            try {
-                menuController.load();
-            } catch (final IOException e) {
-                LOGGER.info("Failed to load past game state");
-            }
+            menuController.load();
         }
     }
 
     private void onClose(final GameController gameController, final MenuController menuController) {
         gameController.endGame();
-        try {
-            menuController.save();
-        } catch (final IOException ex) {
-            LOGGER.severe("Failed to save the game state");
-        }
+        menuController.save();
         Platform.exit();
     }
 }

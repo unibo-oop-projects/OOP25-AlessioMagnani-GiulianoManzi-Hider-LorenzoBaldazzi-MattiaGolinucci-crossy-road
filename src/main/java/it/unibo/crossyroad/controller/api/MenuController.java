@@ -2,9 +2,6 @@ package it.unibo.crossyroad.controller.api;
 
 import it.unibo.crossyroad.model.api.Skin;
 
-import java.io.IOException;
-import java.nio.file.Path;
-
 /**
  * An interface modelling a controller for menu interactions and navigation.
  */
@@ -39,15 +36,11 @@ public interface MenuController {
 
     /**
      * Save application state.
-     *
-     * @throws IOException if an I/O error occurs.
      */
-    void save() throws IOException;
+    void save();
 
     /**
      * Load application state.
-     *
-     * @throws IOException if an I/O error occurs.
      */
-    void load() throws IOException;
+    void load();
 }

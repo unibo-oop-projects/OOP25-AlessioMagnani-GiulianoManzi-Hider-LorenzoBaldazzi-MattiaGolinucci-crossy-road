@@ -24,10 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -51,7 +48,6 @@ public final class MenuViewImpl implements MenuView {
     private static final double BORDER_WIDTH = 2.0;
     private static final Color TEXT_COLOR = Color.WHITE;
 
-    private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
     private static final Logger LOGGER = Logger.getLogger(MenuViewImpl.class.getName());
 
     private final StackPane root;
@@ -165,12 +161,7 @@ public final class MenuViewImpl implements MenuView {
             }),
             createButton("EXIT", Color.CRIMSON, e -> {
                 if (!Objects.isNull(this.controller)) {
-                    // todo: remove try-catch
-                    try {
-                        this.controller.save();
-                    } catch (final IOException ex) {
-                        LOGGER.severe("Failed to save game state");
-                    }
+                    this.controller.save();
                 }
                 Platform.exit();
             })
