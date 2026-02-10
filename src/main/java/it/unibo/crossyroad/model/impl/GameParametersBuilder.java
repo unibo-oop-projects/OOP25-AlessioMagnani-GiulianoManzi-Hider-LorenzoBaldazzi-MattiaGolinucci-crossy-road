@@ -10,6 +10,7 @@ public class GameParametersBuilder {
     private boolean invincibility;
     private double logSpeedMultiplier = 1.0;
     private int coinCount;
+    private int score;
 
     /**
      * Sets the coin multiplier.
@@ -78,6 +79,17 @@ public class GameParametersBuilder {
     }
 
     /**
+     * Sets the initial score.
+     *
+     * @param initScore the init score.
+     * @return the builder instance
+     */
+    public GameParametersBuilder setInitScore(final int initScore) {
+        this.score = initScore;
+        return this;
+    }
+
+    /**
      * Builds the {@link GameParametersImpl} instance.
      *
      * @return the constructed GameParametersImpl
@@ -89,7 +101,8 @@ public class GameParametersBuilder {
                 this.trainSpeedMultiplier,
                 this.invincibility,
                 this.logSpeedMultiplier,
-                this.coinCount
+                this.coinCount,
+                this.score
         );
     }
 }

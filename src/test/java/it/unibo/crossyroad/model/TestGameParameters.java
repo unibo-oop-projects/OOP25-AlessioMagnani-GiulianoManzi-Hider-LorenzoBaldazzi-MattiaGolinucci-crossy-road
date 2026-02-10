@@ -24,11 +24,13 @@ class TestGameParameters {
     private static final boolean DEFAULT_INVINCIBILITY = false;
     private static final double DEFAULT_LOG_SPEED_MULTIPLIER = 1.0;
     private static final int DEFAULT_COIN_START_COUNT = 0;
+    private static final int DEFAULT_INIT_SCORE = 0;
     private static final int TEST_COIN_MULTIPLIER = 2;
     private static final double TEST_CAR_SPEED_MULTIPLIER = 1.5;
     private static final double TEST_TRAIN_SPEED_MULTIPLIER = 2.0;
     private static final boolean TEST_INVINCIBILITY = true;
     private static final double TEST_LOG_SPEED_MULTIPLIER = 1.8;
+    private static final int TEST_INITIAL_SCORE = 4;
     private static final int TEST_COIN_START_COUNT = 5;
     private static final int INCREMENT_TIMES = 7;
 
@@ -46,6 +48,7 @@ class TestGameParameters {
                 .setCoinMultiplier(DEFAULT_COIN_MULTIPLIER)
                 .setInvincibility(DEFAULT_INVINCIBILITY)
                 .setLogSpeedMultiplier(DEFAULT_LOG_SPEED_MULTIPLIER)
+                .setInitScore(DEFAULT_INIT_SCORE)
                 .build();
     }
 
@@ -60,6 +63,7 @@ class TestGameParameters {
         assertEquals(DEFAULT_INVINCIBILITY, this.gameParameters.isInvincible());
         assertEquals(DEFAULT_COIN_START_COUNT, this.gameParameters.getCoinCount());
         assertEquals(DEFAULT_LOG_SPEED_MULTIPLIER, this.gameParameters.getLogSpeedMultiplier());
+        assertEquals(DEFAULT_INIT_SCORE, this.gameParameters.getScore());
     }
 
     /**
@@ -73,6 +77,7 @@ class TestGameParameters {
         this.gameParameters.setInvincibility(TEST_INVINCIBILITY);
         this.gameParameters.setCoinCount(TEST_COIN_START_COUNT);
         this.gameParameters.setLogSpeedMultiplier(TEST_LOG_SPEED_MULTIPLIER);
+        this.gameParameters.setInitialScore(TEST_INITIAL_SCORE);
 
         assertEquals(TEST_COIN_MULTIPLIER, this.gameParameters.getCoinMultiplier());
         assertEquals(TEST_CAR_SPEED_MULTIPLIER, this.gameParameters.getCarSpeedMultiplier());
@@ -80,6 +85,7 @@ class TestGameParameters {
         assertTrue(this.gameParameters.isInvincible());
         assertEquals(TEST_LOG_SPEED_MULTIPLIER, this.gameParameters.getLogSpeedMultiplier());
         assertEquals(TEST_COIN_START_COUNT, this.gameParameters.getCoinCount());
+        assertEquals(TEST_INITIAL_SCORE, this.gameParameters.getScore());
     }
 
     /**
@@ -101,6 +107,9 @@ class TestGameParameters {
         );
         assertThrows(IllegalArgumentException.class, () ->
                 this.gameParameters.setLogSpeedMultiplier(0)
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                this.gameParameters.setInitialScore(-1)
         );
     }
 
@@ -134,6 +143,11 @@ class TestGameParameters {
                         .setLogSpeedMultiplier(0)
                         .build()
         );
+        assertThrows(IllegalArgumentException.class, () ->
+                new GameParametersBuilder()
+                        .setInitScore(-1)
+                        .build()
+        );
     }
 
     /**
@@ -146,6 +160,18 @@ class TestGameParameters {
            this.gameParameters.incrementCoinCount();
        }
        assertEquals(INCREMENT_TIMES * TEST_COIN_MULTIPLIER + DEFAULT_COIN_START_COUNT, this.gameParameters.getCoinCount());
+    }
+
+    /**
+     * Tests the incrementScore method.
+     */
+    @Test
+    void testIncrementScore() {
+        this.gameParameters.setInitialScore(TEST_INITIAL_SCORE);
+        for (int i = 0; i < INCREMENT_TIMES; i++) {
+            this.gameParameters.incrementScore();
+        }
+        assertEquals(INCREMENT_TIMES + TEST_INITIAL_SCORE, this.gameParameters.getScore());
     }
 
     /**
@@ -164,7 +190,8 @@ class TestGameParameters {
                      "trainSpeedMultiplier": 2.0,
                      "invincibility": true,
                      "logSpeedMultiplier": 1.8,
-                     "coinCount": 5
+                     "coinCount": 5,
+                     "score" : 4
                     }
                 """);
 
@@ -179,6 +206,7 @@ class TestGameParameters {
         assertEquals(TEST_LOG_SPEED_MULTIPLIER, this.gameParameters.getLogSpeedMultiplier());
         assertTrue(this.gameParameters.isInvincible());
         assertEquals(TEST_COIN_START_COUNT, this.gameParameters.getCoinCount());
+        assertEquals(TEST_INITIAL_SCORE, this.gameParameters.getScore());
 
         Files.deleteIfExists(tmpFile);
     }
