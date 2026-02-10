@@ -17,23 +17,12 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.Map;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Implementation of the GameView interface.
@@ -51,14 +40,16 @@ public final class GameViewImpl implements GameView {
     private static final double LABEL_PADDING_RATIO = 0.01;
     private static final double CORNER_RADIUS_RATIO = 0.01;
     private static final double BASE_FONT_SIZE = 12.0;
+    private static final double FONT_SCORE = 50.0;
     private static final double BORDER_WIDTH_RATIO = 0.002;
     private static final double MIN_SCREEN_WIDTH = 720.0;
     private static final Color DEFAULT_COLOR_LABEL = Color.WHITE;
     private final StackPane root;
     private final StackPane currentPane;
     private final VBox powerUpBox;
-    private final VBox overlay;
+    private final StackPane overlay;
     private final Label coinLabel;
+    private final Label scoreLabel;
     private final Canvas canvas;
     private final GraphicsContext content;
     private final Map<EntityType, Image> images = new EnumMap<>(EntityType.class);
@@ -67,6 +58,7 @@ public final class GameViewImpl implements GameView {
     private double responsivePadding;
     private double responsiveCornerRadius;
     private double responsiveFontSize = BASE_FONT_SIZE;
+    private double responsiveFontScore = FONT_SCORE;
     private double responsiveBorderWidth;
     private double overlayWidth;
 
@@ -82,10 +74,10 @@ public final class GameViewImpl implements GameView {
         this.content = this.canvas.getGraphicsContext2D();
         this.powerUpBox = new VBox();
         this.coinLabel = new Label();
+        this.scoreLabel = new Label();
 
         //overlay sizes
-        this.overlay = new VBox(10);
-        this.overlay.setAlignment(Pos.TOP_LEFT);
+        this.overlay = new StackPane();
         this.overlay.setPickOnBounds(false);
         this.overlay.setBackground(new Background(
                 new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)
@@ -101,6 +93,10 @@ public final class GameViewImpl implements GameView {
             )
         ));
         this.coinLabel.setTextFill(DEFAULT_COLOR_LABEL);
+
+        //score label sizes
+        this.scoreLabel.setText("0");
+        this.scoreLabel.setTextFill(DEFAULT_COLOR_LABEL);
 
         //power up box sizes
         this.powerUpBox.setSpacing(10);
@@ -140,8 +136,19 @@ public final class GameViewImpl implements GameView {
         currentPane.setFocusTraversable(true);
         currentPane.requestFocus();
 
+        StackPane scoreLayer = new StackPane();
+        scoreLayer.getChildren().add(this.scoreLabel);
+        StackPane.setAlignment(this.scoreLabel, Pos.TOP_CENTER);
+
+        final VBox leftBox = new VBox(10);
+        leftBox.getChildren().addAll(this.coinLabel, this.powerUpBox);
+        StackPane.setAlignment(leftBox, Pos.TOP_LEFT);
+
+        this.overlay.getChildren().addAll(scoreLayer, leftBox);
+
+        this.overlay.setPadding(new Insets(responsivePadding));
+
         this.content.setImageSmoothing(false);
-        this.overlay.getChildren().addAll(this.coinLabel, this.powerUpBox);
         this.currentPane.getChildren().addAll(this.canvas, this.overlay);
         StackPane.setAlignment(this.overlay, Pos.TOP_LEFT);
         this.root.getChildren().add(this.currentPane);
@@ -193,6 +200,8 @@ public final class GameViewImpl implements GameView {
      */
     @Override
     public void updatePowerUpTime(final Map<EntityType, Long> powerUps) {
+        Objects.requireNonNull(powerUps, "The map of power up cannot be null");
+
         Platform.runLater(() -> {
             if (powerUps.isEmpty()) {
                 powerUpBox.setVisible(false);
@@ -247,9 +256,15 @@ public final class GameViewImpl implements GameView {
      */
     @Override
     public void updateCoinCount(final int count) {
-        Platform.runLater(() -> {
-            coinLabel.setText("COINS : " + count);
-        });
+        Platform.runLater(() -> this.coinLabel.setText("COINS : " + count));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateScore(int score) {
+        Platform.runLater(() -> this.scoreLabel.setText("String.valueOf(0)"));
     }
 
     /**
@@ -285,6 +300,7 @@ public final class GameViewImpl implements GameView {
         this.responsivePadding = this.canvas.getHeight() * OVERLAY_PADDING_RATIO;
         this.responsiveCornerRadius = this.canvas.getHeight() * CORNER_RADIUS_RATIO;
         this.responsiveFontSize = this.canvas.getHeight() * (BASE_FONT_SIZE / MIN_SCREEN_WIDTH);
+        this.responsiveFontScore = this.canvas.getHeight() * (FONT_SCORE / MIN_SCREEN_WIDTH);
         this.responsiveBorderWidth = this.canvas.getHeight() * BORDER_WIDTH_RATIO;
         this.overlayWidth = this.canvas.getWidth() * OVERLAY_WIDTH_RATIO;
 
@@ -306,6 +322,7 @@ public final class GameViewImpl implements GameView {
             this.coinLabel.setBackground(new Background(
                 new BackgroundFill(Color.GOLDENROD, new CornerRadii(this.responsiveCornerRadius), Insets.EMPTY)
             ));
+            this.scoreLabel.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontScore));
         });
     }
 
