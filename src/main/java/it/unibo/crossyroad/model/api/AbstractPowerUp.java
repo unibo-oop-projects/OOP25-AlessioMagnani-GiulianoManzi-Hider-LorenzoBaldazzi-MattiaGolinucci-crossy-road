@@ -67,7 +67,7 @@ public abstract class AbstractPowerUp extends AbstractPickable implements PowerU
      * {@inheritDoc}
      */
     @Override
-    public void addReamainingTime(final long time) {
+    public void addRemainingTime(final long time) {
         this.remainingTime += time;
     }
 

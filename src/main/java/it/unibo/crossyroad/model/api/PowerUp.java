@@ -31,5 +31,5 @@ public interface PowerUp extends Pickable {
      * 
      * @param time the time to add to the remaining time.
      */
-    void addReamainingTime(long time);
+    void addRemainingTime(long time);
 }
