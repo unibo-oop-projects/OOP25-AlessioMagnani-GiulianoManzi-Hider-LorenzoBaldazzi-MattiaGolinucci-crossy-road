@@ -38,7 +38,7 @@ public class AppControllerImpl implements AppController {
     private void hideAllViews() {
         this.gameController.hideGame();
         this.menuController.hideMenu();
-        // todo: this.shopController.hideShop();
+        this.shopController.hideShop();
     }
 
     /**
@@ -113,8 +113,7 @@ public class AppControllerImpl implements AppController {
      */
     @Override
     public Skin getActiveSkin() {
-        // return this.shopController.getActiveSkin();
-        return null; // todo
+        return this.shopController.getActiveSkin();
     }
 
     /**
@@ -122,7 +121,6 @@ public class AppControllerImpl implements AppController {
      */
     @Override
     public int getCoinCount() {
-        // return this.shopController.getCoinCount();
-        return 0; // todo
+        return this.shopController.getCoinCount();
     }
 }
