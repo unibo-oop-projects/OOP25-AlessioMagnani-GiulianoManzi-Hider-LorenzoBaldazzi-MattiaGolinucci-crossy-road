@@ -55,6 +55,14 @@ public interface GameParameters {
     void setLogSpeedMultiplier(double logSpeedMultiplier);
 
     /**
+     * Sets the initial score.
+     *
+     * @param initScore the initial score.
+     * @throws IllegalArgumentException if initScore is < 0.
+     */
+    void setInitialScore(int initScore);
+
+    /**
      * Gets the current coin multiplier.
      *
      * @return the coin multiplier.
@@ -100,6 +108,18 @@ public interface GameParameters {
      * Increments the coin based on the coin multiplier.
      */
     void incrementCoinCount();
+
+    /**
+     * Gets the current score.
+     *
+     * @return the score.
+     */
+    int getScore();
+
+    /**
+     * Increments the score at every step forward of the player.
+     */
+    void incrementScore();
 
     /**
      * Loads game parameters from a json file.

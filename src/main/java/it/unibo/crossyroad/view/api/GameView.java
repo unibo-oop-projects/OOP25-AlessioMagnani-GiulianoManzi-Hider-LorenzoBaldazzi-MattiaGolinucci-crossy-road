@@ -24,7 +24,7 @@ public interface GameView extends View {
      * 
      * @param positionables the list of items to render.
      * 
-     * @see Positionables
+     * @see Positionable
      */
     void render(List<Positionable> positionables);
 
@@ -38,7 +38,14 @@ public interface GameView extends View {
     /**
      * Updates the coin count display.
      *
-     * @param count the current coin count
+     * @param count the current coin count.
      */
     void updateCoinCount(int count);
+
+    /**
+     * Updates the score display.
+     *
+     * @param score the current score.
+     */
+    void updateScore(int score);
 }

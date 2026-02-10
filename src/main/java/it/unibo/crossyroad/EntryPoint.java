@@ -24,24 +24,22 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Logger;
 
 /**
  * Entry point of the application. It initializes the MVC components and starts the JavaFX application.
  */
 public class EntryPoint extends Application {
+    private static final String TITLE = "Crossy Road";
     private static final double WIDTH = 10;
     private static final double HEIGHT = 9;
     private static final double ASPECT_RATIO = WIDTH / HEIGHT;
-    private static final String TITLE = "Crossy Road";
     private static final double SCALE = 0.9;
-    private static final Logger LOGGER = Logger.getLogger(EntryPoint.class.getName());
     private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
 
     private StateManager stateManager;
@@ -76,6 +74,7 @@ public class EntryPoint extends Application {
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);
+        stage.getIcons().add(new Image("skins/default_front.png"));
 
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
@@ -101,21 +100,13 @@ public class EntryPoint extends Application {
 
     private void loadSave(final MenuController menuController) {
         if (SAVE_PATH.toFile().exists()) {
-            try {
-                menuController.load(SAVE_PATH);
-            } catch (final IOException e) {
-                LOGGER.info("Failed to load past game state");
-            }
+            menuController.load();
         }
     }
 
     private void onClose(final GameController gameController, final MenuController menuController) {
         gameController.endGame();
-        try {
-            menuController.save(Paths.get(System.getProperty("user.home"), "crossyroad"));
-        } catch (final IOException ex) {
-            LOGGER.severe("Failed to save the game state");
-        }
+        menuController.save();
         Platform.exit();
     }
 }

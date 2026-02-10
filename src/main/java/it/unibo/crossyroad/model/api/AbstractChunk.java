@@ -17,12 +17,14 @@ import it.unibo.crossyroad.model.impl.SlowCars;
  */
 public abstract class AbstractChunk extends AbstractPositionable implements Chunk {
 
-    private static final double FIRST_PROBABILITY = 0.70;
-    private static final double SECOND_PROBABILITY = 0.80;
-    private static final double THIRD_PROBABILITY = 0.90;
+    private static final double FIRST_PROBABILITY = 0.85;
+    private static final double SECOND_PROBABILITY = 0.90;
+    private static final double THIRD_PROBABILITY = 0.95;
     private static final Random RND = new Random();
+    private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private final List<Obstacle> obstacles;
     private final List<Pickable> pickables;
+    private boolean isFirstChunk;
 
     /**
      * Initializes the Chunk.
@@ -38,6 +40,20 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
         }
         this.obstacles = new LinkedList<>();
         this.pickables = new LinkedList<>();
+    }
+
+    /**
+     * Initializes the Chunk.
+     * 
+     * @param initialPosition the Chunk's initial position.
+     * 
+     * @param dimension the Chunk's dimension.
+     * 
+     * @param firstChunk tells if the Chunk is part of the first set of Chunks of the game.
+     */
+    public AbstractChunk(final Position initialPosition, final Dimension dimension, final boolean firstChunk) {
+        this(initialPosition, dimension);
+        this.isFirstChunk = firstChunk;
     }
 
     /**
@@ -156,14 +172,24 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
     }
 
     /**
+     * Tells if the Chunk is part of the first ones of the game.
+     * 
+     * @return ture if the Chunk is part of the first ones of the game.
+     */
+    protected boolean isFirstChunk() {
+        return this.isFirstChunk;
+    }
+
+    /**
      * Generates random Pickables objects on the Chunk, each one with a different probability.
      */
     private void generatePickables() {
-        for (int i = 0; i < RND.nextInt(3); i++) {
+        for (int i = 0; i < RND.nextInt(3, 6); i++) {
             final int relativeX = RND.nextInt((int) this.getDimension().width());
             final int relativeY = RND.nextInt((int) this.getDimension().height());
             final Position randomPosition = new Position(this.getPosition().x() + relativeX, this.getPosition().y() + relativeY);
-            if (!this.getPositionables().stream().anyMatch(p -> p.getPosition().equals(randomPosition))) {
+            if (!this.getPositionables().stream().anyMatch(p -> p.getPosition().equals(randomPosition))
+                && !(this.isFirstChunk && randomPosition.equals(PLAYER_START_POSITION))) {
                 final double number = RND.nextDouble();
                 if (number <= FIRST_PROBABILITY) {
                     this.addPickable(new Coin(randomPosition));

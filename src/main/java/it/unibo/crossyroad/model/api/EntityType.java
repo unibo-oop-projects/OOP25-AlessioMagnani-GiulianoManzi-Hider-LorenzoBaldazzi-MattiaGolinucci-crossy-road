@@ -16,9 +16,9 @@ public enum EntityType {
     TREE("Tree"),
     WOOD_LOG("Wood log"),
     WATER("Water"),
-    COIN_MULTIPLIER("Coin Multiplier"),
-    SLOW_CARS("Slow Cars"),
-    INVINCIBILITY("Invincibility"),
+    COIN_MULTIPLIER("COIN MULTIPLIER"),
+    SLOW_CARS("SLOW CARS"),
+    INVINCIBILITY("INVINCIBILITY"),
     COIN("Coin"),
     PLAYER("Player");
 

@@ -1,11 +1,14 @@
 package it.unibo.crossyroad.model.impl;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Range;
@@ -41,6 +44,7 @@ public final class GameManagerImpl implements GameManager {
     private static final double FIRST_PROBABILITY = 0.3;
     private static final double SECOND_PROBABILITY = 0.6;
     private static final double THIRD_PROBABILITY = 0.8;
+    private static final double COMPARISON_EPSILON = 0.000_01;
     private static final Dimension CHUNK_DIMENSION = new Dimension(MAP_WIDTH, MAP_HEIGHT / 3); 
     private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private static final Position CHUNK_START_POSITION = new Position(0, -3);
@@ -87,7 +91,7 @@ public final class GameManagerImpl implements GameManager {
     public Map<EntityType, Long> getActivePowerUps() {
         return this.chunks.stream()
                           .flatMap(c -> c.getActivePowerUp().stream())
-                          .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining, Math::min));
+                          .collect(Collectors.toMap(Pickable::getEntityType, PowerUp::getRemaining, Math::min)); //TODO use Long::sum
     }
 
     /**
@@ -120,11 +124,17 @@ public final class GameManagerImpl implements GameManager {
      */
     @Override
     public void movePlayer(final Direction d) {
+        final boolean pathStatus = this.isThereAPath(Optional.empty());
+
         if (this.canPlayerMove(d)) {
             if (d == Direction.UP && this.player.getPosition().y() <= Y_MOVE_MAP_MARK) {
                 this.moveMap();
             } else {
                 this.player.move(d, 1);
+            }
+
+            if (pathStatus && !this.isThereAPath(Optional.empty())) {
+                this.isGameOver = true;
             }
         }
     }
@@ -153,8 +163,15 @@ public final class GameManagerImpl implements GameManager {
         this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
         this.chunks.add(new Grass(CHUNK_FIRST_POSITION, CHUNK_DIMENSION));
         this.chunks.add(new Grass(CHUNK_SECOND_POSITION, CHUNK_DIMENSION));
-        this.chunks.add(new Grass(CHUNK_THIRD_POSITION, CHUNK_DIMENSION));
+        this.chunks.add(new Grass(CHUNK_THIRD_POSITION, CHUNK_DIMENSION, true));
         this.lastGenerated = new Pair<>(EntityType.GRASS, 4);
+
+        //Rigenerate until there's a valid path
+        if (!this.isThereAPath(Optional.empty())) {
+            this.reset();
+        }
+
+        this.removeUnreachablePickables();
     }
 
     /**
@@ -163,6 +180,51 @@ public final class GameManagerImpl implements GameManager {
     @Override
     public void endGame() {
         this.isGameOver = true;
+    }
+
+    /**
+     * Checks if there is a valid path the player can use.
+     * 
+     * @param destination the optional precise destination to reach,
+     *     if empty it checks a path to reach the end of the map.
+     * 
+     * @return true if there is a valid path, false otherwise.
+     */
+    private boolean isThereAPath(final Optional<Position> destination) {
+        final Set<Position> visited = new HashSet<>();
+        final Queue<Position> queue = new LinkedList<>();
+
+        queue.add(this.player.getPosition());
+        visited.add(this.player.getPosition());
+
+        while (!queue.isEmpty()) {
+            final Position current = queue.poll();
+
+            //If a destination is passed check if it's reached
+            if (destination.isPresent() && current.equals(destination.get())) {
+                return true;
+            }
+
+            //If a destination is not passed check for the map end
+            if (Math.abs(current.y() - CHUNK_START_POSITION.y()) < COMPARISON_EPSILON) {
+                return true;
+            }
+
+            for (final Direction d : Direction.values()) {
+                final Position newPosition = d.apply(current);
+                if (newPosition.x() >= 0 && newPosition.x() < MAP_WIDTH && newPosition.y() < MAP_HEIGHT
+                    && newPosition.y() >= CHUNK_START_POSITION.y() && !this.getObstaclesOnMap().stream()
+                                                                           .filter(o -> o instanceof Rock || o instanceof Tree)
+                                                                           .anyMatch(o -> o.getPosition().equals(newPosition))
+                    && !visited.contains(newPosition)) {
+
+                    visited.add(newPosition);
+                    queue.add(newPosition);
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -236,7 +298,7 @@ public final class GameManagerImpl implements GameManager {
             for (final Obstacle obs : this.getObstaclesOnMap().stream().filter(o -> o.overlaps(this.player)).toList()) {
                 if (obs.getCollisionType() == CollisionType.DEADLY) {
                     deadlyCollision = true;
-                } else if (obs.getCollisionType() == CollisionType.TRANSPORT) {
+                } else if (obs.getCollisionType() == CollisionType.TRANSPORT && this.currentTransport.isPresent()) {
                     transportCollision = true;
                 }
             }
@@ -249,29 +311,44 @@ public final class GameManagerImpl implements GameManager {
      * Generates a new Chunk.
      */
     private void generateChunk() {
+        Chunk newChunk = new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION);
+
         //Place a Grass chunk after every railway, every river and every 2 roads
-        if (this.lastGenerated.e1() == EntityType.RAILWAY || this.lastGenerated.e1() == EntityType.RIVER
-            || this.lastGenerated.e1() == EntityType.ROAD && this.lastGenerated.e2() >= 2) {
-            this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
-            this.lastGenerated = new Pair<>(EntityType.GRASS, 1);
-        } else { //Generate a random chunk, each one with different probability
+        if (this.lastGenerated.e1() != EntityType.RAILWAY && this.lastGenerated.e1() != EntityType.RIVER
+            && (this.lastGenerated.e1() != EntityType.ROAD || this.lastGenerated.e2() < 2)) {
+            //Generate a random chunk, each one with different probability
             final double number = RANDOM.nextDouble();
-
             if (number <= FIRST_PROBABILITY) {
-                this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
-                this.updateLastGenerated(EntityType.GRASS);
+                newChunk = new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION);
             } else if (number <= SECOND_PROBABILITY) {
-                this.chunks.add(new Road(CHUNK_START_POSITION, CHUNK_DIMENSION));
-                this.updateLastGenerated(EntityType.ROAD);
-
+                newChunk = new Road(CHUNK_START_POSITION, CHUNK_DIMENSION);
             } else if (number <= THIRD_PROBABILITY) {
-                this.chunks.add(new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION));
-                this.updateLastGenerated(EntityType.RAILWAY);
+                newChunk = new Railway(CHUNK_START_POSITION, CHUNK_DIMENSION);
             } else {
                 final Direction riverDirection = RANDOM.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
-                this.chunks.add(new River(CHUNK_START_POSITION, CHUNK_DIMENSION, riverDirection));
+                newChunk = new River(CHUNK_START_POSITION, CHUNK_DIMENSION, riverDirection);
             }
         }
+        this.chunks.add(newChunk);
+
+        //Rigenerate until there's a valid path
+        if (!this.isThereAPath(Optional.empty())) {
+            this.chunks.removeIf(c -> c.getPosition().equals(CHUNK_START_POSITION));
+            this.generateChunk();
+        }
+        this.updateLastGenerated(newChunk.getEntityType());
+
+        this.removeUnreachablePickables();
+    }
+
+    /**
+     * Remove the unreachable pickables on the map.
+     */
+    private void removeUnreachablePickables() {
+        this.chunks.forEach(c -> c.getPickables().stream()
+                                                 .filter(p -> !this.isThereAPath(Optional.of(p.getPosition())))
+                                                 .forEach(c::removePickable)
+                            );
     }
 
     /**
@@ -329,7 +406,7 @@ public final class GameManagerImpl implements GameManager {
     private void checkPowerUpCollisions() {
         this.getPickablesOnMap().stream()
                                 .filter(p -> p instanceof PowerUp && p.overlaps(this.player)
-                                        && !this.getActivePowerUps().containsKey(p.getEntityType()))
+                                    && !this.getActivePowerUps().containsKey(p.getEntityType())) //TODO remove this line
                                 .forEach(p -> p.pickUp(this.gameParameters));
     }
 
