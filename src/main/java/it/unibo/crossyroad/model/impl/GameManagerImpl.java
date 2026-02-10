@@ -40,17 +40,14 @@ public final class GameManagerImpl implements GameManager {
     private static final double Y_MOVE_MAP_MARK = 4; 
     private static final double Y_DISPOSE_CHUNK_MARK = MAP_WIDTH + 2;
     private static final double Y_MAP_MOVEMENT = 1;
-    private static final double Y_CREATE_CHUNK_MARK = 0;
+    private static final double Y_CREATE_CHUNK_MARK = -9;
     private static final double FIRST_PROBABILITY = 0.3;
     private static final double SECOND_PROBABILITY = 0.6;
     private static final double THIRD_PROBABILITY = 0.8;
     private static final double COMPARISON_EPSILON = 0.000_01;
     private static final Dimension CHUNK_DIMENSION = new Dimension(MAP_WIDTH, MAP_HEIGHT / 3); 
     private static final Position PLAYER_START_POSITION = new Position(5, 8);
-    private static final Position CHUNK_START_POSITION = new Position(0, -3);
-    private static final Position CHUNK_FIRST_POSITION = new Position(0, 0);
-    private static final Position CHUNK_SECOND_POSITION = new Position(0, 3);
-    private static final Position CHUNK_THIRD_POSITION = new Position(0, 6);
+    private static final Position CHUNK_START_POSITION = new Position(0, -12);
     private static final Random RANDOM = new Random();
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
@@ -159,11 +156,15 @@ public final class GameManagerImpl implements GameManager {
         this.isGameOver = false;
 
         //Adds the first chunks to start the game
-        this.chunks.add(new Grass(CHUNK_START_POSITION, CHUNK_DIMENSION));
-        this.chunks.add(new Grass(CHUNK_FIRST_POSITION, CHUNK_DIMENSION));
-        this.chunks.add(new Grass(CHUNK_SECOND_POSITION, CHUNK_DIMENSION));
-        this.chunks.add(new Grass(CHUNK_THIRD_POSITION, CHUNK_DIMENSION, true));
-        this.lastGenerated = new Pair<>(EntityType.GRASS, 4);
+        for (int i = -12; i <= 6; i += 3) {
+            if (i <= -9 || i >= 0) {
+                this.chunks.add(new Grass(new Position(0, i), CHUNK_DIMENSION));
+            }
+            else {
+                this.chunks.add(new Road(new Position(0, i), CHUNK_DIMENSION));
+            }
+        }
+        this.lastGenerated = new Pair<>(EntityType.GRASS, 2);
 
         //Rigenerate until there's a valid path
         if (!this.isThereAPath(Optional.empty())) {
