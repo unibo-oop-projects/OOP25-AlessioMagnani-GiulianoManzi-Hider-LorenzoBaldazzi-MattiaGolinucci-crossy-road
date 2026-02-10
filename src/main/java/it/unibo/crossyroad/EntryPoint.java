@@ -16,6 +16,7 @@ import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.MenuView;
 import it.unibo.crossyroad.view.impl.GameViewImpl;
 import it.unibo.crossyroad.view.impl.MenuViewImpl;
+//import it.unibo.crossyroad.view.impl.ShopViewImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -48,6 +49,7 @@ public class EntryPoint extends Application {
     @Override
     public void init() throws Exception {
         final GameParameters gameParameters = new GameParametersImpl();
+        gameParameters.setCoinCount(1000);
         final SkinManager skinManager = new SkinManagerImpl();
         skinManager.loadFromResources();
         this.stateManager = new StateManagerImpl(gameParameters, skinManager);
@@ -73,26 +75,29 @@ public class EntryPoint extends Application {
 
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
-        // todo: add shop view
+        //final ShopView shopView = new ShopViewImpl(root);
 
         final AppController appController = new AppControllerImpl(
             ac -> new GameControllerImpl(ac, gameView),
             ac -> new MenuControllerImpl(ac, menuView, this.stateManager),
-            ac -> null // todo
+            ac -> null
         );
+
+        //ac -> new ShopControllerImpl(ac, this.stateManager, shopView)
         final GameController gameController = appController.getGameController();
         final MenuController menuController = appController.getMenuController();
-        // todo: add shop controller
+        //final ShopController shopController = appController.getShopController();
 
+        this.loadSaving(menuController);
         gameView.setController(gameController);
         menuView.setController(menuController);
+        //shopView.setController(shopController);
         appController.showMenu();
 
-        this.loadSave(menuController);
         stage.setOnCloseRequest(e -> this.onClose(gameController, menuController));
     }
 
-    private void loadSave(final MenuController menuController) {
+    private void loadSaving(final MenuController menuController) {
         if (SAVE_PATH.toFile().exists()) {
             menuController.load();
         }
