@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -24,7 +23,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -33,20 +31,17 @@ import java.util.logging.Logger;
  * An implementation of the MenuView interface, that allows the user to interact with the menuPane of the game.
  */
 public final class MenuViewImpl implements MenuView {
-    private static final String TITLE = "Crossy Road";
-
-    private static final double MIN_TITLE_FONT_SIZE = 16.0;
-    private static final double TITLE_FONT_RATIO = 0.05;
+    private static final String TITLE_IMAGE_PATH = "/assets/logo.png";
+    private static final double TITLE_IMAGE_RATIO = 0.3;
 
     private static final String DEFAULT_SKIN_IMAGE_PATH = "/skins/default_front.png";
-    private static final double IMAGE_SIZE_RATIO = 0.25;
-    private static final double SKIN_IMAGE_SIZE = 200.0;
-    private static final double SHOW_IMAGE_THRESHOLD = 500.0;
+    private static final double SKIN_IMAGE_RATIO = 0.2;
+    private static final double SHOW_SKIN_THRESHOLD = 500.0;
 
     private static final double BUTTON_WIDTH_RATIO = 0.4;
     private static final double BUTTON_HEIGHT_RATIO = 0.08;
     private static final double BUTTON_FONT_RATIO = 0.025;
-    private static final double MIN_BUTTON_FONT_SIZE = 12.0;
+    private static final double MIN_BUTTON_FONT_SIZE = 8.0;
     private static final double BUTTON_SPACING = 10.0;
     private static final double BORDER_WIDTH = 2.0;
     private static final double CORNER_RADIUS = 10.0;
@@ -56,7 +51,8 @@ public final class MenuViewImpl implements MenuView {
 
     private final StackPane root;
     private final Pane menuPane;
-    private final ImageView skinImage = new ImageView();
+    private final ImageView title = new ImageView();
+    private final ImageView skinImageView = new ImageView();
     private MenuController controller;
 
     /**
@@ -80,7 +76,7 @@ public final class MenuViewImpl implements MenuView {
     @Override
     public void setController(final MenuController controller) {
         this.controller = Objects.requireNonNull(controller, "controller cannot be null");
-        this.skinImage.setImage(this.getSkinImage());
+        this.skinImageView.setImage(this.getSkinImage());
     }
 
     /**
@@ -88,7 +84,7 @@ public final class MenuViewImpl implements MenuView {
      */
     @Override
     public void show() {
-        this.skinImage.setImage(this.getSkinImage());
+        this.skinImageView.setImage(this.getSkinImage());
         this.menuPane.setVisible(true);
     }
 
@@ -104,53 +100,45 @@ public final class MenuViewImpl implements MenuView {
         final VBox menu = new VBox(BUTTON_SPACING * 2);
         menu.setAlignment(Pos.CENTER);
 
-        final Label title = this.initTitle();
+        this.initTitle();
         this.setupSkinImage();
         final VBox menuItems = this.initMenuItems();
 
         final Background background = new Background(new BackgroundFill(Color.DARKOLIVEGREEN, CornerRadii.EMPTY, null));
         menu.setBackground(background);
 
-        menu.getChildren().addAll(title, this.skinImage, menuItems);
+        menu.getChildren().addAll(title, this.skinImageView, menuItems);
         return menu;
     }
 
-    private Label initTitle() {
-        final Label title = new Label(TITLE);
-        title.setTextFill(TEXT_COLOR);
-        title.fontProperty().bind(this.root.widthProperty().map(w ->
-            Font.font(null, FontWeight.BOLD, Math.max(MIN_TITLE_FONT_SIZE, w.doubleValue() * TITLE_FONT_RATIO))
-        ));
-        return title;
+    private void initTitle() {
+        this.title.setAccessibleText("Crossy Road");
+        final Image titleImage = new Image(TITLE_IMAGE_PATH);
+        this.title.setImage(titleImage);
+        this.title.setPreserveRatio(true);
+        this.title.fitWidthProperty().bind(this.root.widthProperty().multiply(TITLE_IMAGE_RATIO));
     }
 
     private void setupSkinImage() {
-        this.skinImage.setFitWidth(SKIN_IMAGE_SIZE);
-        this.skinImage.setFitHeight(SKIN_IMAGE_SIZE);
-        skinImage.managedProperty().bind(skinImage.visibleProperty());
+        skinImageView.managedProperty().bind(skinImageView.visibleProperty());
 
         final var widthProperty = this.root.widthProperty();
-        skinImage.fitWidthProperty().bind(widthProperty.multiply(IMAGE_SIZE_RATIO));
-        skinImage.fitHeightProperty().bind(widthProperty.multiply(IMAGE_SIZE_RATIO));
-        skinImage.visibleProperty().bind(widthProperty.greaterThan(SHOW_IMAGE_THRESHOLD));
+        skinImageView.setPreserveRatio(true);
+        skinImageView.fitWidthProperty().bind(widthProperty.multiply(SKIN_IMAGE_RATIO));
+        skinImageView.visibleProperty().bind(widthProperty.greaterThan(SHOW_SKIN_THRESHOLD));
     }
 
     private Image getSkinImage() {
-        final String defaultImagePath = Objects.requireNonNull(getClass().getResource(DEFAULT_SKIN_IMAGE_PATH)).toExternalForm();
+        final Image defaultImage = new Image(DEFAULT_SKIN_IMAGE_PATH);
         if (Objects.isNull(this.controller)) {
             LOGGER.warning("Controller is not set, using default skin image");
-            return new Image(defaultImagePath);
+            return defaultImage;
         }
 
         final var skin = this.controller.getActiveSkin();
         final var imagePath = skin.getFrontImage().toString().replace("\\", "/");
 
-        final URL resource = getClass().getResource(imagePath);
-        if (Objects.isNull(resource)) {
-            LOGGER.warning("Skin image not found, using default skin image");
-            return new Image(defaultImagePath);
-        }
-        return new Image(resource.toExternalForm());
+        return new Image(imagePath);
     }
 
     private VBox initMenuItems() {
