@@ -188,16 +188,16 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
             final int relativeX = RND.nextInt((int) this.getDimension().width());
             final int relativeY = RND.nextInt((int) this.getDimension().height());
             final Position randomPosition = new Position(this.getPosition().x() + relativeX, this.getPosition().y() + relativeY);
-            if (!this.getPositionables().stream().anyMatch(p -> p.getPosition().equals(randomPosition))
+            if (this.getPositionables().stream().noneMatch(p -> p.getPosition().equals(randomPosition))
                 && !(this.isFirstChunk && randomPosition.equals(PLAYER_START_POSITION))) {
                 final double number = RND.nextDouble();
                 if (number <= FIRST_PROBABILITY) {
                     this.addPickable(new Coin(randomPosition));
-                } else if (this.getActivePowerUp().isEmpty() && number > FIRST_PROBABILITY && number <= SECOND_PROBABILITY) {
+                } else if (this.getActivePowerUp().isEmpty() && number <= SECOND_PROBABILITY) {
                     this.addPickable(new Invincibility(randomPosition));
-                } else if (this.getActivePowerUp().isEmpty() && number > SECOND_PROBABILITY && number <= THIRD_PROBABILITY) {
+                } else if (this.getActivePowerUp().isEmpty() && number <= THIRD_PROBABILITY) {
                     this.addPickable(new SlowCars(randomPosition));
-                } else if (this.getActivePowerUp().isEmpty() && number > THIRD_PROBABILITY && number <= 1) {
+                } else if (this.getActivePowerUp().isEmpty() && number > THIRD_PROBABILITY) {
                     this.addPickable(new CoinMultiplier(randomPosition));
                 }
             }
