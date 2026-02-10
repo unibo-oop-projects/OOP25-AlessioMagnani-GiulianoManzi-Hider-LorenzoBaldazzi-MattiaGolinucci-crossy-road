@@ -19,7 +19,7 @@ import it.unibo.crossyroad.view.api.MenuView;
 import it.unibo.crossyroad.view.api.ShopView;
 import it.unibo.crossyroad.view.impl.GameViewImpl;
 import it.unibo.crossyroad.view.impl.MenuViewImpl;
-import it.unibo.crossyroad.view.impl.ShopViewImpl;
+//import it.unibo.crossyroad.view.impl.ShopViewImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -78,20 +78,22 @@ public class EntryPoint extends Application {
 
         final MenuView menuView = new MenuViewImpl(root);
         final GameView gameView = new GameViewImpl(root);
-        final ShopView shopView = new ShopViewImpl(root);
+        //final ShopView shopView = new ShopViewImpl(root);
 
         final AppController appController = new AppControllerImpl(
             ac -> new GameControllerImpl(ac, gameView),
             ac -> new MenuControllerImpl(ac, menuView, this.stateManager),
-            ac -> new ShopControllerImpl(ac, this.stateManager, shopView)
+            ac -> null
         );
+        
+        //ac -> new ShopControllerImpl(ac, this.stateManager, shopView)
         final GameController gameController = appController.getGameController();
         final MenuController menuController = appController.getMenuController();
-        final ShopController shopController = appController.getShopController();
+        //final ShopController shopController = appController.getShopController();
 
         gameView.setController(gameController);
         menuView.setController(menuController);
-        shopView.setController(shopController);
+        //shopView.setController(shopController);
         appController.showMenu();
 
         this.loadSave(menuController);

@@ -31,11 +31,21 @@ public abstract class AbstractPowerUp extends AbstractPickable implements PowerU
     @Override
     public void update(final long deltaTime, final GameParameters gameParameters) {
         this.remainingTime -= deltaTime;
-        if (this.remainingTime <= 0) {
+        if (!this.isPowerUpActive(gameParameters) && this.remainingTime > 0) {
+            this.applyEffect(gameParameters);
+        } else if (this.remainingTime <= 0) {
             this.isDone = true;
             this.deactivate(gameParameters);
         }
     }
+    
+    /**
+     * Checks if the power-up is currently active.
+     * 
+     * @param gameParameters the game parameters to check against.
+     * @return true if the power-up is active, false otherwise.
+     */
+    protected abstract boolean isPowerUpActive(final GameParameters gameParameters);
 
     /**
      * {@inheritDoc}
