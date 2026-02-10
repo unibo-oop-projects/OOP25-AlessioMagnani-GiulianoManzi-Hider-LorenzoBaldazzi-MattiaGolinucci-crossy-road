@@ -55,7 +55,7 @@ public interface ShopController {
     boolean activateSkin(Skin skin);
 
     /**
-     * Get the currently active skins.
+     * Get the currently active skin.
      * 
      * @return the active skin.
      */

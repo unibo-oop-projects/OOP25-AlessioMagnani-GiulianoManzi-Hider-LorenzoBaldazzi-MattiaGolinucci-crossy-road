@@ -45,4 +45,12 @@ public class SlowCars extends AbstractPowerUp {
     public EntityType getEntityType() {
         return EntityType.SLOW_CARS; 
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isPowerUpActive(final GameParameters gameParameters) {
+        return gameParameters.getCarSpeedMultiplier() < 1.0;
+    }
 }

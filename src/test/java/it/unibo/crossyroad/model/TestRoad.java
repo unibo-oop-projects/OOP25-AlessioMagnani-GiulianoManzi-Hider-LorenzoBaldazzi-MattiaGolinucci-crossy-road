@@ -4,6 +4,7 @@ import it.unibo.crossyroad.model.api.Position;
 import it.unibo.crossyroad.model.api.Dimension;
 import it.unibo.crossyroad.model.api.EntityType;
 import it.unibo.crossyroad.model.api.GameParameters;
+import it.unibo.crossyroad.model.impl.Car;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
 import it.unibo.crossyroad.model.impl.Road;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TestRoad {
-    private static final long DELTA_TIME = 1200;
+    private static final long DELTA_TIME = 1250;
     private static final int MAX_CARS_PER_CHUNKS = 8;
     private static final int UPDATES_ROAD = 150;
 
@@ -48,10 +49,6 @@ class TestRoad {
         int leftCars = 0;
         int rightCars = 0;
 
-        final double chunkY = road.getPosition().y();
-        final double laneHeight = road.getDimension().height() / 2;
-        final double tolerance = 0.001;
-
         final GameParameters gp = new GameParametersBuilder()
                 .setCarSpeedMultiplier(1)
                 .build();
@@ -60,11 +57,12 @@ class TestRoad {
         }
         final int cars = road.getObstacles().size();
         for (final var obs: road.getObstacles()) {
-            final double carY = obs.getPosition().y();
-            if (Math.abs(carY - chunkY) < tolerance) {
-                leftCars++;
-            } else if (Math.abs(carY - (chunkY - laneHeight)) < tolerance) {
-                rightCars++;
+            if (obs instanceof Car car) {
+                switch (car.getEntityType()) {
+                    case EntityType.CAR_LEFT -> leftCars++;
+                    case EntityType.CAR_RIGHT -> rightCars++;
+                    default -> { }
+                }
             }
         }
 

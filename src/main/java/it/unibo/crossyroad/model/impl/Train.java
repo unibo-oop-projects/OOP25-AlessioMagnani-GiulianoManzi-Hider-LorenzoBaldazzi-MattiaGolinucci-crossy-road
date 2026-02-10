@@ -13,6 +13,7 @@ import it.unibo.crossyroad.model.api.AbstractActiveObstacle;
  */
 public class Train extends AbstractActiveObstacle {
     private final Direction direction;
+
     /**
      * It creates a new active obstacle (train) with the initial position, speed and direction.
      *

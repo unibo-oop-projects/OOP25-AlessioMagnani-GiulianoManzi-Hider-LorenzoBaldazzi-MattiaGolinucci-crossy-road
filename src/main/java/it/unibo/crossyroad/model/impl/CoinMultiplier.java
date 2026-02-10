@@ -21,6 +21,7 @@ public class CoinMultiplier extends AbstractPowerUp {
     public CoinMultiplier(final Position position) {
         super(position, COIN_MULTIPLIER_DURATION);
     }
+    
 
     /**
      * {@inheritDoc}
@@ -44,5 +45,13 @@ public class CoinMultiplier extends AbstractPowerUp {
     @Override
     public EntityType getEntityType() {
         return EntityType.COIN_MULTIPLIER; 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean isPowerUpActive(final GameParameters gameParameters) {
+        return gameParameters.getCoinMultiplier() > 1;
     }
 }

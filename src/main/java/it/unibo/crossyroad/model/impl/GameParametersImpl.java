@@ -16,6 +16,7 @@ public class GameParametersImpl implements GameParameters {
     private boolean invincibility;
     private double logSpeedMultiplier;
     private int coinCount;
+    private int score;
 
     /**
      * Constructor to initialize game parameters using {@link GameParametersBuilder} to create instance.
@@ -30,21 +31,22 @@ public class GameParametersImpl implements GameParameters {
      */
     public GameParametersImpl(final int coinMultiplier, final double carSpeedMultiplier,
                               final double trainSpeedMultiplier, final boolean invincibility,
-                              final double logSpeedMultiplier, final int coinCount) {
-        validateParameters(coinMultiplier, carSpeedMultiplier, trainSpeedMultiplier, logSpeedMultiplier, coinCount);
+                              final double logSpeedMultiplier, final int coinCount, final int score) {
+        validateParameters(coinMultiplier, carSpeedMultiplier, trainSpeedMultiplier, logSpeedMultiplier, coinCount, score);
         this.coinMultiplier = coinMultiplier;
         this.carSpeedMultiplier = carSpeedMultiplier;
         this.trainSpeedMultiplier = trainSpeedMultiplier;
         this.invincibility = invincibility;
         this.logSpeedMultiplier = logSpeedMultiplier;
         this.coinCount = coinCount;
+        this.score = score;
     }
 
     /**
      * Default constructor initializing parameters to default values.
      */
     public GameParametersImpl() {
-        this(1, 1.0, 1.0, false, 1.0, 0);
+        this(1, 1.0, 1.0, false, 1.0, 0, 0);
     }
 
     /**
@@ -54,7 +56,7 @@ public class GameParametersImpl implements GameParameters {
      */
     public GameParametersImpl(final GameParameters p) {
         this(p.getCoinMultiplier(), p.getCarSpeedMultiplier(), p.getTrainSpeedMultiplier(),
-                p.isInvincible(), p.getLogSpeedMultiplier(), p.getCoinCount());
+                p.isInvincible(), p.getLogSpeedMultiplier(), p.getCoinCount(), p.getScore());
     }
 
     /**
@@ -124,6 +126,17 @@ public class GameParametersImpl implements GameParameters {
      * {@inheritDoc}
      */
     @Override
+    public void setInitialScore(int initScore) {
+        if (initScore < 0) {
+            throw new IllegalArgumentException("The init score must be >= 0");
+        }
+        this.score = initScore;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int getCoinMultiplier() {
         return this.coinMultiplier;
     }
@@ -180,11 +193,27 @@ public class GameParametersImpl implements GameParameters {
      * {@inheritDoc}
      */
     @Override
+    public int getScore() {
+        return this.score;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void incrementScore() {
+        this.score++;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public GameParameters loadFromFile(final String filepath) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final GameParameters newParameters = mapper.readValue(new File(filepath), GameParametersImpl.class);
         validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
-                newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(), newParameters.getCoinCount());
+                newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(), newParameters.getCoinCount(), newParameters.getScore());
         return newParameters;
     }
 
@@ -195,11 +224,13 @@ public class GameParametersImpl implements GameParameters {
      * @param carSpeedMult the car speed multiplier.
      * @param trainSpeedMult the train speed multiplier.
      * @param coinStart the coin start count.
-     * @param logSpeedMult he log speed multiplier.
+     * @param logSpeedMult the log speed multiplier.
+     * @param initScore the init score.
      * @throws IllegalArgumentException if any parameter is invalid.
      */
     private void validateParameters(final int coinMult, final double carSpeedMult,
-                                       final double trainSpeedMult, final double logSpeedMult, final int coinStart) {
+                                    final double trainSpeedMult, final double logSpeedMult,
+                                    final int coinStart, final int initScore) {
         if (coinMult < 1) {
             throw new IllegalArgumentException("Coin multiplier must be >= 1");
         }
@@ -211,6 +242,9 @@ public class GameParametersImpl implements GameParameters {
         }
         if (coinStart < 0) {
             throw new IllegalArgumentException("Coin count must be >= 0");
+        }
+        if (initScore < 0) {
+            throw new IllegalArgumentException("Init score must be >= 0");
         }
     }
 }
