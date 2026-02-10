@@ -95,7 +95,7 @@ public class AppControllerImpl implements AppController {
     @Override
     public void showShop() {
         this.hideAllViews();
-        // todo: this.shopController.showShop();
+        this.shopController.showShop();
     }
 
     /**
