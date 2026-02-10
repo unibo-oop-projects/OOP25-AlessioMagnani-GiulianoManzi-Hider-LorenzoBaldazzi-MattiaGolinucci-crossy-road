@@ -206,7 +206,7 @@ public final class GameManagerImpl implements GameManager {
             }
 
             //If a destination is not passed check for the map end
-            if (Math.abs(current.y() - CHUNK_START_POSITION.y()) < COMPARISON_EPSILON) {
+            if (destination.isEmpty() && Math.abs(current.y() - CHUNK_START_POSITION.y()) < COMPARISON_EPSILON) {
                 return true;
             }
 
@@ -346,7 +346,7 @@ public final class GameManagerImpl implements GameManager {
      */
     private void removeUnreachablePickables() {
         this.chunks.forEach(c -> c.getPickables().stream()
-                                                 .filter(p -> !this.isThereAPath(Optional.of(p.getPosition())))
+                                                 .filter(p -> !p.isPickedUp() && !this.isThereAPath(Optional.of(p.getPosition())))
                                                  .forEach(c::removePickable)
                             );
     }
