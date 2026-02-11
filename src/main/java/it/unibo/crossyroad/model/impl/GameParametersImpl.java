@@ -230,7 +230,6 @@ public class GameParametersImpl implements GameParameters {
         this.logSpeedMultiplier = 1.0;
         this.score = 0;
         this.invincibility = false;
-        this.coinCount = 0;
     }
 
     /**
