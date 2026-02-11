@@ -1,6 +1,7 @@
 package it.unibo.crossyroad.model.api;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Interface representing game parameters and settings.
@@ -122,13 +123,14 @@ public interface GameParameters {
     void incrementScore();
 
     /**
-     * Loads game parameters from a json file.
+     * Loads game parameters from a JSON file.
      *
      * @param filepath the path to the file.
-     * @return a GameParameters instance with loaded parameters.
+     * @return an {@link Optional} containing the loaded {@link GameParameters} if successful,
+     *      or {@link Optional#empty()} if the file does not exist or cannot be read.
      * @throws IOException if an I/O error occurs.
      */
-    GameParameters loadFromFile(String filepath) throws IOException;
+    Optional<GameParameters> loadFromFile(String filepath) throws IOException;
 
     /**
      * Reset the game parameters to default.

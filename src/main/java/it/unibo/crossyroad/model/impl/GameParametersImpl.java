@@ -4,6 +4,8 @@ import it.unibo.crossyroad.model.api.GameParameters;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -210,13 +212,21 @@ public class GameParametersImpl implements GameParameters {
      * {@inheritDoc}
      */
     @Override
-    public GameParameters loadFromFile(final String filepath) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-        final GameParameters newParameters = mapper.readValue(new File(filepath), GameParametersImpl.class);
-        validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
-                newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(),
-                newParameters.getCoinCount(), newParameters.getScore());
-        return newParameters;
+    public Optional<GameParameters> loadFromFile(final String filepath) throws IOException {
+        final File file = new File(filepath);
+        if (!file.exists() || !file.canRead()) {
+            throw new IOException("Cannot access file: " + filepath);
+        }
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            final GameParameters newParameters = mapper.readValue(file, GameParametersImpl.class);
+            validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
+                    newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(),
+                    newParameters.getCoinCount(), newParameters.getScore());
+            return Optional.of(newParameters);
+        } catch (final IOException e) {
+            return Optional.empty();
+        }
     }
 
     /**

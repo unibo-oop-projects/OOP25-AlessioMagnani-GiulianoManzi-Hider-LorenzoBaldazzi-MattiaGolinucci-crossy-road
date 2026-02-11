@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -182,6 +183,17 @@ class TestGameParameters {
     @Test
     void loadFromFile() throws IOException {
         final String invalidFilepath = "not_valid/file/path.json";
+        final Path corruptFile = Files.createTempFile("corrupt_file", ".json");
+        Files.writeString(corruptFile, """
+                    {
+                       "coinMultiplier": 2,
+                       "carSpeedMultiplier": 1.5
+                       "trainSpeedMultiplier": 2.0,
+                       "invincibility": true,
+                       "logSpeedMultiplier": 1.8,
+                       "coinCount": 5,
+                       "score": 4
+                """);
         final Path tmpFile = Files.createTempFile("game_parameters_file", ".json");
         Files.writeString(tmpFile, """
                     {
@@ -195,11 +207,15 @@ class TestGameParameters {
                     }
                 """);
 
-        assertThrows(IOException.class, () ->
-            this.gameParameters.loadFromFile(invalidFilepath)
-        );
+        assertThrows(IOException.class, () -> this.gameParameters.loadFromFile(invalidFilepath));
 
-        this.gameParameters = new GameParametersImpl().loadFromFile(tmpFile.toString());
+        final Optional<GameParameters> corrupt = this.gameParameters.loadFromFile(corruptFile.toString());
+        assertTrue(corrupt.isEmpty());
+
+        final Optional<GameParameters> loaded = new GameParametersImpl().loadFromFile(tmpFile.toString());
+        assertTrue(loaded.isPresent());
+
+        this.gameParameters = loaded.get();
         assertEquals(TEST_COIN_MULTIPLIER, this.gameParameters.getCoinMultiplier());
         assertEquals(TEST_CAR_SPEED_MULTIPLIER, this.gameParameters.getCarSpeedMultiplier());
         assertEquals(TEST_TRAIN_SPEED_MULTIPLIER, this.gameParameters.getTrainSpeedMultiplier());
