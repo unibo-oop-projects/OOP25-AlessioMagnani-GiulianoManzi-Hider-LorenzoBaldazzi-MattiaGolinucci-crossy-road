@@ -28,9 +28,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * Entry point of the application. It initializes the MVC components and starts the JavaFX application.
  */
@@ -40,7 +37,6 @@ public class EntryPoint extends Application {
     private static final double HEIGHT = 9;
     private static final double ASPECT_RATIO = WIDTH / HEIGHT;
     private static final double SCALE = 0.9;
-    private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
 
     private GameParameters gameParameters;
     private StateManager stateManager;
@@ -63,10 +59,9 @@ public class EntryPoint extends Application {
      * It links the MVC components and starts the JavaFX application.
      *
      * @param stage Stage of the application.
-     * @throws Exception if any error occurs.
      */
     @Override
-    public void start(final Stage stage) throws Exception {
+    public void start(final Stage stage) {
         final StackPane root = new StackPane();
         final Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
         final Scene scene = new Scene(root, screenBounds.getHeight() * ASPECT_RATIO * SCALE, screenBounds.getHeight() * SCALE);
@@ -91,23 +86,15 @@ public class EntryPoint extends Application {
         final MenuController menuController = appController.getMenuController();
         final ShopController shopController = appController.getShopController();
 
-        this.loadSaving(menuController);
+        menuController.load();
         gameView.setController(gameController);
         menuView.setController(menuController);
         shopView.setController(shopController);
         appController.showMenu();
-        stage.setOnCloseRequest(e -> this.onClose(gameController, menuController));
-    }
-
-    private void loadSaving(final MenuController menuController) {
-        if (SAVE_PATH.toFile().exists()) {
-            menuController.load();
-        }
-    }
-
-    private void onClose(final GameController gameController, final MenuController menuController) {
-        gameController.endGame();
-        menuController.save();
-        Platform.exit();
+        stage.setOnCloseRequest(e -> {
+            gameController.endGame();
+            menuController.save();
+            Platform.exit();
+        });
     }
 }
