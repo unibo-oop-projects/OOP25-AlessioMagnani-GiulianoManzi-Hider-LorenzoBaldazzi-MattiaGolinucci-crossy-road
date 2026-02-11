@@ -156,8 +156,6 @@ public final class GameViewImpl implements GameView {
 
         this.overlay.getChildren().addAll(scoreLayer, leftBox);
 
-        this.overlay.setPadding(new Insets(responsivePadding));
-
         this.content.setImageSmoothing(false);
         this.currentPane.getChildren().addAll(this.canvas, this.overlay);
         StackPane.setAlignment(this.overlay, Pos.TOP_LEFT);
