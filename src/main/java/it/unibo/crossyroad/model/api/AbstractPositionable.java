@@ -80,7 +80,7 @@ public abstract class AbstractPositionable implements Positionable {
     public boolean overlaps(final Positionable second) {
         final var firstRangeX = Range.closedOpen(this.getPosition().x(), this.getPosition().x() + this.getDimension().width());
         final var firstRangeY = Range.closedOpen(this.getPosition().y(), this.getPosition().y() + this.getDimension().height());
-        final var secondRangex = Range.closedOpen(second.getPosition().x(),
+        final var secondRangeX = Range.closedOpen(second.getPosition().x(),
                                                   second.getPosition().x() + second.getDimension().width()
                                                 );
         final var secondRangeY = Range.closedOpen(second.getPosition().y(),
