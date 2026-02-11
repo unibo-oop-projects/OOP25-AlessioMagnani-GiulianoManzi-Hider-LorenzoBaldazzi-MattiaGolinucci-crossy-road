@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Range;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import it.unibo.crossyroad.model.api.AbstractChunk;
 import it.unibo.crossyroad.model.api.Chunk;
@@ -40,6 +41,8 @@ public final class GameManagerImpl implements GameManager {
     private static final double Y_MOVE_MAP_MARK = 4; 
     private static final double Y_DISPOSE_CHUNK_MARK = MAP_WIDTH + 2;
     private static final double Y_MAP_MOVEMENT = 1;
+    private static final int Y_UPPER_CHUNK = -12;
+    private static final int Y_LOWER_CHUNK = 6;
     private static final double Y_CREATE_CHUNK_MARK = -9;
     private static final double FIRST_PROBABILITY = 0.3;
     private static final double SECOND_PROBABILITY = 0.6;
@@ -62,9 +65,13 @@ public final class GameManagerImpl implements GameManager {
      * 
      * @param g the GameParameters to use in the game.
      */
+    @SuppressFBWarnings(
+        value = "EI2",
+        justification = "GameParameters are required to be an externally mutable object."
+    )
     public GameManagerImpl(final GameParameters g) {
         Objects.requireNonNull(g, "Game parameters cannot be null");
-        this.gameParameters = new GameParametersImpl(g);
+        this.gameParameters = g;
     }
 
     /**
@@ -127,8 +134,10 @@ public final class GameManagerImpl implements GameManager {
             if (d == Direction.UP && this.player.getPosition().y() <= Y_MOVE_MAP_MARK) {
                 if (pathStatus && !this.isThereAPath(Optional.empty())) {
                     this.isGameOver = true;
+                } else {
+                    this.moveMap();
+                    this.gameParameters.incrementScore();
                 }
-                this.moveMap();
             } else {
                 this.player.move(d, 1);
             }
@@ -155,12 +164,16 @@ public final class GameManagerImpl implements GameManager {
         this.chunks = new LinkedList<>();
         this.isGameOver = false;
 
+        //Parameters reset TODO apposite method in gameparameters
+        this.gameParameters.setCarSpeedMultiplier(1.0);
+        this.gameParameters.setTrainSpeedMultiplier(1.0);
+        this.gameParameters.setInvincibility(false);
+
         //Adds the first chunks to start the game
-        for (int i = -12; i <= 6; i += 3) {
-            if (i <= -9 || i >= 0) {
-                this.chunks.add(new Grass(new Position(0, i), CHUNK_DIMENSION));
-            }
-            else {
+        for (int i = Y_UPPER_CHUNK; i <= Y_LOWER_CHUNK; i += 3) {
+            if (i <= Y_CREATE_CHUNK_MARK || i >= 0) {
+                this.chunks.add(new Grass(new Position(0, i), CHUNK_DIMENSION, true));
+            } else {
                 this.chunks.add(new Road(new Position(0, i), CHUNK_DIMENSION));
             }
         }
@@ -407,7 +420,9 @@ public final class GameManagerImpl implements GameManager {
         this.getPickablesOnMap().stream()
                                 .filter(p -> p instanceof PowerUp && p.overlaps(this.player)
                                     && !this.getActivePowerUps().containsKey(p.getEntityType()))
-                                .forEach(p -> p.pickUp(this.gameParameters));
+                                .forEach(p -> {
+                                    p.pickUp(this.gameParameters);
+                                });
     }
 
     /**

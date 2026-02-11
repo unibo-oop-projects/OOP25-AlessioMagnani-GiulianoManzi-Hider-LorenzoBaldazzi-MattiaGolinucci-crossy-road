@@ -16,6 +16,8 @@ class TestGrass {
     private static final int LOOPS = 100_000;
     private static final Position CHUNK_INITIAL_POSITION = new Position(0, 0);
     private static final Position PLAYER_START_POSITON = new Position(5, 8);
+    private static final int MAX_OBSTACLES_EXPECTED = 16;
+    private static final int MAX_PICKABLES_EXPECTED = 5;
     private Grass grass;
 
     @BeforeEach
@@ -38,8 +40,8 @@ class TestGrass {
             assertFalse(this.grass.getPickables().stream().anyMatch(p -> p.getPosition().equals(PLAYER_START_POSITON)));
             assertFalse(this.grass.getObstacles().stream().anyMatch(o -> o.getPosition().equals(PLAYER_START_POSITON)));
             assertTrue(nOfObstacles > 0);
-            assertTrue(nOfObstacles < 16);
-            assertTrue(nOfPickables < 5);
+            assertTrue(nOfObstacles < MAX_OBSTACLES_EXPECTED);
+            assertTrue(nOfPickables < MAX_PICKABLES_EXPECTED);
         }
     }
 

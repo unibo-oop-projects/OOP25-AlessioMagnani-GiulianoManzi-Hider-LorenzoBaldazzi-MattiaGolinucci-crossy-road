@@ -13,7 +13,6 @@ import it.unibo.crossyroad.model.api.Direction;
 import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameManagerImpl;
-import it.unibo.crossyroad.model.impl.GameParametersImpl;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
 
@@ -38,6 +37,8 @@ public final class GameControllerImpl implements GameController {
      * 
      * @param gameView the game view.
      * 
+     * @param parameters the game parameters.
+     * 
      * @see Appcontroller
      * 
      * @see GameView
@@ -47,12 +48,11 @@ public final class GameControllerImpl implements GameController {
         justification = "AppController and GameView references are intentionally shared. "
             + "These components need to interact with the same instances as per MVC pattern."
     )
-    public GameControllerImpl(final AppController appController, final GameView gameView) {
+    public GameControllerImpl(final AppController appController, final GameView gameView, final GameParameters parameters) {
         this.appController = appController;
         this.gameView = gameView;
         this.pause = false;
-
-        this.parameters = new GameParametersImpl();
+        this.parameters = parameters;
         this.gameManager = new GameManagerImpl(this.parameters);
         this.queue = new LinkedBlockingQueue<>();
     }
@@ -136,10 +136,6 @@ public final class GameControllerImpl implements GameController {
         return this.appController.getActiveSkin().getOverheadImage().toString();
     }
 
-    private int getCoinCount() {
-        return this.appController.getCoinCount();
-    }
-
     private final class Loop extends Thread {
         private static final Logger LOGGER = Logger.getLogger(EntryPoint.class.getName());
 
@@ -161,7 +157,8 @@ public final class GameControllerImpl implements GameController {
                     gameManager.update(deltaTime);
                     gameView.render(gameManager.getPositionables());
                     gameView.updatePowerUpTime(gameManager.getActivePowerUps());
-                    gameView.updateCoinCount(getCoinCount());
+                    gameView.updateCoinCount(parameters.getCoinCount());
+                    gameView.updateScore(parameters.getScore());
                 } else {
                     lastUpdate = System.currentTimeMillis();
                 }

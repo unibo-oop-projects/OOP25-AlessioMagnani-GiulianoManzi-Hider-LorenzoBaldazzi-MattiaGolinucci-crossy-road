@@ -42,6 +42,7 @@ public class EntryPoint extends Application {
     private static final double SCALE = 0.9;
     private static final Path SAVE_PATH = Paths.get(System.getProperty("user.home"), "crossyroad");
 
+    private GameParameters gameParameters;
     private StateManager stateManager;
 
     /**
@@ -51,7 +52,7 @@ public class EntryPoint extends Application {
      */
     @Override
     public void init() throws Exception {
-        final GameParameters gameParameters = new GameParametersImpl();
+        this.gameParameters = new GameParametersImpl();
         gameParameters.setCoinCount(1000);
         final SkinManager skinManager = new SkinManagerImpl();
         skinManager.loadFromResources();
@@ -81,7 +82,7 @@ public class EntryPoint extends Application {
         final ShopView shopView = new ShopViewImpl(root);
 
         final AppController appController = new AppControllerImpl(
-            ac -> new GameControllerImpl(ac, gameView),
+            ac -> new GameControllerImpl(ac, gameView, this.gameParameters),
             ac -> new MenuControllerImpl(ac, menuView, this.stateManager),
             ac -> new ShopControllerImpl(ac, this.stateManager, shopView)
         );

@@ -20,6 +20,7 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
     private static final double FIRST_PROBABILITY = 0.85;
     private static final double SECOND_PROBABILITY = 0.90;
     private static final double THIRD_PROBABILITY = 0.95;
+    private static final int MAX_OBSTACLES = 5;
     private static final Random RND = new Random();
     private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private final List<Obstacle> obstacles;
@@ -182,7 +183,7 @@ public abstract class AbstractChunk extends AbstractPositionable implements Chun
      * Generates random Pickables objects on the Chunk, each one with a different probability.
      */
     private void generatePickables() {
-        for (int i = 0; i < RND.nextInt(1, 5); i++) {
+        for (int i = 0; i < RND.nextInt(1, MAX_OBSTACLES); i++) {
             final int relativeX = RND.nextInt((int) this.getDimension().width());
             final int relativeY = RND.nextInt((int) this.getDimension().height());
             final Position randomPosition = new Position(this.getPosition().x() + relativeX, this.getPosition().y() + relativeY);

@@ -1,5 +1,10 @@
 package it.unibo.crossyroad.view.impl;
 
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.Chunk;
 import it.unibo.crossyroad.model.api.EntityType;
@@ -17,12 +22,18 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-
-import java.util.*;
 
 /**
  * Implementation of the GameView interface.
@@ -263,8 +274,8 @@ public final class GameViewImpl implements GameView {
      * {@inheritDoc}
      */
     @Override
-    public void updateScore(int score) {
-        Platform.runLater(() -> this.scoreLabel.setText("String.valueOf(0)"));
+    public void updateScore(final int score) {
+        Platform.runLater(() -> this.scoreLabel.setText(String.valueOf(score)));
     }
 
     /**
@@ -274,6 +285,7 @@ public final class GameViewImpl implements GameView {
     public void show() {
         Platform.runLater(() -> {
             this.currentPane.setVisible(true);
+            this.loadImages();
         });
     }
 
