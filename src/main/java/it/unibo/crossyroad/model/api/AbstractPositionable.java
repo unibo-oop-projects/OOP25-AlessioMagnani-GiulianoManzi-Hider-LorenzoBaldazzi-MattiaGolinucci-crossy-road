@@ -86,8 +86,8 @@ public abstract class AbstractPositionable implements Positionable {
         final var secondRangeY = Range.closedOpen(second.getPosition().y(),
                                                   second.getPosition().y() + second.getDimension().height()
                                                 );
-        return firstRangeX.isConnected(secondRangex) && firstRangeY.isConnected(secondRangeY)
-            && !firstRangeX.intersection(secondRangex).isEmpty()
+        return firstRangeX.isConnected(secondRangeX) && firstRangeY.isConnected(secondRangeY)
+            && !firstRangeX.intersection(secondRangeX).isEmpty()
             && !firstRangeY.intersection(secondRangeY).isEmpty();
     }
 }
