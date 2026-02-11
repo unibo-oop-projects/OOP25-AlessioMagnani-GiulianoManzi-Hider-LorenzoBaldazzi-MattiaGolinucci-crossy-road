@@ -146,7 +146,7 @@ public final class GameViewImpl implements GameView {
         currentPane.setFocusTraversable(true);
         currentPane.requestFocus();
 
-        StackPane scoreLayer = new StackPane();
+        final StackPane scoreLayer = new StackPane();
         scoreLayer.getChildren().add(this.scoreLabel);
         StackPane.setAlignment(this.scoreLabel, Pos.TOP_CENTER);
 

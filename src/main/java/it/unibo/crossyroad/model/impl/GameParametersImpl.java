@@ -28,6 +28,7 @@ public class GameParametersImpl implements GameParameters {
      * @param invincibility the invincibility status.
      * @param coinCount the initial coin count.
      * @param logSpeedMultiplier the log multiplier.
+     * @param score the initial score.
      */
     public GameParametersImpl(final int coinMultiplier, final double carSpeedMultiplier,
                               final double trainSpeedMultiplier, final boolean invincibility,
@@ -126,7 +127,7 @@ public class GameParametersImpl implements GameParameters {
      * {@inheritDoc}
      */
     @Override
-    public void setInitialScore(int initScore) {
+    public void setInitialScore(final int initScore) {
         if (initScore < 0) {
             throw new IllegalArgumentException("The init score must be >= 0");
         }
@@ -213,7 +214,8 @@ public class GameParametersImpl implements GameParameters {
         final ObjectMapper mapper = new ObjectMapper();
         final GameParameters newParameters = mapper.readValue(new File(filepath), GameParametersImpl.class);
         validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
-                newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(), newParameters.getCoinCount(), newParameters.getScore());
+                newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(),
+                newParameters.getCoinCount(), newParameters.getScore());
         return newParameters;
     }
 
