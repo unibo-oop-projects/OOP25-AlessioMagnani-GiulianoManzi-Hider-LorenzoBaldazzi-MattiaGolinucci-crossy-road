@@ -55,8 +55,8 @@ public final class GameManagerImpl implements GameManager {
     private static final int INCREASE_SPEED_MULTIPLIER_FREQUENCY = 25;
     private static final double CAR_SPEED_MULTIPLIER_INCREMENT = 0.1;
     private static final double TRAIN_SPEED_MULTIPLIER_INCREMENT = 0.1;
-    private static final double MAX_CAR_SPEED_MULTIPLIER = 10.0;
-    private static final double MAX_TRAIN_SPEED_MULTIPLIER = 10.0;
+    private static final double MAX_CAR_SPEED_MULTIPLIER = 5.0;
+    private static final double MAX_TRAIN_SPEED_MULTIPLIER = 5.0;
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
     private Pair<EntityType, Integer> lastGenerated;
