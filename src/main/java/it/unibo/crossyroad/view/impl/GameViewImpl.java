@@ -386,7 +386,7 @@ public final class GameViewImpl implements GameView {
      * @return the respective Image.
      */
     private Image getImage(final String folder, final String file) {
-        return new Image(Paths.get(folder, file).toString());
+        return new Image(folder + "/" + file);
     }
 
     /**
