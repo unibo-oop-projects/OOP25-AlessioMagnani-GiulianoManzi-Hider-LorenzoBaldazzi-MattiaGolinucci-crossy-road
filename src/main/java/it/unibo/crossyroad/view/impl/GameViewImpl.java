@@ -212,7 +212,37 @@ public final class GameViewImpl implements GameView {
      */
     @Override
     public void updatePowerUpTime(final Map<EntityType, Long> powerUps) {
+        Objects.requireNonNull(powerUps, "The map of power up cannot be null");
 
+        Platform.runLater(() -> {
+            if (powerUps.isEmpty()) {
+                powerUpBox.setVisible(false);
+                return;
+            }
+            powerUpBox.setVisible(true);
+            powerUpBox.getChildren().clear();
+            for (final Map.Entry<EntityType, Long> entry: powerUps.entrySet()) {
+                final int duration = (int) (entry.getValue() / 1000);
+
+                //Create the label for every active power up
+                final Label label = new Label(formatPowerUpText(entry.getKey(), duration));
+                label.setMaxWidth(this.overlayWidth);
+                label.setWrapText(true);
+                label.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
+                label.setTextFill(DEFAULT_COLOR_LABEL);
+                label.setBorder(new Border(
+                        new BorderStroke(
+                                Color.WHITE, BorderStrokeStyle.SOLID,
+                                new CornerRadii(this.responsiveCornerRadius),
+                                new BorderWidths(this.responsiveBorderWidth)
+                        )
+                ));
+                label.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
+                label.setBackground(labelBackground(entry.getKey()));
+
+                powerUpBox.getChildren().add(label);
+            }
+        });
     }
 
     /**
