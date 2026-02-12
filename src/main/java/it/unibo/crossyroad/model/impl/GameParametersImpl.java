@@ -219,7 +219,8 @@ public class GameParametersImpl implements GameParameters {
         }
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            final GameParameters newParameters = mapper.readValue(file, GameParametersImpl.class);
+            final GameParameters newParameters = new GameParametersImpl();
+            mapper.readerForUpdating(newParameters).readValue(file);
             validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
                     newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(),
                     newParameters.getCoinCount(), newParameters.getScore());
