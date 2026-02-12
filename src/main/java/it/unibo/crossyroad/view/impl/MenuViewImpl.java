@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -135,8 +136,8 @@ public final class MenuViewImpl implements MenuView {
             return defaultImage;
         }
 
-        final var skin = this.controller.getActiveSkin();
-        final var imagePath = skin.getFrontImage().toString().replace("\\", "/");
+        final Path skin = this.controller.getActiveSkin().getFrontImage();
+        final String imagePath = skin.toString().replace("\\", "/");
 
         return new Image(imagePath);
     }
