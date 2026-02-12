@@ -147,7 +147,7 @@ public final class StateManagerImpl implements StateManager {
         final File file = directory.resolve("data.json").toFile();
         final ObjectMapper mapper = new ObjectMapper();
         final State state = mapper.readValue(file, State.class);
-        this.gameParameters.setCoinCount(state.coins());
+        this.gameParameters.loadFromFile(file.toPath().toString());
         final Set<Skin> unlockedSkins = this.skinManager.getSkins().stream()
             .filter(skin -> state.unlockedSkins().contains(skin.getId()))
             .collect(Collectors.toSet());
@@ -158,5 +158,5 @@ public final class StateManagerImpl implements StateManager {
             .orElseThrow(() -> new IllegalStateException("Active skin not found"));
     }
 
-    private record State(int coins, String activeSkinId, Set<String> unlockedSkins) { }
+    private record State(int coinCount, String activeSkinId, Set<String> unlockedSkins) { }
 }
