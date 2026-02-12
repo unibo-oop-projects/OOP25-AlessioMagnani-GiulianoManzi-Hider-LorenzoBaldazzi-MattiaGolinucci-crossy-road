@@ -219,12 +219,11 @@ public class GameParametersImpl implements GameParameters {
         }
         try {
             final ObjectMapper mapper = new ObjectMapper();
-            final GameParameters newParameters = new GameParametersImpl();
-            mapper.readerForUpdating(newParameters).readValue(file);
-            validateParameters(newParameters.getCoinMultiplier(), newParameters.getCarSpeedMultiplier(),
-                    newParameters.getTrainSpeedMultiplier(), newParameters.getLogSpeedMultiplier(),
-                    newParameters.getCoinCount(), newParameters.getScore());
-            return Optional.of(newParameters);
+            mapper.readerForUpdating(this).readValue(file);
+            validateParameters(this.getCoinMultiplier(), this.getCarSpeedMultiplier(),
+                    this.getTrainSpeedMultiplier(), this.getLogSpeedMultiplier(),
+                    this.getCoinCount(), this.getScore());
+            return Optional.of(this);
         } catch (final IOException e) {
             return Optional.empty();
         }
