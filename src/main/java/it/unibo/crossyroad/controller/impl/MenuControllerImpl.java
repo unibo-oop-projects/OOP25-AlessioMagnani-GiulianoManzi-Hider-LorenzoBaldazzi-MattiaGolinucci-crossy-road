@@ -99,7 +99,7 @@ public class MenuControllerImpl implements MenuController {
         try {
             this.stateManager.load(SAVE_PATH);
         } catch (final IOException ex) {
-            LOGGER.severe("Failed to load game state");
+            LOGGER.info("Failed to load game state");
         }
     }
 }
