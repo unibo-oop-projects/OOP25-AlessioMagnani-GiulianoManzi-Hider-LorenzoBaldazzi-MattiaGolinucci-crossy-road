@@ -1,6 +1,5 @@
 package it.unibo.crossyroad.view.impl;
 
-import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -232,11 +231,11 @@ public final class GameViewImpl implements GameView {
                 label.setFont(Font.font(null, FontWeight.BOLD, this.responsiveFontSize));
                 label.setTextFill(DEFAULT_COLOR_LABEL);
                 label.setBorder(new Border(
-                    new BorderStroke(
-                        Color.WHITE, BorderStrokeStyle.SOLID,
-                        new CornerRadii(this.responsiveCornerRadius),
-                        new BorderWidths(this.responsiveBorderWidth)
-                    )
+                        new BorderStroke(
+                                Color.WHITE, BorderStrokeStyle.SOLID,
+                                new CornerRadii(this.responsiveCornerRadius),
+                                new BorderWidths(this.responsiveBorderWidth)
+                        )
                 ));
                 label.setPadding(new Insets(this.canvas.getHeight() * LABEL_PADDING_RATIO));
                 label.setBackground(labelBackground(entry.getKey()));
