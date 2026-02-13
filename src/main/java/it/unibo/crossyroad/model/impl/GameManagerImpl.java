@@ -433,10 +433,58 @@ public final class GameManagerImpl implements GameManager {
      * Picks up the PowerUps the player is colliding with. 
      */
     private void checkPowerUpCollisions() {
+        this.chunks.forEach(chunk -> {
+            final List<PowerUp> collectablePowerUps = chunk.getPickables().stream()
+                    .filter(this::isCollectablePowerUp)
+                    .map(p -> (PowerUp) p)
+                    .toList();
+
+            collectablePowerUps.forEach(powerUp ->
+                    this.activateOrExtendPowerUp(powerUp, chunk));
+        });
+    }
+
+    /**
+     * Checks if a pickable is a power-up that can be collected by the player.
+     *
+     * @param pick the pickable object to check
+     * @return true if it's a PowerUp that hasn't been picked up yet and overlaps with the player
+     */
+    private boolean isCollectablePowerUp(final Pickable pick) {
+        return pick instanceof PowerUp powerUp
+            && !powerUp.isPickedUp()
+            && powerUp.overlaps(this.player);
+    }
+
+    /**
+     * If a power-up of the same type is already active, extends its duration.
+     * Otherwise, activates the new power-up.
+     *
+     * @param powerUp the power-up
+     * @param chunk the chunk containing the power-up
+     */
+    private void activateOrExtendPowerUp(final PowerUp powerUp, final Chunk chunk) {
+        if (this.getActivePowerUps().containsKey(powerUp.getEntityType())) {
+            extendExistingPowerUp(powerUp, chunk);
+        } else {
+            powerUp.pickUp(this.gameParameters);
+        }
+    }
+
+    /**
+     * Extends the duration of an already active power-up.
+     *
+     * @param newPowerUp the newly collected power-up
+     * @param chunk the chunk containing the new power-up
+     */
+    private void extendExistingPowerUp(final PowerUp newPowerUp, final Chunk chunk) {
         this.getPickablesOnMap().stream()
-                                .filter(p -> p instanceof PowerUp && p.overlaps(this.player)
-                                    && !this.getActivePowerUps().containsKey(p.getEntityType()))
-                                .forEach(p -> p.pickUp(this.gameParameters));
+            .filter(p -> p.getEntityType() == newPowerUp.getEntityType() && p.isPickedUp())
+            .findFirst()
+            .ifPresent(existing -> {
+                ((PowerUp) existing).addTime(newPowerUp.getRemaining());
+                chunk.removePickable(newPowerUp);
+            });
     }
 
     /**

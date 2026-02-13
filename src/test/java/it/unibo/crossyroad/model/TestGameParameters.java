@@ -2,14 +2,12 @@ package it.unibo.crossyroad.model;
 
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.impl.GameParametersBuilder;
-import it.unibo.crossyroad.model.impl.GameParametersImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

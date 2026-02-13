@@ -1,7 +1,6 @@
 package it.unibo.crossyroad.model.api;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * Interface representing game parameters and settings.
