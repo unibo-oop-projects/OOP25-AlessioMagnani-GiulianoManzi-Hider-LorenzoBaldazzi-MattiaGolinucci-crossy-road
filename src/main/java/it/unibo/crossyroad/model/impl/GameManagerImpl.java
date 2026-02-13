@@ -150,20 +150,6 @@ public final class GameManagerImpl implements GameManager {
         }
     }
 
-    private void increaseSpeedsMultiplier() {
-        final double currentCarMultiplier = this.gameParameters.getCarSpeedMultiplier();
-        final double currentTrainMultiplier = this.gameParameters.getTrainSpeedMultiplier();
-
-        if (this.gameParameters.getScore() % INCREASE_SPEED_MULTIPLIER_FREQUENCY == 0) {
-            if (currentCarMultiplier < MAX_CAR_SPEED_MULTIPLIER) {
-                this.gameParameters.setCarSpeedMultiplier(currentCarMultiplier + CAR_SPEED_MULTIPLIER_INCREMENT);
-            }
-            if (currentTrainMultiplier < MAX_TRAIN_SPEED_MULTIPLIER) {
-                this.gameParameters.setTrainSpeedMultiplier(currentTrainMultiplier + TRAIN_SPEED_MULTIPLIER_INCREMENT);
-            }
-        }
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -213,10 +199,10 @@ public final class GameManagerImpl implements GameManager {
 
     /**
      * Checks if there is a valid path the player can use.
-     * 
+     *
      * @param destination the optional precise destination to reach,
      *     if empty it checks a path to reach the end of the map.
-     * 
+     *
      * @return true if there is a valid path, false otherwise.
      */
     private boolean isThereAPath(final Optional<Position> destination) {
@@ -292,6 +278,23 @@ public final class GameManagerImpl implements GameManager {
                     .relative(player.getPosition())
             ))
             .findFirst();
+    }
+
+    /**
+     * Increases the speed multipliers of the transport obstacles every INCREASE_SPEED_MULTIPLIER_FREQUENCY ms.
+     */
+    private void increaseSpeedsMultiplier() {
+        final double currentCarMultiplier = this.gameParameters.getCarSpeedMultiplier();
+        final double currentTrainMultiplier = this.gameParameters.getTrainSpeedMultiplier();
+
+        if (this.gameParameters.getScore() % INCREASE_SPEED_MULTIPLIER_FREQUENCY == 0) {
+            if (currentCarMultiplier < MAX_CAR_SPEED_MULTIPLIER) {
+                this.gameParameters.setCarSpeedMultiplier(currentCarMultiplier + CAR_SPEED_MULTIPLIER_INCREMENT);
+            }
+            if (currentTrainMultiplier < MAX_TRAIN_SPEED_MULTIPLIER) {
+                this.gameParameters.setTrainSpeedMultiplier(currentTrainMultiplier + TRAIN_SPEED_MULTIPLIER_INCREMENT);
+            }
+        }
     }
 
     /**
