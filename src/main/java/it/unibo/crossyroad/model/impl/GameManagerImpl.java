@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.DoubleConsumer;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Range;
@@ -52,11 +53,15 @@ public final class GameManagerImpl implements GameManager {
     private static final Position PLAYER_START_POSITION = new Position(5, 8);
     private static final Position CHUNK_START_POSITION = new Position(0, -12);
     private static final Random RANDOM = new Random();
+
     private static final int INCREASE_SPEED_MULTIPLIER_FREQUENCY = 25;
     private static final double CAR_SPEED_MULTIPLIER_INCREMENT = 0.1;
     private static final double TRAIN_SPEED_MULTIPLIER_INCREMENT = 0.05;
+    private static final double LOG_SPEED_MULTIPLIER_INCREMENT = 0.2;
     private static final double MAX_CAR_SPEED_MULTIPLIER = 5.0;
     private static final double MAX_TRAIN_SPEED_MULTIPLIER = 3.0;
+    private static final double MAX_LOG_SPEED_MULTIPLIER = 5.0;
+
     private final GameParameters gameParameters;
     private List<Chunk> chunks;
     private Pair<EntityType, Integer> lastGenerated;
@@ -119,9 +124,8 @@ public final class GameManagerImpl implements GameManager {
         if (transport.isPresent() && positionBefore.isPresent()) {
             movePlayerWithTransport(positionBefore.get(), transport.get().getPosition());
         }
-
         this.currentTransport = transport;
-        this.handlePlayerOffTransport();
+        this.runIfPlayerLeftTransport(this::alignPlayerHorizontally);
         this.wasOnTransport = transport.isPresent();
 
         this.checkCoinsCollision();
@@ -243,11 +247,13 @@ public final class GameManagerImpl implements GameManager {
     }
 
     /**
-     * Handles the player getting off a transport Obstacle, aligning him horizontally to the nearest integer position.
+     * Checks if the player got off the transport obstacle and if so, executes the Runnable given as parameter.
+     *
+     * @param onOffTransport the Runnable to execute when the player gets off the transport obstacle
      */
-    private void handlePlayerOffTransport() {
+    private void runIfPlayerLeftTransport(final Runnable onOffTransport) {
         if (this.wasOnTransport && this.currentTransport.isEmpty()) {
-            this.alignHorizontallyPlayer();
+            onOffTransport.run();
         }
     }
 
@@ -284,23 +290,51 @@ public final class GameManagerImpl implements GameManager {
      * Increases the speed multipliers of the transport obstacles every INCREASE_SPEED_MULTIPLIER_FREQUENCY ms.
      */
     private void increaseSpeedsMultiplier() {
-        final double currentCarMultiplier = this.gameParameters.getCarSpeedMultiplier();
-        final double currentTrainMultiplier = this.gameParameters.getTrainSpeedMultiplier();
-
         if (this.gameParameters.getScore() % INCREASE_SPEED_MULTIPLIER_FREQUENCY == 0) {
-            if (currentCarMultiplier < MAX_CAR_SPEED_MULTIPLIER) {
-                this.gameParameters.setCarSpeedMultiplier(currentCarMultiplier + CAR_SPEED_MULTIPLIER_INCREMENT);
-            }
-            if (currentTrainMultiplier < MAX_TRAIN_SPEED_MULTIPLIER) {
-                this.gameParameters.setTrainSpeedMultiplier(currentTrainMultiplier + TRAIN_SPEED_MULTIPLIER_INCREMENT);
-            }
+            incrementMultiplier(
+                this.gameParameters.getCarSpeedMultiplier(),
+                MAX_CAR_SPEED_MULTIPLIER,
+                CAR_SPEED_MULTIPLIER_INCREMENT,
+                this.gameParameters::setCarSpeedMultiplier
+            );
+            incrementMultiplier(
+                this.gameParameters.getTrainSpeedMultiplier(),
+                MAX_TRAIN_SPEED_MULTIPLIER,
+                TRAIN_SPEED_MULTIPLIER_INCREMENT,
+                this.gameParameters::setTrainSpeedMultiplier
+            );
+            incrementMultiplier(
+                this.gameParameters.getLogSpeedMultiplier(),
+                MAX_LOG_SPEED_MULTIPLIER,
+                LOG_SPEED_MULTIPLIER_INCREMENT,
+                this.gameParameters::setLogSpeedMultiplier
+            );
+        }
+    }
+
+    /**
+     * Increments multiplier of increment value, up to max value.
+     *
+     * @param current current multiplier value
+     * @param max max allowed value
+     * @param increment increment to apply
+     * @param setter the setter method, used to update the multiplier in the GameParameters
+     */
+    private void incrementMultiplier(
+        final double current,
+        final double max,
+        final double increment,
+        final DoubleConsumer setter
+    ) {
+        if (current < max) {
+            setter.accept(Math.min(current + increment, max));
         }
     }
 
     /**
      * Aligns the player horizontally after he gets off a transport Obstacle (to the nearest integer position).
      */
-    private void alignHorizontallyPlayer() {
+    private void alignPlayerHorizontally() {
         if (this.player.getPosition().x() % 1 != 0) {
             final double nearestX = Math.round(this.player.getPosition().x());
             this.player.move(
