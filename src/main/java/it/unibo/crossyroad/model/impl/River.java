@@ -58,7 +58,9 @@ public final class River extends AbstractActiveChunk {
     protected boolean shouldGenerateNewObstacles(final long deltaTime, final GameParameters params) {
         this.timeSinceLastGeneration += deltaTime;
 
-        if (this.timeSinceLastGeneration >= LOG_INTERVAL) {
+        final long adjustedLogInterval = (long) (LOG_INTERVAL / params.getLogSpeedMultiplier());
+
+        if (this.timeSinceLastGeneration >= adjustedLogInterval) {
             this.timeSinceLastGeneration = 0;
             return true;
         }
