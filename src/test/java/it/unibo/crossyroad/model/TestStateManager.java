@@ -189,7 +189,7 @@
             this.stateManager.activateSkin(this.findSkinById(CONDUCTOR_SKIN));
             this.stateManager.save(dir.resolve(FILE_SAVE_NAME));
             final String content = Files.readString(dir.resolve(FILE_SAVE_NAME).resolve("data.json"));
-            assertTrue(content.contains("\"coins\" : 10"));
+            assertTrue(content.contains("\"coinCount\" : 10"));
             assertTrue(content.contains("\"activeSkinId\" : \"" + CONDUCTOR_SKIN + "\""));
             assertTrue(content.contains(DEFAULT_SKIN));
             assertTrue(content.contains(CONDUCTOR_SKIN));

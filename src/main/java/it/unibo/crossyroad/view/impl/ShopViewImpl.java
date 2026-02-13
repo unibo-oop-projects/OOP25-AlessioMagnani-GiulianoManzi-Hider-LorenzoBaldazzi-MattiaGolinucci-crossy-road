@@ -86,7 +86,7 @@ public class ShopViewImpl implements ShopView {
     private ShopController shopController;
     private Label coinLabel;
     private FlowPane skinContainer;
-
+ 
     /**
      * ShopViewImpl constructor.
      * 

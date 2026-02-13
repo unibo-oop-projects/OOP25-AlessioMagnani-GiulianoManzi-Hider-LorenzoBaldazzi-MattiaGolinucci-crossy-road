@@ -13,6 +13,13 @@ public interface PowerUp extends Pickable {
     void update(long deltaTime, GameParameters gameParameters);
 
     /**
+     * Adding time to remaining time of a picked up power-up.
+     * 
+     * @param additionalTime the time to add.
+     */
+    void addTime(long additionalTime);
+
+    /**
      * Returns the remaining time of the power-up.
      * 
      * @return the remaining time.
