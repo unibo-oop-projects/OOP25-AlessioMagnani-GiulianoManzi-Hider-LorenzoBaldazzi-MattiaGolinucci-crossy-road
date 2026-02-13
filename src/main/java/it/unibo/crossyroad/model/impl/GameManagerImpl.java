@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.DoubleConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Range;
@@ -324,7 +324,7 @@ public final class GameManagerImpl implements GameManager {
         final double current,
         final double max,
         final double increment,
-        final DoubleConsumer setter
+        final Consumer<Double> setter
     ) {
         if (current < max) {
             setter.accept(Math.min(current + increment, max));
