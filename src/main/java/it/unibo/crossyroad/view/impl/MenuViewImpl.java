@@ -2,7 +2,6 @@ package it.unibo.crossyroad.view.impl;
 
 import it.unibo.crossyroad.controller.api.MenuController;
 import it.unibo.crossyroad.view.api.MenuView;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -181,8 +180,8 @@ public final class MenuViewImpl implements MenuView {
             initButton("EXIT", Color.DIMGRAY, e -> {
                 if (!Objects.isNull(this.controller)) {
                     this.controller.save();
+                    this.controller.exit();
                 }
-                Platform.exit();
             })
         );
     }
