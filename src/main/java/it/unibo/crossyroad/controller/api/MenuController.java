@@ -45,7 +45,12 @@ public interface MenuController {
     void load();
 
     /**
-     * Reset the state manager.
+     * Close the game.
+     */
+    void exit();
+
+    /**
+     * Reset the coins and skins.
      */
     void reset();
 }

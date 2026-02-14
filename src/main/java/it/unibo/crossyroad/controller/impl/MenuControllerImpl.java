@@ -107,6 +107,14 @@ public class MenuControllerImpl implements MenuController {
      * {@inheritDoc}
      */
     @Override
+    public void exit() {
+        this.appController.exitGame();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void reset() {
         this.stateManager.reset();
     }
