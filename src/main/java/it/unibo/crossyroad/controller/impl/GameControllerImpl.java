@@ -12,7 +12,6 @@ import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.Direction;
 import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
-import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
 
@@ -37,6 +36,8 @@ public final class GameControllerImpl implements GameController {
      * 
      * @param gameView the game view.
      * 
+     * @param gameManager the game manager.
+     * 
      * @param parameters the game parameters.
      * 
      * @see AppController
@@ -48,12 +49,13 @@ public final class GameControllerImpl implements GameController {
         justification = "AppController and GameView references are intentionally shared. "
             + "These components need to interact with the same instances as per MVC pattern."
     )
-    public GameControllerImpl(final AppController appController, final GameView gameView, final GameParameters parameters) {
+    public GameControllerImpl(final AppController appController, final GameView gameView,
+                            final GameManager gameManager, final GameParameters parameters) {
         this.appController = appController;
         this.gameView = gameView;
         this.pause = false;
         this.parameters = parameters;
-        this.gameManager = new GameManagerImpl(this.parameters);
+        this.gameManager = gameManager;
         this.queue = new LinkedBlockingQueue<>();
     }
 

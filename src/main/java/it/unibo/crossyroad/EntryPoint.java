@@ -8,9 +8,11 @@ import it.unibo.crossyroad.controller.impl.AppControllerImpl;
 import it.unibo.crossyroad.controller.impl.GameControllerImpl;
 import it.unibo.crossyroad.controller.impl.MenuControllerImpl;
 import it.unibo.crossyroad.controller.impl.ShopControllerImpl;
+import it.unibo.crossyroad.model.api.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.model.api.SkinManager;
 import it.unibo.crossyroad.model.api.StateManager;
+import it.unibo.crossyroad.model.impl.GameManagerImpl;
 import it.unibo.crossyroad.model.impl.GameParametersImpl;
 import it.unibo.crossyroad.model.impl.SkinManagerImpl;
 import it.unibo.crossyroad.model.impl.StateManagerImpl;
@@ -41,6 +43,7 @@ public class EntryPoint extends Application {
 
     private GameParameters gameParameters;
     private StateManager stateManager;
+    private GameManager gameManager;
 
     /**
      * It initializes the MVC components.
@@ -54,6 +57,7 @@ public class EntryPoint extends Application {
         final SkinManager skinManager = new SkinManagerImpl();
         skinManager.loadFromResources();
         this.stateManager = new StateManagerImpl(gameParameters, skinManager);
+        this.gameManager = new GameManagerImpl(gameParameters);
     }
 
     /**
@@ -78,7 +82,7 @@ public class EntryPoint extends Application {
         final ShopView shopView = new ShopViewImpl(root);
 
         final AppController appController = new AppControllerImpl(
-            ac -> new GameControllerImpl(ac, gameView, this.gameParameters),
+            ac -> new GameControllerImpl(ac, gameView, this.gameManager, this.gameParameters),
             ac -> new MenuControllerImpl(ac, menuView, this.stateManager),
             ac -> new ShopControllerImpl(ac, this.stateManager, shopView)
         );
