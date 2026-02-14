@@ -461,7 +461,7 @@ public final class GameManagerImpl implements GameManager {
                                 .filter(p -> p instanceof Coin && p.overlaps(this.player))
                                 .map(p -> (Coin) p)
                                 .forEach(c -> {
-                                    c.applyEffect(this.gameParameters);
+                                    c.pickUp(this.gameParameters);
                                     this.chunks.forEach(ch -> ch.removePickable(c));
                                 });
     }
