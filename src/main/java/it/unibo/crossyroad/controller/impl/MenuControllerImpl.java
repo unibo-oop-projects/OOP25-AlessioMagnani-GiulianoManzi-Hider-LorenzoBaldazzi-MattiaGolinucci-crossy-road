@@ -3,7 +3,7 @@ package it.unibo.crossyroad.controller.impl;
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.MenuController;
 import it.unibo.crossyroad.model.api.Skin;
-import it.unibo.crossyroad.model.api.StateManager;
+import it.unibo.crossyroad.model.api.managers.StateManager;
 import it.unibo.crossyroad.view.api.MenuView;
 
 import java.io.IOException;

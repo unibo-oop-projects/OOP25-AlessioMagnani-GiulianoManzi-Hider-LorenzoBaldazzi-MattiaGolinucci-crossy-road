@@ -6,7 +6,7 @@ import java.util.Set;
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.ShopController;
 import it.unibo.crossyroad.model.api.Skin;
-import it.unibo.crossyroad.model.api.StateManager;
+import it.unibo.crossyroad.model.api.managers.StateManager;
 import it.unibo.crossyroad.view.api.ShopView;
 
 /**

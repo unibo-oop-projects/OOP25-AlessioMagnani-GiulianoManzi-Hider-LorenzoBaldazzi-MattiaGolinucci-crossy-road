@@ -10,7 +10,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.crossyroad.controller.api.AppController;
 import it.unibo.crossyroad.controller.api.GameController;
 import it.unibo.crossyroad.model.api.Direction;
-import it.unibo.crossyroad.model.api.GameManager;
+import it.unibo.crossyroad.model.api.managers.GameManager;
 import it.unibo.crossyroad.model.api.GameParameters;
 import it.unibo.crossyroad.view.api.GameView;
 import it.unibo.crossyroad.view.api.UserInput;
