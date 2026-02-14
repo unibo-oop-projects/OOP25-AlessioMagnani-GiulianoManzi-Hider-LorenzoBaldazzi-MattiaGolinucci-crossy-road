@@ -488,7 +488,7 @@ public final class GameManagerImpl implements GameManager {
      * @return true if it's a PowerUp that hasn't been picked up yet and overlaps with the player
      */
     private boolean isCollectablePowerUp(final Pickable pick) {
-        return pick instanceof PowerUp
+        return pick.getEntityType().isPowerup()
             && !pick.isPickedUp()
             && pick.overlaps(this.player);
     }
